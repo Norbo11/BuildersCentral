@@ -2,6 +2,8 @@ package com.github.norbo11.builderscentral;
 	
 import java.io.IOException;
 
+import com.github.norbo11.builderscentral.util.Database;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +18,10 @@ public class Main extends Application {
         {
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             
-            Scene scene = new Scene(root, 300, 275);
+            Scene scene = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+            
+            Database.connect();
+            Database.createTables();
             
             stage.setTitle(Constants.APPLICATION_NAME);
             stage.setScene(scene);

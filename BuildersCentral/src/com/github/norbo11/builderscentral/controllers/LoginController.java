@@ -1,4 +1,4 @@
-package com.github.norbo11.builderscentral;
+package com.github.norbo11.builderscentral.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
