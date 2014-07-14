@@ -2,6 +2,7 @@ package com.github.norbo11.builderscentral.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,24 +11,26 @@ public class Database {
     private static final String DB_FILEPATH = "TopBuilders.db";
     private static Connection connection = null;
     
-    public static ResultSet executeUpdate(String query) {
+    public static void executeUpdate(String query) {
         try
         {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(10);
-            return statement.executeQuery(query);
+            statement.executeUpdate(query);
         } catch (SQLException e)
         {
             Log.error(e);
         }
-        return null;
     }
     
-    public static ResultSet executeQuery(String query) {
+    public static ResultSet executeQuery(String query, Object[] objects) {
         try
         {
-            Statement statement = connection.createStatement();
-            statement.execute(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            for (int i = 1; i <= statement.getParameterMetaData().getParameterCount(); i++) {
+                statement.setObject(i, objects[i - 1]);
+            }
+            return statement.executeQuery();
         } catch (SQLException e)
         {
             Log.error(e);
@@ -35,6 +38,10 @@ public class Database {
         return null;
     }
     
+    public static ResultSet executeQuery(String query, Object object) {
+        return executeQuery(query, new Object[] { object });
+    }
+
     public static void disconnect() {
         try {
             if (connection != null)
@@ -57,7 +64,7 @@ public class Database {
     }
     
     public static void createTables() {
-        executeQuery("CREATE TABLE users ("
+        executeUpdate("CREATE TABLE IF NOT EXISTS users ("
                 + "id INTEGER PRIMARY KEY, username TEXT, password TEXT)");
         
     }
