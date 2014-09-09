@@ -15,7 +15,7 @@ public class Database {
         try
         {
             Statement statement = connection.createStatement();
-            statement.setQueryTimeout(10);
+            statement.setQueryTimeout(10); //10 seconds
             statement.executeUpdate(query);
         } catch (SQLException e)
         {
