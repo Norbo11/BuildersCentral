@@ -58,7 +58,7 @@ class SubmitLoginHandler implements EventHandler<ActionEvent> {
         try {
             User user = User.get(usernameField.getText(), passwordField.getText());
             User.setCurrentUser(user);
-            Main.changeMainScene(MainScene.getScene());
+            Main.changeMainScene(new MainScene());
         } catch (UsernameException | PasswordException e) {
             statusText.setText(e.getMessage());
         }
@@ -66,13 +66,13 @@ class SubmitLoginHandler implements EventHandler<ActionEvent> {
 }
 
 
-public class LoginScene {
+public class LoginScene extends StyledScene {
     
-    public static StyledScene getScene()
+    public LoginScene()
     {
-        GridPane gridPane = new GridPane();
-        StyledScene scene = new StyledScene(gridPane, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "login.css");
+        super(new GridPane(), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "login.css");
         
+        GridPane gridPane = (GridPane) getRoot();
         gridPane.setPrefSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -98,16 +98,16 @@ public class LoginScene {
 
         Button submitButton = new Button("Sign In");
         submitButton.setPrefSize(110, 25);
-        submitButton.setOnAction(new SubmitLoginHandler(scene));
+        submitButton.setOnAction(new SubmitLoginHandler(this));
         submitButton.setId("submitButton");
         
         Button registerButton = new Button("Register");
         registerButton.setPrefSize(110, 25);
-        registerButton.setOnAction(e -> Main.changeMainScene(RegisterScene.getScene()));
+        registerButton.setOnAction(e -> Main.changeMainScene(new RegisterScene()));
         
         Button testAccountButton = new Button("Test account");
         testAccountButton.setPrefSize(110, 25);
-        testAccountButton.setOnAction(new TestAccountHandler(scene));
+        testAccountButton.setOnAction(new TestAccountHandler(this));
         
         Text statusText = new Text();
         statusText.setId("statusText");
@@ -118,7 +118,5 @@ public class LoginScene {
         VBox vbox = new VBox(20);
         vbox.getChildren().addAll(hbox, statusText);
         gridPane.add(vbox, 1, 4);
-      
-        return scene;
     }
 }

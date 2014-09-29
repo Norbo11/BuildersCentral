@@ -10,11 +10,10 @@ import com.github.norbo11.builderscentral.Main;
 import com.github.norbo11.builderscentral.scenes.LoginScene;
 import com.github.norbo11.builderscentral.util.TabManager;
 
-public class HomeTab {
-    public static Tab getTab() {
-        Tab tab = new Tab();
-        tab.setText("Home");
-        tab.setClosable(false);
+public class HomeTab extends Tab{
+    public HomeTab() {
+        setText("Home");
+        setClosable(false);
         
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -31,7 +30,7 @@ public class HomeTab {
             gridPane.add(button[i], i % 4, i <= 3 ? 0 : 1); //Buttons 0-3 have columnIndex of 0, while 4-7 have columnIndex of 1
         }
         button[0].setText("Quotes and invoices");
-        button[0].setOnAction(e -> TabManager.newTab(QuotesTab.getTab()));
+        button[0].setOnAction(e -> TabManager.newTab(new QuotesTab()));
         button[1].setText("Quote requests");
         button[2].setText("Manage employees");
         button[3].setText("Settings");
@@ -39,9 +38,8 @@ public class HomeTab {
         button[5].setText("Material stock");
         button[6].setText("Manage users");
         button[7].setText("Log out");
-        button[7].setOnAction(e -> Main.changeMainScene(LoginScene.getScene()));
+        button[7].setOnAction(e -> Main.changeMainScene(new LoginScene()));
         
-        tab.setContent(gridPane);
-        return tab;
+        setContent(gridPane);
     }
 }

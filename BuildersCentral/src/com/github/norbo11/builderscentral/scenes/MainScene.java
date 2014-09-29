@@ -21,18 +21,19 @@ import com.github.norbo11.builderscentral.models.User;
 import com.github.norbo11.builderscentral.tabs.HomeTab;
 import com.github.norbo11.builderscentral.util.TabManager;
 
-public class MainScene {
+public class MainScene extends StyledScene {
     
-    private static TabPane tabPane;
+    private TabPane tabPane;
 
-    public static TabPane getTabPane() {
+    public TabPane getTabPane() {
         return tabPane;
     }
     
-    public static StyledScene getScene()
+    public MainScene()
     {
-        BorderPane borderPane = new BorderPane();
-        StyledScene scene = new StyledScene(borderPane, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "main.css");        
+    	super(new BorderPane(), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "main.css");
+        
+    	BorderPane borderPane = (BorderPane) getRoot();
         borderPane.setPrefSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         
         //TOP
@@ -50,7 +51,7 @@ public class MainScene {
         //CENTER
         tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
-        TabManager.newTab(HomeTab.getTab());
+        TabManager.newTab(new HomeTab());
         borderPane.setCenter(tabPane);
         
         //BOTTOM
@@ -82,7 +83,5 @@ public class MainScene {
         VBox botBox = new VBox();
         botBox.getChildren().addAll(botLine, botAnchor);
         borderPane.setBottom(botBox);
-        
-        return scene;
     }
 }

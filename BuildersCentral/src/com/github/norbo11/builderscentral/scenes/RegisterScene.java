@@ -11,11 +11,13 @@ import javafx.scene.layout.VBox;
 import com.github.norbo11.builderscentral.Constants;
 import com.github.norbo11.builderscentral.Main;
 
-public class RegisterScene {
-    public static StyledScene getScene() {
-        VBox box = new VBox();
-        StyledScene scene = new StyledScene(box, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "register.css");
+public class RegisterScene extends StyledScene {
+	
+    public RegisterScene() {
+    	super(new VBox(), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "register.css");
         
+    	VBox box = (VBox) getRoot();
+    	
         box.setPrefSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         box.setPadding(new Insets(25));
         box.setSpacing(20);
@@ -31,12 +33,10 @@ public class RegisterScene {
         Button submitButton = new Button("Activate account!");
         submitButton.setPrefWidth(150);
         backButton.setPrefWidth(150);
-        backButton.setOnAction(e -> Main.changeMainScene(LoginScene.getScene()));
+        backButton.setOnAction(e -> Main.changeMainScene(new LoginScene()));
         
         HBox hbox = new HBox(20);
         hbox.getChildren().addAll(backButton, submitButton);
         box.getChildren().addAll(label, field, hbox);
-      
-        return scene;
     }
 }

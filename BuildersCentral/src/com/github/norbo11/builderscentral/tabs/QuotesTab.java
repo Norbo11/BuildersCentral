@@ -14,12 +14,12 @@ import javafx.scene.layout.VBox;
 
 import com.github.norbo11.builderscentral.Constants;
 
-public class QuotesTab {
+public class QuotesTab extends Tab {
 
-    private static GridPane jobsGrid;
-    private static int lastRow;
+    private GridPane jobsGrid;
+    private int lastRow;
     
-    public static void addNewJobRow() {        
+    public void addNewJobRow() {        
         TextField[] fields = new TextField[3];
         
         for (int i = 0; i < fields.length; i++)
@@ -31,9 +31,8 @@ public class QuotesTab {
         jobsGrid.addRow(lastRow++, fields);
     }
     
-    public static Tab getTab() {        
-        Tab tab = new Tab();
-        tab.setText("Quotes and invoices");
+    public QuotesTab() {        
+        setText("Quotes and invoices");
         
         Label[] labels = new Label[6];
 
@@ -111,8 +110,7 @@ public class QuotesTab {
         
         contents.getChildren().add(botBox);
         
-        tab.setContent(contents);
-        return tab;
+        setContent(contents);
     }
 
 }
