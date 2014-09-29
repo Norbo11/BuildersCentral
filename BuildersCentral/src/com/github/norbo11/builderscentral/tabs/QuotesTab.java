@@ -36,9 +36,7 @@ public class QuotesTab {
         tab.setText("Quotes and invoices");
         
         Label[] labels = new Label[6];
-        labels[0] = new Label("Job Description");
-        labels[1] = new Label("Materials Required");
-        labels[2] = new Label("Cost");
+
         labels[3] = new Label("Select quote to edit");
         labels[4] = new Label("Client name");
         labels[5] = new Label("Project address");
@@ -64,23 +62,40 @@ public class QuotesTab {
         projectDetailsGrid.addRow(0, labels[4], clientNameField);
         projectDetailsGrid.addRow(1, labels[5], projectAddressArea);
         
+        labels[0] = new Label("Job Description");
+        labels[1] = new Label("Materials Required");
+        labels[2] = new Label("Cost");
+        
+        for (int i = 0; i <= 2; i++) {
+        	labels[i].setPrefWidth(200);
+        	labels[i].setPadding(new Insets(0, 0, 0, 3));
+        }
+        
+        GridPane titleGrid = new GridPane();
+        titleGrid.setHgap(10);
+        titleGrid.setVgap(10);
+        titleGrid.add(labels[0], 0, 0);
+        titleGrid.add(labels[1], 1, 0);
+        titleGrid.add(labels[2], 2, 0);
+        
         jobsGrid = new GridPane();
         jobsGrid.setHgap(10);
         jobsGrid.setVgap(10);
-        jobsGrid.add(labels[0], 0, 0);
-        jobsGrid.add(labels[1], 1, 0);
-        jobsGrid.add(labels[2], 2, 0);
-        lastRow = 1;
         addNewJobRow();
+        
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefHeight(Constants.WINDOW_HEIGHT);
+        scrollPane.setPrefWidth(700);
+        scrollPane.setStyle("-fx-background-color:transparent;"); //Get rid of gray borders
+        scrollPane.setContent(jobsGrid);
+        
+        VBox vbox = new VBox(10);
+        vbox.getChildren().addAll(titleGrid, scrollPane);
         
         HBox centerBox = new HBox(30);
         centerBox.setPadding(new Insets(20));
-        centerBox.getChildren().addAll(projectDetailsGrid, jobsGrid);        
-        
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPrefSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        scrollPane.setContent(centerBox);
-        contents.getChildren().add(scrollPane);
+        centerBox.getChildren().addAll(projectDetailsGrid, vbox);        
+        contents.getChildren().addAll(centerBox);
         
         //BOTTOM
         Button exportButton = new Button("Export to Excel");
