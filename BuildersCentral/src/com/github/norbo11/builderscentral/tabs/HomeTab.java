@@ -8,9 +8,9 @@ import javafx.scene.layout.GridPane;
 
 import com.github.norbo11.builderscentral.Main;
 import com.github.norbo11.builderscentral.scenes.LoginScene;
-import com.github.norbo11.builderscentral.util.TabManager;
+import com.github.norbo11.builderscentral.util.TabHelper;
 
-public class HomeTab extends Tab{
+public class HomeTab extends Tab {
     public HomeTab() {
         setText("Home");
         setClosable(false);
@@ -30,7 +30,7 @@ public class HomeTab extends Tab{
             gridPane.add(button[i], i % 4, i <= 3 ? 0 : 1); //Buttons 0-3 have columnIndex of 0, while 4-7 have columnIndex of 1
         }
         button[0].setText("Quotes and invoices");
-        button[0].setOnAction(e -> TabManager.newTab(new QuotesTab()));
+        button[0].setOnAction(e -> TabHelper.newTab(getTabPane(), new QuotesTab()));
         button[1].setText("Quote requests");
         button[2].setText("Manage employees");
         button[3].setText("Settings");

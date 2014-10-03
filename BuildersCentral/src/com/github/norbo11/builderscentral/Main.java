@@ -20,7 +20,7 @@ public class Main extends Application {
         Main.stage = stage;
         stage.setResizable(false);
         stage.setTitle(Constants.APPLICATION_NAME);
-        changeMainScene(LoginScene.getScene());
+        changeMainScene(new LoginScene());
 	}
 	
 	public static void main(String[] args) {

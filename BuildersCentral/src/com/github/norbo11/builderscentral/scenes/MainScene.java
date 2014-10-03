@@ -19,7 +19,7 @@ import javafx.util.Duration;
 import com.github.norbo11.builderscentral.Constants;
 import com.github.norbo11.builderscentral.models.User;
 import com.github.norbo11.builderscentral.tabs.HomeTab;
-import com.github.norbo11.builderscentral.util.TabManager;
+import com.github.norbo11.builderscentral.util.TabHelper;
 
 public class MainScene extends StyledScene {
     
@@ -28,6 +28,7 @@ public class MainScene extends StyledScene {
     public TabPane getTabPane() {
         return tabPane;
     }
+    
     
     public MainScene()
     {
@@ -51,7 +52,7 @@ public class MainScene extends StyledScene {
         //CENTER
         tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
-        TabManager.newTab(new HomeTab());
+        TabHelper.newTab(tabPane, new HomeTab());
         borderPane.setCenter(tabPane);
         
         //BOTTOM
