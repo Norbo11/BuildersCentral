@@ -43,7 +43,7 @@ public class User {
         
     }
     
-    public static User get(String inputUser, String inputPassword) throws UsernameException, PasswordException {
+    public static User login(String inputUser, String inputPassword) throws UsernameException, PasswordException {
         try {
             ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME  + " WHERE username = ? COLLATE NOCASE", inputUser);
 

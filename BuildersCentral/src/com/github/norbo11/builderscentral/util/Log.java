@@ -7,4 +7,8 @@ public class Log {
         e.printStackTrace();
     }
 
+    public static void error(String string) {
+        System.out.println(string);
+    }
+
 }

@@ -56,7 +56,7 @@ class SubmitLoginHandler implements EventHandler<ActionEvent> {
         statusText = (Text) scene.lookup("#statusText");
         
         try {
-            User user = User.get(usernameField.getText(), passwordField.getText());
+            User user = User.login(usernameField.getText(), passwordField.getText());
             User.setCurrentUser(user);
             Main.changeMainScene(new MainScene());
         } catch (UsernameException | PasswordException e) {

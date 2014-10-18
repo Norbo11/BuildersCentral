@@ -1,4 +1,5 @@
 package com.github.norbo11.builderscentral.tabs;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,9 +14,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import com.github.norbo11.builderscentral.Constants;
+import com.github.norbo11.builderscentral.models.NewProject;
+import com.github.norbo11.builderscentral.models.Project;
+import com.github.norbo11.builderscentral.util.ProjectManager;
 
 public class QuotesTab extends Tab {
 
+    private ComboBox<Project> projectPicker = new ComboBox<Project>();
+    private TextField clientNameField;
     private GridPane jobsGrid;
     private int lastRow;
     
@@ -34,23 +40,21 @@ public class QuotesTab extends Tab {
     public QuotesTab() {        
         setText("Quotes and invoices");
         
-        Label[] labels = new Label[6];
-
-        labels[3] = new Label("Select quote to edit");
-        labels[4] = new Label("Client name");
-        labels[5] = new Label("Project address");
-
         VBox contents = new VBox(20);
         contents.setPadding(new Insets(20, 0, 20, 0));
         
         //TOP
         HBox topBox = new HBox(20);
         topBox.setAlignment(Pos.TOP_CENTER);
-        topBox.getChildren().addAll(labels[3], new ComboBox<String>());
+        
+        populatePicker(null);
+        projectPicker.setOnAction(e -> updateFields(projectPicker.getSelectionModel().getSelectedItem()));
+        
+        topBox.getChildren().addAll(new Label("Select quote to edit"), projectPicker);
         contents.getChildren().add(topBox);
         
         //CENTER     
-        TextField clientNameField = new TextField();
+        clientNameField = new TextField();
         TextArea projectAddressArea = new TextArea();
         projectAddressArea.setPrefHeight(100);
 
@@ -58,9 +62,10 @@ public class QuotesTab extends Tab {
         projectDetailsGrid.setPadding(new Insets(27, 0, 0, 0));
         projectDetailsGrid.setHgap(20);
         projectDetailsGrid.setVgap(20);
-        projectDetailsGrid.addRow(0, labels[4], clientNameField);
-        projectDetailsGrid.addRow(1, labels[5], projectAddressArea);
+        projectDetailsGrid.addRow(0, new Label("Client name"), clientNameField);
+        projectDetailsGrid.addRow(1, new Label("Project address"), projectAddressArea);
         
+        Label[] labels = new Label[3];
         labels[0] = new Label("Job Description");
         labels[1] = new Label("Materials Required");
         labels[2] = new Label("Cost");
@@ -103,6 +108,7 @@ public class QuotesTab extends Tab {
         newJobButton.setOnAction(e -> addNewJobRow());
         
         Button saveButton = new Button("Save quote");
+        saveButton.setOnAction(e -> updateProject(projectPicker.getSelectionModel().getSelectedItem()));
 
         HBox botBox = new HBox(20);
         botBox.setAlignment(Pos.BOTTOM_CENTER);
@@ -111,6 +117,25 @@ public class QuotesTab extends Tab {
         contents.getChildren().add(botBox);
         
         setContent(contents);
+    }
+
+    private void populatePicker(Project viewProject) {
+        ObservableList<Project> projectList = ProjectManager.fetchProjects();
+        NewProject newProject = new NewProject();
+        projectList.add(newProject);
+        projectPicker.getItems().clear();
+        projectPicker.getItems().addAll(projectList);
+        projectPicker.getSelectionModel().select(viewProject != null ? viewProject : newProject);
+    }
+
+    private void updateFields(Project currentProject) {
+        if (currentProject != null) clientNameField.setText(currentProject.getClientName());
+    }
+
+    private void updateProject(Project currentProject) {
+        currentProject.setClientName(clientNameField.getText());
+        currentProject.save();
+        populatePicker(currentProject);
     }
 
 }
