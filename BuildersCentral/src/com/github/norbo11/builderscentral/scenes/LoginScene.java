@@ -1,28 +1,17 @@
 package com.github.norbo11.builderscentral.scenes;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
-import com.github.norbo11.builderscentral.Constants;
 import com.github.norbo11.builderscentral.Main;
 import com.github.norbo11.builderscentral.models.User;
 import com.github.norbo11.builderscentral.models.exceptions.PasswordException;
 import com.github.norbo11.builderscentral.models.exceptions.UsernameException;
 
-class TestAccountHandler implements EventHandler<ActionEvent> {
+/*class TestAccountHandler implements EventHandler<ActionEvent> {
     
     Scene scene;
     
@@ -63,10 +52,10 @@ class SubmitLoginHandler implements EventHandler<ActionEvent> {
             statusText.setText(e.getMessage());
         }
     }
-}
+}*/
 
-
-public class LoginScene extends StyledScene {
+/*public class LoginScene extends AbstractScene {
+    public static final String FXML_FILENAME = "LoginScene.fxml";
     
     public LoginScene()
     {
@@ -118,5 +107,42 @@ public class LoginScene extends StyledScene {
         VBox vbox = new VBox(20);
         vbox.getChildren().addAll(hbox, statusText);
         gridPane.add(vbox, 1, 4);
+    }
+
+    @Override
+    public String getFxmlFilename() {
+        return FXML_FILENAME;
+    }
+}*/
+
+public class LoginScene {
+    public static final String FXML_FILENAME = "LoginScene.fxml";
+    
+    @FXML TextField usernameField;
+    @FXML TextField passwordField;
+    @FXML Text statusText;
+    @FXML Button submitButton;
+    
+    @FXML
+    public void submitLogin(ActionEvent event) {
+        try {
+            User user = User.login(usernameField.getText(), passwordField.getText());
+            User.setCurrentUser(user);
+            Main.changeMainScene(MainScene.FXML_FILENAME);
+        } catch (UsernameException | PasswordException e) {
+            statusText.setText(e.getMessage());
+        }
+    }
+    
+    @FXML
+    public void register(ActionEvent event) {
+        Main.changeMainScene(RegisterScene.FXML_FILENAME);
+    }
+    
+    @FXML
+    public void testAccount(ActionEvent event) {
+        usernameField.setText("test");
+        passwordField.setText("abc123");
+        submitButton.fire();
     }
 }

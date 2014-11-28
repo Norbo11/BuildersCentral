@@ -3,22 +3,21 @@ package com.github.norbo11.builderscentral.scenes;
 import java.net.URL;
 
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 
 import com.github.norbo11.builderscentral.Main;
 
-public class StyledScene extends Scene {
+public abstract class AbstractScene {
     
-    public StyledScene(Parent root, String stylesheetPath) {
-        super(root);
-        this.stylesheetPath = stylesheetPath;
-        applyStylesheet();
-    }
-
-    public StyledScene(Parent root, double windowWidth, double windowHeight, String stylesheetPath) {
-        super(root, windowWidth, windowHeight);
-        this.stylesheetPath = stylesheetPath;
-        applyStylesheet();
+    public AbstractScene(Parent root, double windowWidth, double windowHeight, String stylesheetPath) {
+        //super(root, windowWidth, windowHeight);
+        
+        /*try {
+            root = FXMLLoader.load(Main.app.getClass().getResource("/com/github/norbo11/builderscentral/fxml/" + getFxmlFilename()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        setRoot(root);
+        applyStylesheet();*/
     }
 
     private String stylesheetPath = "";
@@ -32,8 +31,8 @@ public class StyledScene extends Scene {
     }
     
     public void applyStylesheet() {
-        String styleSheet = loadStylesheet(stylesheetPath);
-        if (styleSheet != null) getStylesheets().add(styleSheet);
+        //String styleSheet = loadStylesheet(stylesheetPath);
+        //if (styleSheet != null) getStylesheets().add(styleSheet);
     }
 
     public static String loadStylesheet(String filename) {

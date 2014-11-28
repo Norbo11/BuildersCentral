@@ -1,20 +1,11 @@
 package com.github.norbo11.builderscentral.scenes;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
-import com.github.norbo11.builderscentral.Constants;
-import com.github.norbo11.builderscentral.Main;
-
-public class RegisterScene extends StyledScene {
-	
+public class RegisterScene {
+	public static final String FXML_FILENAME = "RegisterScene.fxml";
+    
     public RegisterScene() {
-    	super(new VBox(), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "register.css");
+    	/*super(new VBox(), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "register.css");
         
     	VBox box = (VBox) getRoot();
     	
@@ -33,10 +24,10 @@ public class RegisterScene extends StyledScene {
         Button submitButton = new Button("Activate account!");
         submitButton.setPrefWidth(150);
         backButton.setPrefWidth(150);
-        backButton.setOnAction(e -> Main.changeMainScene(new LoginScene()));
+        backButton.setOnAction(e -> Main.changeMainScene(LoginScene.FXML_FILENAME));
         
         HBox hbox = new HBox(20);
         hbox.getChildren().addAll(backButton, submitButton);
-        box.getChildren().addAll(label, field, hbox);
+        box.getChildren().addAll(label, field, hbox);*/
     }
 }

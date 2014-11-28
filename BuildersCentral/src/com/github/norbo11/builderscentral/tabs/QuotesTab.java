@@ -1,25 +1,17 @@
 package com.github.norbo11.builderscentral.tabs;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
-import com.github.norbo11.builderscentral.Constants;
 import com.github.norbo11.builderscentral.models.NewProject;
 import com.github.norbo11.builderscentral.models.Project;
 import com.github.norbo11.builderscentral.util.ProjectManager;
 
-public class QuotesTab extends Tab {
+public class QuotesTab {
 
+    public final static String FXML_FILENAME = "QuotesTab.fxml";
+    
     private ComboBox<Project> projectPicker = new ComboBox<Project>();
     private TextField clientNameField;
     private GridPane jobsGrid;
@@ -38,7 +30,7 @@ public class QuotesTab extends Tab {
     }
     
     public QuotesTab() {        
-        setText("Quotes and invoices");
+        /*setText("Quotes and invoices");
         
         VBox contents = new VBox(20);
         contents.setPadding(new Insets(20, 0, 20, 0));
@@ -116,7 +108,7 @@ public class QuotesTab extends Tab {
         
         contents.getChildren().add(botBox);
         
-        setContent(contents);
+        setContent(contents);*/
     }
 
     private void populatePicker(Project viewProject) {
@@ -137,5 +129,4 @@ public class QuotesTab extends Tab {
         currentProject.save();
         populatePicker(currentProject);
     }
-
 }

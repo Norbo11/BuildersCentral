@@ -1,11 +1,13 @@
 package com.github.norbo11.builderscentral;
 	
 import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import com.github.norbo11.builderscentral.scenes.LoginScene;
-import com.github.norbo11.builderscentral.scenes.StyledScene;
 import com.github.norbo11.builderscentral.util.Database;
+import com.github.norbo11.builderscentral.util.FXMLHelper;
 
 public class Main extends Application {
    private static Stage stage = null;
@@ -20,15 +22,16 @@ public class Main extends Application {
         Main.stage = stage;
         stage.setResizable(false);
         stage.setTitle(Constants.APPLICATION_NAME);
-        changeMainScene(new LoginScene());
+        changeMainScene(LoginScene.FXML_FILENAME);
 	}
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
-    public static void changeMainScene(StyledScene scene) {
-        stage.setScene(scene);
+    public static void changeMainScene(String filename) {
+        Parent root = FXMLHelper.loadFxml(filename);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 }
