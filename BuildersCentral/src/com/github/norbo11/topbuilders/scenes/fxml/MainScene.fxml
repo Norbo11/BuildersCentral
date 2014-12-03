@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.Line?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.scenes.MainScene">
+  <prefWidth><Constants fx:constant="WINDOW_WIDTH" /></prefWidth>
+  <prefHeight><Constants fx:constant="WINDOW_HEIGHT" /></prefHeight>
+             
+  <top>
+    <VBox>      
+      <Text fx:id="welcomeText" text="">
+        <VBox.margin><Insets top="50" bottom="0" right="0" left="0" /></VBox.margin>
+      </Text>
+      <Line>
+        <endX><Constants fx:constant="WINDOW_WIDTH" /></endX>
+      </Line> 
+    </VBox>
+  </top>
+  
+  <center>
+    <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS">
+    </TabPane>
+  </center>
+        
+  <bottom>
+    <VBox>
+      <Line>
+        <endX><Constants fx:constant="WINDOW_WIDTH" /></endX>
+      </Line>
+      <AnchorPane>
+        <VBox fx:id="dateBox" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="0"></VBox>
+      </AnchorPane>
+    </VBox>
+  </bottom>
+  
+</BorderPane>
