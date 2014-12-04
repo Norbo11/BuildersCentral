@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
+import com.github.norbo11.topbuilders.scenes.MainScene;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.SceneHelper;
 
 public class User {
     public static final String DB_TABLE_NAME = "users";
@@ -54,7 +56,9 @@ public class User {
                 
                 if (password.equalsIgnoreCase(inputPassword)) {
                     String type = result.getString("type");
-                    return new User(username, password, UserType.getUserType(type));
+                    User user = new User(username, password, UserType.getUserType(type));
+                    User.setCurrentUser(user);
+                    return user; 
                 } else throw new PasswordException();
             } else throw new UsernameException();
         } catch (SQLException e) {
@@ -71,4 +75,13 @@ public class User {
     public static User getCurrentUser() {
         return User.currentUser;
     }
+
+	public static void loginTestAccount() {
+		try {
+			login("test", "abc123");
+		} catch (UsernameException | PasswordException e) {
+			e.printStackTrace();
+		}
+        SceneHelper.changeMainScene(MainScene.FXML_FILENAME);
+	}
 }

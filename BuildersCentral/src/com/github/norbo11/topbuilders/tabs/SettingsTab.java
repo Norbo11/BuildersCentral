@@ -8,8 +8,7 @@ import javafx.fxml.Initializable;
 public class SettingsTab implements Initializable {
     public final static String FXML_FILENAME = "SettingsTab.fxml";
     
-
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialize(URL url, ResourceBundle rb) {
 	}
 }

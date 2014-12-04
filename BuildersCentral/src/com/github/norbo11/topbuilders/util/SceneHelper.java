@@ -1,10 +1,10 @@
 package com.github.norbo11.topbuilders.util;
 
-import com.github.norbo11.topbuilders.Main;
-
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import com.github.norbo11.topbuilders.Main;
 
 public class SceneHelper {
 	
