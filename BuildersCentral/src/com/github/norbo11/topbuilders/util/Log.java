@@ -10,5 +10,10 @@ public class Log {
     public static void error(String string) {
         System.out.println(string);
     }
+    
+    public static void error(String string, Exception e) {
+        error(string);
+        e.printStackTrace();
+    }
 
 }
