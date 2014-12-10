@@ -38,4 +38,8 @@ public class LoginScene {
     public void testAccount(ActionEvent event) {
         User.loginTestAccount();
     }
+
+	public static String getAbsoluteFxmlFilename() {
+		return "/com/github/norbo11/topbuilders/scenes/fxml/" + FXML_FILENAME;
+	}
 }

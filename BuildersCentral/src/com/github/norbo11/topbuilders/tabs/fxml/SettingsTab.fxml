@@ -56,7 +56,7 @@
   <TitledPane text="General settings" collapsible="false">
     <GridPane hgap="20">
       <Label text="Choose language" GridPane.columnIndex="0" />
-      <ComboBox fx:id="languagesCombo" GridPane.columnIndex="1">
+      <ComboBox fx:id="languagesCombo" GridPane.columnIndex="1" onAction="#chooseLanguage">
       </ComboBox>
     </GridPane>
   </TitledPane>

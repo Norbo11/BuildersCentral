@@ -16,14 +16,15 @@ import org.xml.sax.SAXException;
 import com.github.norbo11.topbuilders.Constants;
 
 public class Language {
-	public Language(Document languageDoc) {
+	private Language(Document languageDoc) {
 		generateBindings(languageDoc.getChildNodes(), "");
 		System.out.println(bindings);
 	}
 	
 	private HashMap<String, String> bindings;
+	private static Language currentLanguage;
 	
-	public static Language load(String filename) {
+	public static void load(String filename) {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    //factory.setValidating(true);
 	    //factory.setIgnoringElementContentWhitespace(true);
@@ -33,12 +34,14 @@ public class Language {
 	        File file = new File(Constants.LANGUAGES_DIRECTORY + filename);
 	        Document doc = builder.parse(file);
 	        
-	        return new Language(doc);
+	        currentLanguage = new Language(doc);
+	        //User.getCurrentUser().getSettings().setLanguage(Util.removeFileExtension(file));
 	    } catch (ParserConfigurationException | SAXException | IOException e) {
 	    	Log.error("Error loading language file " + filename, e);
 	    }
-	    return null;
 	}
+	
+	
 	
 	/*
 	<settings>
@@ -60,6 +63,24 @@ public class Language {
 	</settings>
 	*/
 	
+	public static Language getCurrentLanguage() {
+		return currentLanguage;
+	}
+
+
+
+	public static void setCurrentLanguage(Language currentLanguage) {
+		Language.currentLanguage = currentLanguage;
+	}
+
+
+
+	public void setBindings(HashMap<String, String> bindings) {
+		this.bindings = bindings;
+	}
+
+
+
 	private void generateBindings(NodeList currentNodes, String currentKey) {
 		for (int i = 0; i < currentNodes.getLength(); i++) {
 			Node child = currentNodes.item(i);

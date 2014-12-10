@@ -17,11 +17,21 @@ public class User {
     private String username;
     private String password;
     private UserType type;
+    private UserSettings settings;
     
-    public User(String username, String password, UserType type) {
+    public static String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+
+	public UserSettings getSettings() {
+		return settings;
+	}
+
+	public User(String username, String password, UserType type) {
         this.username = username;
         this.password = password;
         this.type = type;
+        this.settings = UserSettings.load(this);
     }
     
     @Override
