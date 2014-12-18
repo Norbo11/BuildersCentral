@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.util;
+package com.github.norbo11.topbuilders.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="CENTER" hgap="20" vgap="20" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.tabs.EmployeeHomeTab">
+<GridPane alignment="CENTER" hgap="20" vgap="20" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.EmployeeHomeTab">
   <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
         
   <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="1" text="Quotes and invoices" />

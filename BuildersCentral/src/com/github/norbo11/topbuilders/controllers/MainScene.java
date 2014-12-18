@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.scenes;
+package com.github.norbo11.topbuilders.controllers;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -17,7 +17,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import com.github.norbo11.topbuilders.models.User;
-import com.github.norbo11.topbuilders.tabs.EmployeeHomeTab;
 import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class MainScene implements Initializable {

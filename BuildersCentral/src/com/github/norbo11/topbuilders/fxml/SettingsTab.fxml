@@ -8,7 +8,7 @@
 <?import javafx.collections.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
 
-<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.tabs.SettingsTab">
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.SettingsTab">
   <padding><Insets top="25" bottom="25" right="300" left="300" /></padding>
   
   <TitledPane text="%settings.password.heading" collapsible="false">

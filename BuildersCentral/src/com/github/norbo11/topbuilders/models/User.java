@@ -3,10 +3,10 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.github.norbo11.topbuilders.controllers.MainScene;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
-import com.github.norbo11.topbuilders.scenes.MainScene;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.SceneHelper;

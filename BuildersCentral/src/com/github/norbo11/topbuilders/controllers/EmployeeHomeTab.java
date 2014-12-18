@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.tabs;
+package com.github.norbo11.topbuilders.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
-import com.github.norbo11.topbuilders.scenes.LoginScene;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.TabHelper;
 

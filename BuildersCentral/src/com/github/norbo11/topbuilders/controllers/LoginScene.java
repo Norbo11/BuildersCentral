@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.scenes;
+package com.github.norbo11.topbuilders.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

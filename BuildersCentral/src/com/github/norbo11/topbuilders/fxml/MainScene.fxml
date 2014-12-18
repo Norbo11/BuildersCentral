@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Line?>
 <?import com.github.norbo11.topbuilders.Constants?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.scenes.MainScene">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.MainScene">
   <prefWidth><Constants fx:constant="WINDOW_WIDTH" /></prefWidth>
   <prefHeight><Constants fx:constant="WINDOW_HEIGHT" /></prefHeight>
              

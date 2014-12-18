@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
 
-<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.tabs.QuotesTab">
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.QuotesTab">
   <padding><Insets top="20" bottom="20" right="0" left="0" /></padding>
         
   <HBox spacing="20" alignment="TOP_CENTER">
