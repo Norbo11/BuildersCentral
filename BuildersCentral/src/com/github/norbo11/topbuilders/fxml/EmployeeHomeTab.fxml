@@ -6,16 +6,32 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="CENTER" hgap="20" vgap="20" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.EmployeeHomeTab">
-  <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
-        
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="1" text="Quotes and invoices" />
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="2" text="Quote requests" />
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="3" text="Manage employees" />
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="4" text="Settings" />
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="1" GridPane.columnIndex="1" text="Current projects" />
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="1" GridPane.columnIndex="2" text="Material stock" />
-  <Button onAction="#openNewTab" prefWidth="200" prefHeight="110" GridPane.rowIndex="1" GridPane.columnIndex="3" text="Manage users" />
-  <Button onAction="#logOut" prefWidth="200" prefHeight="110" GridPane.rowIndex="1" GridPane.columnIndex="4" text="Log out" />
+<HBox alignment="center" spacing="50" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.EmployeeHomeTab">
+  <padding><Insets top="25" bottom="25" right="100" left="100" /></padding>
+  
+  <TitledPane fx:id="notificationsPane" text="%home.notifications.heading" prefWidth="400" collapsible="false" maxHeight="520">
+    <BorderPane>
+      <padding><Insets top="0" bottom="0" left="0" right="0"></Insets></padding>
+      <top>
+        <ScrollPane fx:id="notificationsScrollPane" prefHeight="450" fitToHeight="true" fitToWidth="true">
+          <padding><Insets top="0" bottom="0" left="0" right="0"></Insets></padding>
+          <VBox fx:id="notificationsList">
+          </VBox>
+        </ScrollPane>
+      </top>
+      
+      <bottom>
+        <Label text="%home.notifications.info" />
+      </bottom>
+    </BorderPane>
+  </TitledPane>
 
-</GridPane>
+  <VBox alignment="center">
+    <GridPane hgap="20" vgap="20">    
+      <Button fx:id="myAssignments" onAction="#buttonAction" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="1" text="%home.myAssignments" />
+      <Button fx:id="messages" onAction="#buttonAction" prefWidth="200" prefHeight="110" GridPane.rowIndex="0" GridPane.columnIndex="2" text="%home.messages" />
+      <Button fx:id="settings" onAction="#buttonAction" prefWidth="200" prefHeight="110" GridPane.rowIndex="1" GridPane.columnIndex="1" text="%home.settings" />
+      <Button fx:id="logout" onAction="#buttonAction" prefWidth="200" prefHeight="110" GridPane.rowIndex="1" GridPane.columnIndex="2" text="%home.logout" />
+    </GridPane>
+  </VBox>
+</HBox>

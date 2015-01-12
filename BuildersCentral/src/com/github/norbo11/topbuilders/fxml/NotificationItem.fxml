@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<fx:root styleClass="notification-item" type="javafx.scene.control.TitledPane" xmlns:fx="http://javafx.com/fxml" prefHeight="80" collapsible="false" onMouseClicked="#view">
+  <BorderPane>
+    <left><ImageView fx:id="image" preserveRatio="true" fitWidth="60" /></left>
+    <center><Label BorderPane.alignment="TOP_LEFT" fx:id="content" wrapText="true" /></center>
+    <right><Label BorderPane.alignment="TOP_RIGHT" fx:id="timestamp" prefWidth="75" wrapText="true" textAlignment="RIGHT"/></right>
+  </BorderPane>
+</fx:root>

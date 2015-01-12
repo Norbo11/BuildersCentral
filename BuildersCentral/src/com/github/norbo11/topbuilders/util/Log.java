@@ -16,6 +16,10 @@ public class Log {
         e.printStackTrace();
     }
 
+    public static void info(Object object) {
+        System.out.println(object + "");
+    }
+    
 	public static void info(String string) {
 		System.out.println(string);
 	}

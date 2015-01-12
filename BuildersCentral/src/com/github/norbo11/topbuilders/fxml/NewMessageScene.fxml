@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<VBox spacing="20" alignment="top_left" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.NewMessageScene">
+  <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
+    
+  <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
+    <padding><Insets top="10" bottom="10" /></padding>
+    
+    <Label text="%messages.new.to" GridPane.rowIndex="0" />
+    <ComboBox fx:id="toCombo" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+    
+    <Label text="%messages.new.title" GridPane.rowIndex="1" />
+    <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    
+    <Label text="%messages.content" GridPane.rowIndex="2" />
+    <HTMLEditor fx:id="contentEditor" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+  </GridPane>
+    
+  <HBox spacing="100" alignment="center">
+    <Button text="%messages.new.send" prefWidth="190" prefHeight="40" onAction="#sendMessage" />
+    <Button text="%messages.new.discard" prefWidth="190" prefHeight="40" onAction="#discard" />
+  </HBox>
+</VBox>

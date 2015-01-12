@@ -1,0 +1,124 @@
+.root {    
+    -fx-font: 1em "Verdana";
+    -fx-background-color: white;
+    -fx-focus-color: transparent; 
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.root.popup {
+    -fx-background-color: transparent;
+}
+
+.text-field {
+    -fx-focus-color: #2D86B3; 
+}
+
+#welcomeText {
+    -fx-font-size: 3em;
+}
+
+#bottomPane {
+    -fx-background-color: #C7E7FC;
+    -fx-border-width: 1px;
+    -fx-border-color: black transparent transparent transparent;
+}
+
+#topPane {
+    -fx-border-width: 1px;
+    -fx-border-color: transparent transparent black transparent;
+}
+
+.table-view, .tab-pane {
+    -fx-background-color: transparent;
+}
+
+.tab:focused {
+    -fx-effect: null;
+}
+
+.table-cell {
+    -fx-alignment: center;
+}
+
+.column-header-background, .titled-pane .title, .tab, .column-header {
+    -fx-background-color: #ACDAFA;
+}
+
+.button, .combo-box, .combo-box .list-view {
+    -fx-font: normal bold 1em "Verdana";
+    -fx-text-fill: #2D86B3;
+     
+    -fx-background-color: #C7E7FC;
+    -fx-border-radius: 5px;
+}
+
+.combo-box .list-view .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+#notificationsPane .title {
+    -fx-alignment: center;
+}
+
+#notificationsScrollPane {
+    -fx-background-color: transparent;
+}
+
+.notification-item .title {
+    -fx-alignment: center-left !important;
+    -fx-background-color: #C7E7FC;
+    -fx-background-radius: 0;
+    -fx-border-color: -fx-box-border transparent -fx-box-border transparent;
+}
+
+.notification-item-last {
+    -fx-border-color: transparent transparent -fx-box-border transparent;
+}
+
+.notification-item .content {
+    -fx-border-color: transparent;
+}
+
+.button:hover, .notification-item .content:hover {
+    -fx-background-color: #BBD9ED;
+}
+
+.combo-box .list-view .list-cell:selected {
+    -fx-background-color: #C7E7FC;
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color: #96D6FF;
+}
+    
+
+.titled-pane .content {
+    -fx-background-color: white;
+}   
+
+.tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 90px;
+}
+
+.tab {
+    -fx-background-insets: 0 1 0 1, 0, 0;
+    -fx-border-width: 1px;
+    -fx-border-color: black black transparent black;
+}
+
+.tab-pane .tab:selected, .tab-content-area, .tab:hover {
+    -fx-background-color: #F2FAFF;
+}
+
+.tab .tab-label { 
+    -fx-font-weight: bold;
+}

@@ -7,11 +7,12 @@
 <?import javafx.scene.text.*?>
 <?import javafx.collections.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
+<?import com.github.norbo11.topbuilders.util.StylableComboBox?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.SettingsTab">
   <padding><Insets top="25" bottom="25" right="300" left="300" /></padding>
   
-  <TitledPane text="%settings.password.heading" collapsible="false">
+  <TitledPane text="%settings.password.heading">
     <AnchorPane>
       <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
         <padding><Insets top="10" bottom="10" /></padding>
@@ -32,7 +33,7 @@
     </AnchorPane>
   </TitledPane>
   
-  <TitledPane text="%settings.email.heading" collapsible="false">
+  <TitledPane text="%settings.email.heading">
     <AnchorPane>
       <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
         <padding><Insets top="10" bottom="10" /></padding>
@@ -53,15 +54,24 @@
     </AnchorPane>
   </TitledPane>
   
-  <TitledPane text="%settings.general.heading" collapsible="false">
-    <AnchorPane>
-      <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
-        <padding><Insets top="10" bottom="10" /></padding>
-        <Label text="%settings.general.lang" GridPane.columnIndex="0" />
-        <ComboBox fx:id="languagesCombo" GridPane.columnIndex="1">
-        </ComboBox>
-      </GridPane>
-    </AnchorPane>
+  <TitledPane text="%settings.general.heading">  
+    <BorderPane>
+      <padding><Insets top="10" bottom="10" left="10" right="10" /></padding>
+    
+      <left>
+        <VBox spacing="10">
+          <Label text="%settings.general.lang"  />
+          <Label text="%settings.general.fullscreen" />
+        </VBox>
+      </left>
+      
+      <right>
+        <VBox spacing="10">
+          <StylableComboBox fx:id="languagesCombo" />
+          <CheckBox fx:id="fullscreenCheckbox" />
+        </VBox>
+      </right>
+    </BorderPane>
   </TitledPane>
   
   <HBox spacing="100" alignment="center">

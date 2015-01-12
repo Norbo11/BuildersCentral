@@ -1,7 +1,7 @@
 package com.github.norbo11.topbuilders.models.enums;
 
 public enum UserType {
-    NORMAL("Normal"), MANAGER("Manager"), SUPERUSER("Superuser"); 
+    MANAGER("Manager"), SUPERUSER("Superuser"), EMPLOYEE("Normal");
     
     public String typeName = "";
     
@@ -13,11 +13,11 @@ public enum UserType {
         return typeName;
     }
 
-    public static UserType getUserType(String type) {
+    public static UserType getUserType(int type) {
         switch (type) {
-            case "normal": return NORMAL;
-            case "manager": return MANAGER;
-            case "superuser": return SUPERUSER;
+            case 0: return SUPERUSER;
+            case 1: return MANAGER;
+            case 2: return EMPLOYEE;
         }
         return null;
     }

@@ -1,33 +1,32 @@
 package com.github.norbo11.topbuilders.controllers;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
-public class RegisterScene {
+import com.github.norbo11.topbuilders.util.SceneHelper;
+
+
+public class RegisterScene extends AbstractController {
 	public static final String FXML_FILENAME = "RegisterScene.fxml";
+        
+    @FXML TextField usernameField;
+    @FXML TextField passwordField;
+    @FXML Text statusText;
+    @FXML Button submitButton;
     
-    public RegisterScene() {
-    	/*super(new VBox(), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, "register.css");
-        
-    	VBox box = (VBox) getRoot();
-    	
-        box.setPrefSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        box.setPadding(new Insets(25));
-        box.setSpacing(20);
-        box.setFillWidth(false);
-        box.setAlignment(Pos.CENTER);
-        
-        Label label = new Label("Please enter the 12-character long code received by your employer:");
-        
-        TextField field = new TextField();
-        field.setPrefWidth(340);
-        
-        Button backButton = new Button("Back");
-        Button submitButton = new Button("Activate account!");
-        submitButton.setPrefWidth(150);
-        backButton.setPrefWidth(150);
-        backButton.setOnAction(e -> Main.changeMainScene(LoginScene.FXML_FILENAME));
-        
-        HBox hbox = new HBox(20);
-        hbox.getChildren().addAll(backButton, submitButton);
-        box.getChildren().addAll(label, field, hbox);*/
+    @FXML
+    public void activate(ActionEvent event) {
+    }
+    
+    @FXML
+    public void back(ActionEvent event) {
+        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME, false);
+    }
+
+    public static String getAbsoluteFxmlFilename() {
+        return "/com/github/norbo11/topbuilders/scenes/fxml/" + FXML_FILENAME;
     }
 }

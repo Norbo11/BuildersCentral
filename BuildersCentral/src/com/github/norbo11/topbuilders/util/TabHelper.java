@@ -1,9 +1,9 @@
 package com.github.norbo11.topbuilders.util;
 
-import com.github.norbo11.topbuilders.controllers.AbstractTab;
-
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+
+import com.github.norbo11.topbuilders.controllers.AbstractTab;
 
 public class TabHelper {
     private static TabPane tabPane;

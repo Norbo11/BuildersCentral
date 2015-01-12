@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.shape.Line?>
 <?import com.github.norbo11.topbuilders.Constants?>
 
@@ -13,14 +14,19 @@
   <prefHeight><Constants fx:constant="WINDOW_HEIGHT" /></prefHeight>
              
   <top>
-    <VBox>      
-      <Text fx:id="welcomeText" text="">
-        <VBox.margin><Insets top="50" bottom="0" right="0" left="0" /></VBox.margin>
-      </Text>
-      <Line>
-        <endX><Constants fx:constant="WINDOW_WIDTH" /></endX>
-      </Line> 
-    </VBox>
+    <BorderPane fx:id="topPane">  
+      <padding><Insets bottom="10" /></padding>
+        
+      <left>
+        <Text fx:id="welcomeText" text="" BorderPane.alignment="BOTTOM_LEFT" />
+      </left>
+      
+      <right>
+        <ImageView preserveRatio="true" fitWidth="200">
+          <image><Image url="/img/logo.png" /></image>
+        </ImageView>
+      </right>
+    </BorderPane>
   </top>
   
   <center>
@@ -29,12 +35,9 @@
   </center>
         
   <bottom>
-    <VBox>
-      <Line>
-        <endX><Constants fx:constant="WINDOW_WIDTH" /></endX>
-      </Line>
+    <VBox fx:id="bottomPane" alignment="CENTER_RIGHT">
       <AnchorPane>
-        <VBox fx:id="dateBox" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="0"></VBox>
+        <VBox fx:id="dateBox" AnchorPane.topAnchor="5" AnchorPane.bottomAnchor="5" AnchorPane.rightAnchor="10"></VBox>
       </AnchorPane>
     </VBox>
   </bottom>

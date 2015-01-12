@@ -5,31 +5,34 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
 
-<GridPane hgap="10" vgap="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.LoginScene">
+<VBox alignment="CENTER_LEFT" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.LoginScene">
   <prefWidth><Constants fx:constant="WINDOW_WIDTH" /></prefWidth>
   <prefHeight><Constants fx:constant="WINDOW_HEIGHT" /></prefHeight>
-  <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
+  <padding><Insets right="400" left="400" /></padding>
   
-  <Text textAlignment="CENTER" wrappingWidth="300" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.rowSpan="1">
-    <text><Constants fx:constant="APPLICATION_NAME" /></text>
-    <font><Font size="25" /></font>
-  </Text>
+  <ImageView  GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.rowSpan="1" preserveRatio="true" fitWidth="200">
+    <image><Image url="/img/logo.png" /></image>
+  </ImageView>
 
-  <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-  <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+  <GridPane hgap="10" vgap="10">
+    <padding><Insets top="15" /></padding>
   
-  <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-  <TextField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-  <VBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="4">
-    <HBox spacing="20">
-      <Button fx:id="submitButton" text="Sign In" prefWidth="110" prefHeight="25" onAction="#submitLogin" />
-      <Button text="Register" prefWidth="110" prefHeight="25" onAction="#register" />
-      <Button text="Test account" prefWidth="110" prefHeight="25" onAction="#testAccount" />
-    </HBox>
-    <Text fx:id="statusText" textAlignment="CENTER" />
-  </VBox>
+    <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
   
-</GridPane>
+    <VBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <HBox spacing="20">
+        <Button fx:id="submitButton" text="Sign In" prefWidth="110" prefHeight="25" onAction="#submitLogin" />
+        <Button text="Register" prefWidth="110" prefHeight="25" onAction="#register" />
+        <Button text="Test account" prefWidth="110" prefHeight="25" onAction="#testAccount" />
+      </HBox>
+      <Text fx:id="statusText" textAlignment="CENTER" />
+    </VBox>
+  </GridPane>
+</VBox>

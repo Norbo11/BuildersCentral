@@ -1,10 +1,11 @@
 package com.github.norbo11.topbuilders;
 	
 import javafx.application.Application;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.LoginScene;
-import com.github.norbo11.topbuilders.models.User;
+import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 
@@ -19,10 +20,12 @@ public class Main extends Application {
         
         Main.app = this;
         Main.mainStage = stage;
-        stage.setResizable(false);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         stage.setTitle(Constants.APPLICATION_NAME);
-        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
-        if (Constants.DEBUG_MODE) User.loginTestAccount();
+        
+        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME, false);
+        if (Constants.DEBUG_MODE) Employee.loginTestAccount();
 	}
 	
 	public static void main(String[] args) {

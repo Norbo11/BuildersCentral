@@ -1,10 +1,6 @@
 package com.github.norbo11.topbuilders.controllers;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -13,7 +9,7 @@ import com.github.norbo11.topbuilders.models.NewProject;
 import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.util.ProjectManager;
 
-public class QuotesTab implements Initializable {
+public class QuotesTab extends AbstractController {
 
     public final static String FXML_FILENAME = "QuotesTab.fxml";
     
@@ -62,8 +58,8 @@ public class QuotesTab implements Initializable {
     	return projectPicker.getSelectionModel().getSelectedItem();
     }
     	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+    @FXML
+	public void initialize() {
 		populatePicker(null);
 		addJobRow();
 	}

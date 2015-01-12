@@ -1,12 +1,12 @@
 package com.github.norbo11.topbuilders.controllers;
 
-import com.github.norbo11.topbuilders.util.FXMLHelper;
-
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+
+import com.github.norbo11.topbuilders.util.FXMLHelper;
+import com.github.norbo11.topbuilders.util.LoadedFXML;
 
 public class AbstractTab extends Tab {
 
@@ -18,8 +18,13 @@ public class AbstractTab extends Tab {
 	
 	private String fxmlFilename;
 	private TabPane parentTabPane = null;
+	private AbstractController controller = null;
 	
-	public void close() {
+	public AbstractController getController() {
+        return controller;
+    }
+
+    public void close() {
     	EventHandler<Event> handler = getOnClosed();
     	if (null != handler) {
             handler.handle(null);
@@ -37,8 +42,8 @@ public class AbstractTab extends Tab {
 	}
 	
     public void loadFromFxml() {
-        //Create the tab object, fill it with the loaded FXML
-        Parent root = FXMLHelper.loadFxml("/com/github/norbo11/topbuilders/fxml/" + fxmlFilename);
-	    setContent(root);
+	    LoadedFXML fxml = FXMLHelper.loadFxml("/com/github/norbo11/topbuilders/fxml/" + fxmlFilename);
+        controller = (AbstractController) fxml.getController();
+        setContent(fxml.getRoot());
 	}
 }
