@@ -65,10 +65,6 @@
     -fx-alignment: center;
 }
 
-#notificationsScrollPane {
-    -fx-background-color: transparent;
-}
-
 .notification-item .title {
     -fx-alignment: center-left !important;
     -fx-background-color: #C7E7FC;
@@ -76,12 +72,13 @@
     -fx-border-color: -fx-box-border transparent -fx-box-border transparent;
 }
 
-.notification-item-last {
-    -fx-border-color: transparent transparent -fx-box-border transparent;
-}
-
 .notification-item .content {
     -fx-border-color: transparent;
+}
+
+.notification-item-last {
+    -fx-border-color: transparent transparent -fx-box-border transparent;
+    -fx-border-width: 1px;
 }
 
 .button:hover, .notification-item .content:hover {

@@ -22,7 +22,7 @@ public class LoginScene extends AbstractController {
     @FXML
     public void submitLogin(ActionEvent event) {
         try {
-            Employee user = Employee.login(usernameField.getText(), passwordField.getText());
+            Employee user = Employee.login(usernameField.getText(), passwordField.getText());            
             SceneHelper.changeMainScene(MainScene.FXML_FILENAME, user.getSettings().isFullscreen());
         } catch (UsernameException | PasswordException e) {
             statusText.setText(e.getMessage());

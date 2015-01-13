@@ -22,7 +22,7 @@ public class EmployeeHomeTab extends AbstractController {
 	@FXML private VBox notificationsList;
 	
 	@FXML 
-	private void buttonAction(ActionEvent event) {
+	public void buttonAction(ActionEvent event) {
 		switch (((Button) event.getSource()).getId()) {
 		case "myAssignments": break;
 		case "messages": TabHelper.createAndSwitchTab(resources.getString("home.messages"), MessagesTab.FXML_FILENAME); break;
@@ -36,9 +36,7 @@ public class EmployeeHomeTab extends AbstractController {
         ObservableList<Node> notifications = notificationsList.getChildren();
        
         for (Notification notification : Notification.getNotificationsFromEmployee(Employee.getCurrentEmployee())) {
-            System.out.println("NOTIFICATION!");
-            NotificationItem node = new NotificationItem(notification);
-            notifications.add(node);
+            notifications.add(new NotificationItem(notification));
         }
         
         //TODO For some reason this line adds a slight visual glitch around the notifcation heading edges, investigate later
