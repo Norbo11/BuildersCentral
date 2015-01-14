@@ -26,22 +26,18 @@ public class Employee extends AbstractModel {
     private StringProperty password;
     private StringProperty firstName;
     private StringProperty lastName;
-    private ObjectProperty<UserType> type;
+    private ObjectProperty<UserType> userType;
     private ObjectProperty<EmployeeSettings> settings;
 	
-	public Employee(int id, String username, String password, String firstName, String lastName, UserType type) {
+	public Employee(int id, String username, String password, String firstName, String lastName, UserType userType) {
 	    super(id);
 	    
         this.username = new SimpleStringProperty(username);
         this.password = new SimpleStringProperty(password);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
-        this.type = new SimpleObjectProperty<UserType>(type);
-        this.settings = new SimpleObjectProperty<EmployeeSettings>(EmployeeSettings.load(this));
-    }
-    
-    public static String getDbTableName() {
-        return DB_TABLE_NAME;
+        this.userType = new SimpleObjectProperty<UserType>(userType);
+        this.settings = new SimpleObjectProperty<EmployeeSettings>(EmployeeSettings.getSettingsFromEmployeeId(getId()));
     }
 
     public EmployeeSettings getSettings() {
@@ -64,8 +60,8 @@ public class Employee extends AbstractModel {
         return password.get();
     }
 
-    public UserType getType() {
-        return type.get();
+    public UserType getUserType() {
+        return userType.get();
     }
     
     public static void setCurrentEmployee(Employee user) {
@@ -139,7 +135,7 @@ public class Employee extends AbstractModel {
 	}
 
     public static Employee getEmployeeFromId(int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + getDbTableName() + " WHERE id = ?", id);
+        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
         
         try {
             if (result.next()) {

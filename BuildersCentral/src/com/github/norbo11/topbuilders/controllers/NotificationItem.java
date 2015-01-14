@@ -12,7 +12,7 @@ import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.util.FXMLHelper;
-import com.github.norbo11.topbuilders.util.Util;
+import com.github.norbo11.topbuilders.util.DateTimeUtil;
 
 public class NotificationItem extends TitledPane {
     public static final String FXML_FILENAME = "NotificationItem.fxml";
@@ -51,7 +51,7 @@ public class NotificationItem extends TitledPane {
                 break;
         }
         
-        timestamp.setText(Util.formatDate(notification.getDate()) + "\n" + Util.formatTime(notification.getDate()));
+        timestamp.setText(DateTimeUtil.formatDate(notification.getDate()) + "\n" + DateTimeUtil.formatTime(notification.getDate()));
     }
     
     @FXML
@@ -71,7 +71,7 @@ public class NotificationItem extends TitledPane {
                 break;
         }
         
-        timestamp.setText(Util.formatDateAndTime(notification.getDate()));
+        timestamp.setText(DateTimeUtil.formatDateAndTime(notification.getDate()));
     }
     
 }

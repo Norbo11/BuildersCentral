@@ -2,9 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import javafx.beans.property.ObjectProperty;
@@ -14,6 +12,7 @@ import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.DateTimeUtil;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -83,7 +82,7 @@ public class Message extends AbstractModel {
         Employee recipient = Employee.getEmployeeFromId(result.getInt("recipientId"));
         String title = result.getString("title");
         String content = result.getString("content");
-        LocalDateTime timestamp = LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.valueOf(result.getString("timestamp"))), TimeZone.getDefault().toZoneId());
+        LocalDateTime timestamp = DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp"));
         
         return new Message(id, sender, recipient, title, content, timestamp);
     }

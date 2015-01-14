@@ -13,7 +13,7 @@ import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.TabHelper;
-import com.github.norbo11.topbuilders.util.Util;
+import com.github.norbo11.topbuilders.util.DateTimeUtil;
 
 public class NewMessageScene extends AbstractController {
     public static final String FXML_FILENAME = "NewMessageScene.fxml";
@@ -28,7 +28,7 @@ public class NewMessageScene extends AbstractController {
         int toId = toCombo.getSelectionModel().getSelectedItem().getId();
         String title = titleField.getText();
         String content = contentEditor.getHtmlText().replace("contenteditable=\"true\"", "");
-        long timestamp = Util.getCurrentTimestamp();
+        long timestamp = DateTimeUtil.getCurrentTimestamp();
                 
         int messageId = Message.addMessage(fromId, toId, title, content, timestamp);
         Notification.addNotification(toId, NotificationType.NEW_MESSAGE.ordinal(), messageId, timestamp, false);

@@ -9,7 +9,7 @@ import javafx.scene.web.WebView;
 
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.Util;
+import com.github.norbo11.topbuilders.util.DateTimeUtil;
 
 
 public class DisplayMessageScene extends AbstractController {
@@ -69,7 +69,7 @@ public class DisplayMessageScene extends AbstractController {
 
     public void update() {
         title.setText(message.getTitle());
-        date.setText(Util.formatDateAndTime(message.getDate()));
+        date.setText(DateTimeUtil.formatDateAndTime(message.getDate()));
         from.setText(message.getSender().toString());
         WebEngine webEngine = content.getEngine();
         webEngine.loadContent(message.getContent());
