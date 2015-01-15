@@ -63,9 +63,15 @@ public class Database {
     }
     
     public static void connect() {
+    	//TODO Create connection with SQLite database for use during the development stage - later explain (in design document)
+    	//that in production an online-hosted MySQL database would be used
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + "/" + DB_NAME, DB_USER, DB_PASSWORD);
+        	//Uncomment to enable MySQL
+            //Class.forName("com.mysql.jdbc.Driver");
+            //connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + "/" + DB_NAME, DB_USER, DB_PASSWORD);
+
+        	Class.forName("org.sqlite.JDBC");
+        	connection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
         } catch (Exception e) {
             Log.error(e);
         }
