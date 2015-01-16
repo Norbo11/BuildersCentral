@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import com.github.norbo11.topbuilders.Main;
-import com.github.norbo11.topbuilders.controllers.LoginScene;
+import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 
 public class FXMLHelper {

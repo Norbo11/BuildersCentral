@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<VBox fillWidth="true" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.LoginScene">
+  <padding><Insets right="75" left="75" /></padding>
+
+  <GridPane alignment="CENTER" hgap="10" vgap="10">
+    <ImageView preserveRatio="true" fitWidth="200" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+      <image><Image url="/img/logo.png" /></image>
+      <GridPane.margin><Insets bottom="15" /></GridPane.margin>
+    </ImageView>
+  
+    <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    
+    <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+  
+    <VBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <HBox spacing="20">
+        <Button fx:id="submitButton" text="Sign In" prefWidth="110" prefHeight="25" onAction="#submitLogin" />
+        <Button text="Register" prefWidth="110" prefHeight="25" onAction="#register" />
+        <Button text="Test account" prefWidth="110" prefHeight="25" onAction="#testAccount" />
+      </HBox>
+      <Text fx:id="statusText" textAlignment="CENTER" />
+    </VBox>
+  </GridPane>
+</VBox>

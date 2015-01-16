@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.Main;
-import com.github.norbo11.topbuilders.controllers.AbstractScene;
+import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 
 public class SceneHelper {
 	

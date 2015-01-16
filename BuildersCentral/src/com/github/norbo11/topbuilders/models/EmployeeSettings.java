@@ -47,7 +47,7 @@ public class EmployeeSettings {
         
         try {
         	boolean fullscreen = (boolean) SettingType.FULLSCREEN.getDefaultValue();
-            Locale locale = (Locale) SettingType.LOCALE.getDefaultValue();
+            Locale locale = Locale.forLanguageTag((String) SettingType.LOCALE.getDefaultValue());
         	
             while (result.next()) {
                 int settingTypeId = result.getInt("settingTypeId");

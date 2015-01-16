@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.MessagesTab">
+  <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
+  
+  <TableView fx:id="table">
+    <columns>
+        <TableColumn fx:id="dateCol" text="%messages.date">
+            <cellValueFactory><PropertyValueFactory property="date" /></cellValueFactory>
+        </TableColumn>
+        
+        <TableColumn fx:id="timeCol" text="%messages.time">
+            <cellValueFactory><PropertyValueFactory property="date" /></cellValueFactory>
+        </TableColumn>
+        
+        <TableColumn fx:id="senderCol" text="%messages.sender">
+            <cellValueFactory><PropertyValueFactory property="sender" /></cellValueFactory>
+        </TableColumn>
+        
+        <TableColumn fx:id="titleCol" text="%messages.title">
+            <cellValueFactory><PropertyValueFactory property="title" /></cellValueFactory>
+        </TableColumn>
+        
+        <TableColumn fx:id="xCol" text="X" />
+    </columns>
+  </TableView>
+  
+  <HBox spacing="100" alignment="center">
+    <Button text="%messages.read" prefWidth="190" prefHeight="40" onAction="#readMessage" />
+    <Button text="%messages.new" prefWidth="190" prefHeight="40" onAction="#newMessage" />
+  </HBox>
+</VBox>

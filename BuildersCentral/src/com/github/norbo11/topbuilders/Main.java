@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
-import com.github.norbo11.topbuilders.controllers.LoginScene;
+import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.SceneHelper;
@@ -17,6 +17,9 @@ public class Main extends Application {
 	public void start(Stage stage) {
         Database.connect();
         Database.createTables();
+        
+        stage.setWidth(Constants.WINDOW_WIDTH);
+        stage.setHeight(Constants.WINDOW_HEIGHT);
         
         Main.app = this;
         Main.mainStage = stage;

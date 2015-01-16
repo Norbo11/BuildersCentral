@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 public class Database {
     private static final String DB_HOSTNAME = "norbz.co.uk";
+    private static final String DB_PORT = "443"; //3306 is default
     private static final String DB_NAME = "top_builders";
     private static final String DB_USER = "top_builders";
     private static final String DB_PASSWORD = "computing";
@@ -67,11 +68,11 @@ public class Database {
     	//that in production an online-hosted MySQL database would be used
         try {
         	//Uncomment to enable MySQL
-            //Class.forName("com.mysql.jdbc.Driver");
-            //connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + "/" + DB_NAME, DB_USER, DB_PASSWORD);
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT 	+ "/" + DB_NAME, DB_USER, DB_PASSWORD);
 
-        	Class.forName("org.sqlite.JDBC");
-        	connection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
+        	//Class.forName("org.sqlite.JDBC");
+        	//connection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
         } catch (Exception e) {
             Log.error(e);
         }
