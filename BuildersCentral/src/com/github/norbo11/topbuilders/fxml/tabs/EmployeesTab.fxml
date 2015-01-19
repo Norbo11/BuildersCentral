@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab">
+  <padding><Insets top="25" bottom="25" right="170" left="170" /></padding>
+  
+  <TreeTableView>
+    <columns>
+        <TreeTableColumn fx:id="fullName" text="%employees.fullName">
+            <!--<cellValueFactory><PropertyValueFactory property="fullName" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="username" text="%employees.username">
+            <!--<cellValueFactory><PropertyValueFactory property="username" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="email" text="%employees.email">
+            <!--<cellValueFactory><PropertyValueFactory property="email" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="address" text="%employees.address">
+            <!--<cellValueFactory><PropertyValueFactory property="address" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="userType" text="%employees.userType">
+            <!--<cellValueFactory><PropertyValueFactory property="userType" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="delete" text="%employees.delete">
+            <!--<cellValueFactory><PropertyValueFactory property="delete" /></cellValueFactory>-->
+        </TreeTableColumn>
+    </columns>
+    <root>
+        <TreeItem>
+          <value>
+            <TreeItem value="%employees.types.superusers"></TreeItem>
+            <TreeItem value="%employees.types.managers"></TreeItem>
+            <TreeItem value="%employees.types.employees"></TreeItem>
+          </value>
+        </TreeItem>
+    </root>
+  </TreeTableView>
+  
+  <HBox spacing="100" alignment="center">
+    <Button text="%settings.apply" prefWidth="190" prefHeight="40"  />
+    <Button text="%settings.cancel" prefWidth="190" prefHeight="40"  />
+  </HBox>
+</VBox>
