@@ -147,4 +147,14 @@ public class Employee extends AbstractModel {
         
         return null;
     }
+
+    public static String getNameFromId(int id) {
+        ResultSet result = Database.executeQuery("SELECT firstname, lastname FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
+        try {
+            if (result.next()) return result.getString("firstName") + " " + result.getString("lastName");
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+        return null;
+    }
 }

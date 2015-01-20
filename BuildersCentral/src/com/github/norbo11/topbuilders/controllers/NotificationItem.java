@@ -46,7 +46,7 @@ public class NotificationItem extends TitledPane {
             case NEW_MESSAGE:
                 Message message = (Message) associatedModel;
                 setText(resources.getString("home.notifications.new_message"));
-                content.setText(resources.getString("messages.sender") + ": " + message.getSender() + "\nTitle: " + message.getTitle());
+                content.setText(resources.getString("messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
                 break;
             case NEW_QUOTE_REQUEST:
                 break;

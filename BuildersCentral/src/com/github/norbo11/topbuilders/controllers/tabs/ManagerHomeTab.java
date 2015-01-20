@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
@@ -48,6 +49,11 @@ public class ManagerHomeTab extends AbstractController {
         }
         
         //TODO For some reason this line adds a slight visual glitch around the notifcation heading edges, investigate later
-        notifications.get(notifications.size() - 1).getStyleClass().add("notification-item-last");
+        if (notifications.size() > 0)
+            notifications.get(notifications.size() - 1).getStyleClass().add("notification-item-last");
+        else {
+            Label label = new Label(resources.getString("notifications.empty"));
+            notifications.add(label);
+        }
     }
 }

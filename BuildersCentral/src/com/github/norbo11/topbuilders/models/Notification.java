@@ -8,35 +8,38 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Log;
 
 public class Notification extends AbstractModel {
     public static final String DB_TABLE_NAME = "notifications";
     
-    private ObjectProperty<Employee> employee;
+    private IntegerProperty employeeId;
     private ObjectProperty<NotificationType> type;
     private ObjectProperty<AbstractModel> associatedModel;
     private ObjectProperty<LocalDateTime> date;
     private BooleanProperty seen;
 
-    public Notification(int id, Employee employee, NotificationType type, AbstractModel associatedModel, LocalDateTime date, boolean seen) {
+    public Notification(int id, int employeeId, NotificationType type, AbstractModel associatedModel, LocalDateTime date, boolean seen) {
         super(id);
         
-        this.employee = new SimpleObjectProperty<Employee>(employee);
+        this.employeeId = new SimpleIntegerProperty(employeeId);
         this.type = new SimpleObjectProperty<NotificationType>(type);
         this.associatedModel = new SimpleObjectProperty<AbstractModel>(associatedModel);
         this.date = new SimpleObjectProperty<LocalDateTime>(date);
         this.seen = new SimpleBooleanProperty(seen);
     }
     
-    public Employee getEmployee() {
-        return employee.get();
+    public Integer getEmployee() {
+        return employeeId.get();
     }
 
     public NotificationType getType() {
@@ -73,8 +76,8 @@ public class Notification extends AbstractModel {
     public static Notification getNotificationFromResult(ResultSet result) throws SQLException {
         int id = result.getInt("id");
         int associatedId = result.getInt("associatedId");
-        Employee employee = Employee.getEmployeeFromId(result.getInt("employeeId"));
-        LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.valueOf(result.getString("timestamp"))), TimeZone.getDefault().toZoneId());
+        int employeeId = result.getInt("employeeId");
+        LocalDateTime date = DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp"));
         NotificationType type = NotificationType.getNotificationType(result.getInt("type"));
         boolean read = result.getBoolean("seen");
         
@@ -91,7 +94,7 @@ public class Notification extends AbstractModel {
                 break;
         }
         
-        return new Notification(id, employee, type, associatedModel, date, read);
+        return new Notification(id, employeeId, type, associatedModel, date, read);
     }
     
     public static void addNotification(int employeeId, int type, int associatedId, long timestamp, boolean read) {

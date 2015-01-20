@@ -23,6 +23,7 @@ public class Main extends Application {
         
         Main.app = this;
         Main.mainStage = stage;
+        stage.setOnCloseRequest(e -> Database.disconnect());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         stage.setTitle(Constants.APPLICATION_NAME);
