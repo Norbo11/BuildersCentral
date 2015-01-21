@@ -1,3 +1,5 @@
+/* Boilerplate */
+
 .root {    
     -fx-font: 1em "Verdana";
     -fx-background-color: white;
@@ -13,9 +15,13 @@
     -fx-background-color: transparent;
 }
 
-.text-field {
-    -fx-focus-color: #2D86B3; 
+/* General */
+
+.column-header-background, .titled-pane .title, .tab, .column-header {
+    -fx-background-color: #ACDAFA;
 }
+
+/* Specific */
 
 #welcomeText {
     -fx-font-size: 3em;
@@ -27,26 +33,15 @@
     -fx-border-color: black transparent transparent transparent;
 }
 
-#topPane {
-    -fx-border-width: 1px;
-    -fx-border-color: transparent transparent black transparent;
+/* Controls */
+
+.text-field {
+    -fx-focus-color: #2D86B3; 
 }
 
-.table-view, .tab-pane {
-    -fx-background-color: transparent;
-}
-
-.tab:focused {
-    -fx-effect: null;
-}
-
-.table-cell {
-    -fx-alignment: center;
-}
-
-.column-header-background, .titled-pane .title, .tab, .column-header {
-    -fx-background-color: #ACDAFA;
-}
+.titled-pane .content {
+    -fx-background-color: white;
+}   
 
 .button, .combo-box, .combo-box .list-view {
     -fx-font: normal bold 1em "Verdana";
@@ -56,10 +51,32 @@
     -fx-border-radius: 5px;
 }
 
+.button:hover, .notification-item .content:hover {
+    -fx-background-color: #BBD9ED;
+}
+
 .combo-box .list-view .list-cell {
     -fx-background-color: white;
     -fx-text-fill: black;
 }
+
+.combo-box .list-view .list-cell:selected {
+    -fx-background-color: #C7E7FC;
+}
+
+.combo-box .list-view .list-cell:hover {
+    -fx-background-color: #96D6FF;
+}
+
+/* Tables */
+
+
+
+.table-cell {
+    -fx-alignment: center;
+}
+
+/* Notifications */
 
 #notificationsPane .title {
     -fx-alignment: center;
@@ -81,25 +98,18 @@
     -fx-border-width: 0px 0px 1px 0px;
 }
 
-.button:hover, .notification-item .content:hover {
-    -fx-background-color: #BBD9ED;
-}
+/* Tabs */
 
-.combo-box .list-view .list-cell:selected {
-    -fx-background-color: #C7E7FC;
+.tab:focused {
+    -fx-effect: null;
 }
-
-.combo-box .list-view .list-cell:hover {
-    -fx-background-color: #96D6FF;
-}
-    
-
-.titled-pane .content {
-    -fx-background-color: white;
-}   
 
 .tab-header-background {
     -fx-opacity: 0;
+}
+
+.tab-header-area {
+	-fx-border-color: transparent transparent black transparent;
 }
 
 .tab-pane {

@@ -3,15 +3,22 @@ package com.github.norbo11.topbuilders.util;
 import javafx.scene.Parent;
 
 public class LoadedFXML {
-    public LoadedFXML(Parent root, Object controller) {
+    public LoadedFXML(Parent root, Object controller, String fxmlFilename) {
         this.root = root;
         this.controller = controller;
+        this.fxmlFilename = fxmlFilename;
     }
+    
     
     private Parent root;
     private Object controller;
+    private String fxmlFilename;
     
-    public Parent getRoot() {
+    public String getFxmlFilename() {
+		return fxmlFilename;
+	}
+
+	public Parent getRoot() {
         return root;
     }
     

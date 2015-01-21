@@ -10,7 +10,7 @@ public class SceneHelper {
 	
 	//Change the contents of a given window (stage) by loading the FXML file provided
 	public static AbstractScene changeScene(Stage stage, boolean fullscreen, String filename) {
-		AbstractScene scene = new AbstractScene(filename, stage);
+		AbstractScene scene = new AbstractScene(FXMLHelper.loadFxml(filename));
         stage.setScene(scene);
         stage.setFullScreen(fullscreen);
         stage.show();

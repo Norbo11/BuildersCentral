@@ -22,18 +22,8 @@ public class LoginScene extends AbstractController {
     
     @FXML
     public void initialize() {
-        /*Log.info(submitButton);
-        Log.info(submitButton.getScene());
-        Log.info(submitButton.getScene().getAccelerators());
-        Log.info(new KeyCodeCombination(KeyCode.ENTER));
-        submitButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), () -> submitButton.fire());*/
-    }
-    
-    @Override
-    public void postInitialize() {
         //TODO This is still broken
-        /*
-        Log.info(submitButton);
+        /*Log.info(submitButton);
         Log.info(submitButton.getScene());
         Log.info(submitButton.getScene().getAccelerators());
         Log.info(new KeyCodeCombination(KeyCode.ENTER));

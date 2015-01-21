@@ -10,9 +10,10 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab">
-  <padding><Insets top="25" bottom="25" right="170" left="170" /></padding>
+  <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
   
-  <TreeTableView>
+  <TreeTableView fx:id="table">
+    <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
         <TreeTableColumn fx:id="fullName" text="%employees.fullName">
             <!--<cellValueFactory><PropertyValueFactory property="fullName" /></cellValueFactory>-->
@@ -40,11 +41,11 @@
     </columns>
     <root>
         <TreeItem>
-          <value>
-            <TreeItem value="%employees.types.superusers"></TreeItem>
-            <TreeItem value="%employees.types.managers"></TreeItem>
-            <TreeItem value="%employees.types.employees"></TreeItem>
-          </value>
+          <children>
+            <TreeItem fx:id="superusers" value="%employees.types.superusers"></TreeItem>
+            <TreeItem fx:id="managers" value="%employees.types.managers"></TreeItem>
+            <TreeItem fx:id="employees" value="%employees.types.employees"></TreeItem>
+          </children>
         </TreeItem>
     </root>
   </TreeTableView>

@@ -31,7 +31,7 @@ public class NotificationItem extends TitledPane {
         this.notification = notification;
         this.associatedModel = notification.getAssociatedModel();
 
-        FXMLHelper.loadFxml("/com/github/norbo11/topbuilders/fxml/" + FXML_FILENAME, this, this);
+        FXMLHelper.loadFxml(FXML_FILENAME, this, this);
     }
 
     @FXML
@@ -52,7 +52,7 @@ public class NotificationItem extends TitledPane {
                 break;
         }
         
-        timestamp.setText(DateTimeUtil.formatDate(notification.getDate()) + "\n" + DateTimeUtil.formatTime(notification.getDate()));
+        timestamp.setText(DateTimeUtil.formatDateAndTime(notification.getDate()));
     }
     
     @FXML
@@ -71,8 +71,6 @@ public class NotificationItem extends TitledPane {
             case NEW_QUOTE_REQUEST:
                 break;
         }
-        
-        timestamp.setText(DateTimeUtil.formatDateAndTime(notification.getDate()));
     }
     
 }

@@ -12,12 +12,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 
 import com.github.norbo11.topbuilders.Constants;
+import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.controllers.scenes.MainScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.EmployeeSettings;
 import com.github.norbo11.topbuilders.util.Log;
-import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class SettingsTab extends AbstractController {
@@ -74,8 +73,7 @@ public class SettingsTab extends AbstractController {
 		
 		TabHelper.closeCurrentTab();
 		TabHelper.refreshAllTabs();
-	    SceneHelper.changeMainScene(MainScene.FXML_FILENAME, fullscreenCheckbox.isSelected());
-
+		Main.getMainStage().setFullScreen(settings.isFullscreen());
 	}
 	
 	@FXML public void cancel(ActionEvent event) {

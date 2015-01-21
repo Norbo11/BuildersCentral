@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,14 +70,6 @@ public class MessagesTab extends AbstractController {
     
 	@FXML
 	public void initialize() {				
-		//Distribute column widths
-		ReadOnlyDoubleProperty tableWidth = table.widthProperty();
-		dateCol.prefWidthProperty().bind(tableWidth.multiply(0.07));
-		timeCol.prefWidthProperty().bind(tableWidth.multiply(0.07));
-		senderCol.prefWidthProperty().bind(tableWidth.multiply(0.30));
-		titleCol.prefWidthProperty().bind(tableWidth.multiply(0.51));
-		xCol.prefWidthProperty().bind(tableWidth.multiply(0.05));
-		
 		//Set custom date/time cell display classes
 		dateCol.setCellFactory(column -> new DateCell());
 		timeCol.setCellFactory(column -> new TimeCell());

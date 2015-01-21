@@ -5,15 +5,15 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-import com.github.norbo11.topbuilders.util.FXMLHelper;
 import com.github.norbo11.topbuilders.util.LoadedFXML;
 
 public class AbstractTab extends Tab {
 
-	public AbstractTab(TabPane tabPane, String filename) {
-		fxmlFilename = filename;
-		parentTabPane = tabPane;
-		loadFromFxml();
+	public AbstractTab(TabPane parentTabPane, LoadedFXML fxml) {
+		setContent(fxml.getRoot());
+		this.controller = (AbstractController) fxml.getController();
+		this.parentTabPane = parentTabPane;
+		this.fxmlFilename = fxml.getFxmlFilename();
 	}
 	
 	private String fxmlFilename;
@@ -36,14 +36,8 @@ public class AbstractTab extends Tab {
 	public TabPane getParentTabPane() {
 		return parentTabPane;
 	}
-
+	
 	public String getFxmlFilename() {
 		return fxmlFilename;
-	}
-	
-    public void loadFromFxml() {
-	    LoadedFXML fxml = FXMLHelper.loadFxml("/com/github/norbo11/topbuilders/fxml/" + fxmlFilename);
-        controller = (AbstractController) fxml.getController();
-        setContent(fxml.getRoot());
 	}
 }

@@ -9,7 +9,8 @@ public class TabHelper {
     private static TabPane tabPane;
 
 	public static AbstractTab createAndSwitchTab(String tabName, String fxmlFilename) {
-        AbstractTab tab = new AbstractTab(tabPane, fxmlFilename);
+		//Load the tab, set its name, add it to the tab pane and switch to it
+        AbstractTab tab = loadTab(fxmlFilename);
         tab.setText(tabName);
         
         tabPane.getTabs().add(tab);
@@ -17,6 +18,10 @@ public class TabHelper {
         return tab;
     }
     
+	public static AbstractTab loadTab(String fxmlFilename) {
+		return new AbstractTab(tabPane, FXMLHelper.loadFxml(fxmlFilename));
+	}
+	
     public static void switchTab(Tab tab) {
         tabPane.getSelectionModel().select(tab);
     }
@@ -31,9 +36,10 @@ public class TabHelper {
     }
 
 	public static void refreshAllTabs() {
+		//Iterate through all tabs and update each one by loading it again
 		for (Tab tab : tabPane.getTabs()) {
-	    	AbstractTab abstractTab = (AbstractTab) tab;	    	
-	    	abstractTab.loadFromFxml();
+	    	AbstractTab abstractTab = (AbstractTab) tab;	
+	    	abstractTab = loadTab(abstractTab.getFxmlFilename());
 		}
 	}
 }
