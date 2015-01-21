@@ -35,42 +35,46 @@ public class NotificationItem extends TitledPane {
     }
 
     @FXML
-    public void initialize() {              
-        switch (notification.getType()) {
-            case ASSIGNMENT_CLOSE_TO_END:
-                break;
-            case EMPLOYEE_ASSIGNMENT_COMPLETE:
-                break;
-            case NEW_ASSIGNMENT:
-                break;
-            case NEW_MESSAGE:
-                Message message = (Message) associatedModel;
-                setText(resources.getString("home.notifications.new_message"));
-                content.setText(resources.getString("messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
-                break;
-            case NEW_QUOTE_REQUEST:
-                break;
-        }
-        
-        timestamp.setText(DateTimeUtil.formatDateAndTime(notification.getDate()));
+    public void initialize() {           
+    	if (associatedModel != null) {
+	        switch (notification.getType()) {
+	            case ASSIGNMENT_CLOSE_TO_END:
+	                break;
+	            case EMPLOYEE_ASSIGNMENT_COMPLETE:
+	                break;
+	            case NEW_ASSIGNMENT:
+	                break;
+	            case NEW_MESSAGE:
+	                Message message = (Message) associatedModel;
+	                setText(resources.getString("home.notifications.new_message"));
+	                content.setText(resources.getString("messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
+	                break;
+	            case NEW_QUOTE_REQUEST:
+	                break;
+	        }
+	        
+	        timestamp.setText(DateTimeUtil.formatDateAndTime(notification.getDate()));
+    	}
     }
     
     @FXML
     public void view(MouseEvent event) {
-        switch (notification.getType()) {
-            case ASSIGNMENT_CLOSE_TO_END:
-                break;
-            case EMPLOYEE_ASSIGNMENT_COMPLETE:
-                break;
-            case NEW_ASSIGNMENT:
-                break;
-            case NEW_MESSAGE:
-                Message message = (Message) associatedModel;
-                MessagesTab.displayMessage(message);
-                break;
-            case NEW_QUOTE_REQUEST:
-                break;
-        }
+    	if (associatedModel != null) {
+	        switch (notification.getType()) {
+	            case ASSIGNMENT_CLOSE_TO_END:
+	                break;
+	            case EMPLOYEE_ASSIGNMENT_COMPLETE:
+	                break;
+	            case NEW_ASSIGNMENT:
+	                break;
+	            case NEW_MESSAGE:
+	                Message message = (Message) associatedModel;
+	                MessagesTab.displayMessage(message);
+	                break;
+	            case NEW_QUOTE_REQUEST:
+	                break;
+	        }
+    	}
     }
     
 }

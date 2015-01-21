@@ -7,46 +7,42 @@
 <?import javafx.scene.text.*?>
 <?import javafx.collections.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab.EmployeeFullNameValueFactory?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab">
   <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
   
-  <TreeTableView fx:id="table">
+  <TreeTableView fx:id="table" showRoot="false">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
         <TreeTableColumn fx:id="fullName" text="%employees.fullName">
-            <!--<cellValueFactory><PropertyValueFactory property="fullName" /></cellValueFactory>-->
         </TreeTableColumn>
         
         <TreeTableColumn fx:id="username" text="%employees.username">
-            <!--<cellValueFactory><PropertyValueFactory property="username" /></cellValueFactory>-->
+            <cellValueFactory><TreeItemPropertyValueFactory property="username" /></cellValueFactory>
         </TreeTableColumn>
         
         <TreeTableColumn fx:id="email" text="%employees.email">
-            <!--<cellValueFactory><PropertyValueFactory property="email" /></cellValueFactory>-->
+            <cellValueFactory><TreeItemPropertyValueFactory property="email" /></cellValueFactory>
         </TreeTableColumn>
         
         <TreeTableColumn fx:id="address" text="%employees.address">
-            <!--<cellValueFactory><PropertyValueFactory property="address" /></cellValueFactory>-->
+            <cellValueFactory><TreeItemPropertyValueFactory property="address" /></cellValueFactory>
         </TreeTableColumn>
-        
-        <TreeTableColumn fx:id="userType" text="%employees.userType">
-            <!--<cellValueFactory><PropertyValueFactory property="userType" /></cellValueFactory>-->
-        </TreeTableColumn>
-        
+
         <TreeTableColumn fx:id="delete" text="%employees.delete">
-            <!--<cellValueFactory><PropertyValueFactory property="delete" /></cellValueFactory>-->
+            <cellValueFactory><TreeItemPropertyValueFactory property="delete" /></cellValueFactory>
         </TreeTableColumn>
     </columns>
     <root>
-        <TreeItem>
-          <children>
-            <TreeItem fx:id="superusers" value="%employees.types.superusers"></TreeItem>
-            <TreeItem fx:id="managers" value="%employees.types.managers"></TreeItem>
-            <TreeItem fx:id="employees" value="%employees.types.employees"></TreeItem>
-          </children>
-        </TreeItem>
+      <TreeItem value="Employees" expanded="true">
+        <children>
+          <TreeItem fx:id="superusers" value="Test" />
+          <TreeItem fx:id="managers" value="%employees.types.managers" />
+          <TreeItem fx:id="employees" value="%employees.types.employees" />
+        </children>
+      </TreeItem>
     </root>
   </TreeTableView>
   
