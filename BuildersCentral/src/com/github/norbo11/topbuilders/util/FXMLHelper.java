@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import com.github.norbo11.topbuilders.Main;
+import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 
@@ -38,6 +39,10 @@ public class FXMLHelper {
         	
         	loadedRoot = loader.load();
         	loadedController = loader.getController();
+        	if (loadedController instanceof AbstractController) {
+        	    AbstractController loadedAbstractController = (AbstractController) loadedController;
+        	    loadedAbstractController.postInitialize();
+        	}
         } catch (IOException e) {
             e.printStackTrace();
         }

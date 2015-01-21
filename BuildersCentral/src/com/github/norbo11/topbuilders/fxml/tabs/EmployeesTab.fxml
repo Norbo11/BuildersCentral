@@ -7,29 +7,50 @@
 <?import javafx.scene.text.*?>
 <?import javafx.collections.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
-<?import com.github.norbo11.topbuilders.util.StylableComboBox?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.SettingsTab">
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab">
   <padding><Insets top="25" bottom="25" right="170" left="170" /></padding>
   
-  <TitledPane text="%settings.password.heading">
-    <AnchorPane>
-      <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
-        <padding><Insets top="10" bottom="10" /></padding>
-        <Label text="%settings.password.current" GridPane.rowIndex="0" />
-        <PasswordField GridPane.rowIndex="0" GridPane.columnIndex="1" />
+  <TreeTableView>
+    <columns>
+        <TreeTableColumn fx:id="fullName" text="%employees.fullName">
+            <!--<cellValueFactory><PropertyValueFactory property="fullName" /></cellValueFactory>-->
+        </TreeTableColumn>
         
-        <Label text="%settings.password.new" GridPane.rowIndex="1" />
-        <PasswordField GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        <TreeTableColumn fx:id="username" text="%employees.username">
+            <!--<cellValueFactory><PropertyValueFactory property="username" /></cellValueFactory>-->
+        </TreeTableColumn>
         
-        <Label text="%settings.password.confirm" GridPane.rowIndex="2" />
-        <PasswordField GridPane.rowIndex="2" GridPane.columnIndex="1" />
-      </GridPane>
-      
-      <Button text="%settings.password.heading" prefWidth="150" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
-        <padding><Insets top="10" bottom="10" /></padding>
-        <maxHeight><Double fx:constant="MAX_VALUE" /></maxHeight>
-      </Button>
-    </AnchorPane>
-  </TitledPane>
+        <TreeTableColumn fx:id="email" text="%employees.email">
+            <!--<cellValueFactory><PropertyValueFactory property="email" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="address" text="%employees.address">
+            <!--<cellValueFactory><PropertyValueFactory property="address" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="userType" text="%employees.userType">
+            <!--<cellValueFactory><PropertyValueFactory property="userType" /></cellValueFactory>-->
+        </TreeTableColumn>
+        
+        <TreeTableColumn fx:id="delete" text="%employees.delete">
+            <!--<cellValueFactory><PropertyValueFactory property="delete" /></cellValueFactory>-->
+        </TreeTableColumn>
+    </columns>
+    <root>
+        <TreeItem>
+          <value>
+            <TreeItem value="%employees.types.superusers"></TreeItem>
+            <TreeItem value="%employees.types.managers"></TreeItem>
+            <TreeItem value="%employees.types.employees"></TreeItem>
+          </value>
+        </TreeItem>
+    </root>
+  </TreeTableView>
+  
+  <HBox spacing="100" alignment="center">
+    <Button text="%settings.apply" prefWidth="190" prefHeight="40"  />
+    <Button text="%settings.cancel" prefWidth="190" prefHeight="40"  />
+  </HBox>
 </VBox>

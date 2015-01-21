@@ -55,26 +55,24 @@ public class Database {
 
     public static void disconnect() {
         try {
-            if (connection != null)
+            if (connection != null) {
                 connection.close();
+                Log.info("Database close: success");
+            } else Log.error("Database close: not connected");
+            
         } catch(SQLException e)
         {
-            Log.error(e);
+            Log.error("Database close: exception", e);
         }
     }
     
     public static void connect() {
-    	//TODO Create connection with SQLite database for use during the development stage - later explain (in design document)
-    	//that in production an online-hosted MySQL database would be used
         try {
-        	//Uncomment to enable MySQL
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT 	+ "/" + DB_NAME, DB_USER, DB_PASSWORD);
-
-        	//Class.forName("org.sqlite.JDBC");
-        	//connection = DriverManager.getConnection("jdbc:sqlite:" + DB_NAME + ".db");
+            Log.info("Database connect: success");
         } catch (Exception e) {
-            Log.error(e);
+            Log.error("Database connect: exception", e);
         }
     }
     

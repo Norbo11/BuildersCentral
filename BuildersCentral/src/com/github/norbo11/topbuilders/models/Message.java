@@ -4,30 +4,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Vector;
-
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.Log;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
 
-    private ObjectProperty<Employee> sender;
-    private ObjectProperty<Employee> recipient;
+    private IntegerProperty senderId;
+    private IntegerProperty recipientId;
     private StringProperty title;
     private StringProperty content;
     private ObjectProperty<LocalDateTime> date;
     
-    public Message(int id, Employee sender, Employee recipient, String title, String content, LocalDateTime date) {
+    public Message(int id, int senderId, int recipientId, String title, String content, LocalDateTime date) {
         super(id);
         
-        this.sender = new SimpleObjectProperty<Employee>(sender);
-        this.recipient = new SimpleObjectProperty<Employee>(recipient);
+        this.senderId = new SimpleIntegerProperty(senderId);
+        this.recipientId = new SimpleIntegerProperty(recipientId);
         this.title = new SimpleStringProperty(title);
         this.content = new SimpleStringProperty(content);
         this.date = new SimpleObjectProperty<LocalDateTime>(date);
@@ -37,12 +38,12 @@ public class Message extends AbstractModel {
         return date;
     }
     
-    public Employee getSender() {
-        return sender.get();
+    public String getSenderName() {
+        return Employee.getNameFromId(senderId.get());
     }
 
-    public Employee getRecipient() {
-        return recipient.get();
+    public int getRecipient() {
+        return recipientId.get();
     }
 
     public String getTitle() {
@@ -78,13 +79,13 @@ public class Message extends AbstractModel {
 
     private static Message getMessageFromResult(ResultSet result) throws SQLException {
         int id = result.getInt("id");
-        Employee sender = Employee.getEmployeeFromId(result.getInt("senderId"));
-        Employee recipient = Employee.getEmployeeFromId(result.getInt("recipientId"));
+        int senderId = result.getInt("senderId");
+        int recipientId = result.getInt("recipientId");
         String title = result.getString("title");
         String content = result.getString("content");
         LocalDateTime timestamp = DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp"));
         
-        return new Message(id, sender, recipient, title, content, timestamp);
+        return new Message(id, senderId, recipientId, title, content, timestamp);
     }
     
     public static Message getMessageFromId(int id) {

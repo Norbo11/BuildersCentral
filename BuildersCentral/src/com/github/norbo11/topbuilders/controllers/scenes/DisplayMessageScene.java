@@ -71,7 +71,7 @@ public class DisplayMessageScene extends AbstractController {
     public void update() {
         title.setText(message.getTitle());
         date.setText(DateTimeUtil.formatDateAndTime(message.getDate()));
-        from.setText(message.getSender().toString());
+        from.setText(message.getSenderName());
         WebEngine webEngine = content.getEngine();
         webEngine.loadContent(message.getContent());
     }
