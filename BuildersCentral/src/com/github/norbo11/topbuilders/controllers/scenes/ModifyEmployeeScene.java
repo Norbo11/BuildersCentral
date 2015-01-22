@@ -34,15 +34,17 @@ public class ModifyEmployeeScene extends AbstractController {
     
     @FXML
     public void saveEmployee(ActionEvent event) {
-        
+    	employee.setUserType(userType.getSelectionModel().getSelectedItem());
+        employee.save();
     }
     
     @FXML
     public void deleteEmployee(ActionEvent event) {
-        
+        employee.delete();
     }
 
     public void bind() {
+    	//Bind every property except the user type as it uses a ComboBox which has a read-only selection property	
         username.textProperty().bindBidirectional(employee.usernameProperty());
         email.textProperty().bindBidirectional(employee.emailProperty());
         firstName.textProperty().bindBidirectional(employee.firstNameProperty());

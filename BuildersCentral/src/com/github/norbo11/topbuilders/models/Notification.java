@@ -82,7 +82,8 @@ public class Notification extends AbstractModel {
         AbstractModel associatedModel = null;
         switch (type) {
             case ASSIGNMENT_CLOSE_TO_END: case EMPLOYEE_ASSIGNMENT_COMPLETE: case NEW_ASSIGNMENT:
-                associatedModel = Assignment.getAssignmentFromId(associatedId);
+            	associatedModel = new Assignment();
+            	associatedModel.loadFromId(associatedId);
                 break;
             case NEW_MESSAGE:
                 associatedModel = Message.getMessageFromId(associatedId);

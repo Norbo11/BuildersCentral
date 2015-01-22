@@ -8,17 +8,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene;
+import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.StageHelper;
 
 public class EmployeesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/EmployeesTab.fxml";
@@ -54,7 +56,8 @@ public class EmployeesTab extends AbstractController {
             return row;
         });
         
-    	for (Employee employee : Employee.getAllEmployees()) {
+    	for (AbstractModel model : Employee.loadAll()) {
+    		Employee employee = (Employee) model;
     		TreeItem<Employee> item = new TreeItem<Employee>(employee);
     		    		
     		switch (employee.getUserType()) {
@@ -68,7 +71,7 @@ public class EmployeesTab extends AbstractController {
     
     @FXML
     public void deleteEmployee(ActionEvent event) {
-        Employee.deleteEmployee(table.getSelectionModel().getSelectedItem().getValue());
+        table.getSelectionModel().getSelectedItem().getValue().delete();
     }
     
     @FXML
@@ -82,8 +85,7 @@ public class EmployeesTab extends AbstractController {
         
         if (!employee.isDummy()) {
             //Create new window
-            Stage stage = new Stage();
-            stage.setTitle(employee.getFullName());
+            Stage stage = StageHelper.createDialogStage(employee.getFullName());
             AbstractScene scene = SceneHelper.changeScene(stage, Employee.getCurrentEmployee().getSettings().isFullscreen(), ModifyEmployeeScene.FXML_FILENAME);
             
             //Display details

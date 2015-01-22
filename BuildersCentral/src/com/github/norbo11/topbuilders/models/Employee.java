@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -84,7 +83,7 @@ public class Employee extends AbstractModel {
         return userType;
     }
     
-	/* Getters and Setters */
+	/* Getters and setters */
     
     public static void setCurrentEmployee(Employee currentEmployee) {
         Employee.currentEmployee = currentEmployee;
@@ -128,6 +127,10 @@ public class Employee extends AbstractModel {
 
     public String getPostcode() {
         return postcode.get();
+    }
+    
+    public double getDefaultWage() {
+        return defaultWage.get();
     }
     
     public UserType getUserType() {
@@ -178,11 +181,15 @@ public class Employee extends AbstractModel {
         this.userType.set(userType);
     }
 
+    public void setDefaultWage(double defaultWage) {
+        this.defaultWage.set(defaultWage);
+    }
+    
     public void setSettings(EmployeeSettings settings) {
         this.settings.set(settings);
     }
     
-    /* Methods */
+    /* Instance methods */
     
     public String getFullName() {
         return getFirstName() + " " + (getLastName() != null ? getLastName() : "");
@@ -195,14 +202,47 @@ public class Employee extends AbstractModel {
         if (!getPostcode().equals("")) address += "\n" + getPostcode();
         return address;
     }
-
+    
+	public void save() {
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?" +
+	    "secondLineAddress=?,city=?,postcode=?,defaultWage=,userType=? "
+	    + "WHERE id = ?", getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserType());
+	}
+	
+	/* Overrides */
+	
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+	
+	@Override
+	public void loadFromResult(ResultSet result) throws SQLException {	    
+	    int id = result.getInt("id");
+	    setId(id);
+        setUsername(result.getString("username"));
+        setPassword(result.getString("password"));
+        setFirstName(result.getString("firstName"));
+        setLastName(result.getString("lastName"));
+        setEmail(result.getString("email"));
+        setFirstLineAddress(result.getString("firstLineAddress"));
+        setSecondLineAddress(result.getString("secondLineAddress"));
+        setCity(result.getString("city"));
+        setPostcode(result.getString("postcode"));
+        setUserType(UserType.getUserType(result.getInt("userType")));
+        setSettings(EmployeeSettings.getSettingsFromEmployeeId(id));
+	}
+	
+	/* Static methods */
+	
     public static Employee login(String inputUser, String inputPassword) throws UsernameException, PasswordException {
         try {
             ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME  + " WHERE username = ?", inputUser);
 
             if (result.next())
             {
-                Employee employee = getEmployeeFromResult(result);
+                Employee employee = new Employee();
+                employee.loadFromResult(result);
                 
                 if (employee.getPassword().equals(inputPassword)) {
                     Employee.setCurrentEmployee(employee);
@@ -226,56 +266,7 @@ public class Employee extends AbstractModel {
 		}
 	}
 	
-	public static Vector<Employee> getAllEmployees() {
-        Vector<Employee> employees = new Vector<Employee>();
-
-        try {
-            ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
-            
-            while (result.next())
-            {
-                employees.add(getEmployeeFromResult(result));
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return employees;
-	}
-	
-	private static Employee getEmployeeFromResult(ResultSet result) throws SQLException {
-	    Employee employee = new Employee();
-	    
-	    int id = result.getInt("id");
-	    employee.setId(id);
-        employee.setUsername(result.getString("username"));
-        employee.setPassword(result.getString("password"));
-        employee.setFirstName(result.getString("firstName"));
-        employee.setLastName(result.getString("lastName"));
-        employee.setEmail(result.getString("email"));
-        employee.setFirstLineAddress(result.getString("firstLineAddress"));
-        employee.setSecondLineAddress(result.getString("secondLineAddress"));
-        employee.setCity(result.getString("city"));
-        employee.setPostcode(result.getString("postcode"));
-        employee.setUserType(UserType.getUserType(result.getInt("userType")));
-        employee.setSettings(EmployeeSettings.getSettingsFromEmployeeId(id));
-        return employee;
-	}
-
-    public static Employee getEmployeeFromId(int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
-        
-        try {
-            if (result.next()) {
-                return getEmployeeFromResult(result);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return null;
-    }
-
+	//TODO this is not ideal
     public static String getNameFromId(int id) {
         ResultSet result = Database.executeQuery("SELECT firstname, lastname FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
         try {
@@ -284,9 +275,5 @@ public class Employee extends AbstractModel {
             Log.error(e);
         }
         return null;
-    }
-
-    public static void deleteEmployee(Employee employee) {
-        Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE id = ?", employee.getId());
     }
 }
