@@ -46,10 +46,15 @@ public class AbstractModel {
     public void save() {
     	
     }
+    
     public void loadFromResult(ResultSet result) throws SQLException {
     	
     }
     
+    public String getDbTableName() {
+		return null;
+    }
+	
     /* Instance methods */
 
     public void loadFromId(int id) {
@@ -80,13 +85,11 @@ public class AbstractModel {
         return false;
     }
 	
-	/* Static methods */
-	
-    public static Vector<AbstractModel> loadAll() {
-        Vector<AbstractModel> models = new Vector<AbstractModel>();
+    public static <T extends AbstractModel> Vector<AbstractModel> loadAllModels(final String DB_TABLE_NAME) {
+        Vector<T> models = new Vector<T>();
 
         try {
-            ResultSet result = Database.executeQuery("SELECT * FROM " + getDbTableName());
+            ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
             
             while (result.next())
             {
@@ -101,8 +104,8 @@ public class AbstractModel {
         return models;
     }
     
-	public static Vector<AbstractModel> loadAllWhereId(String field, int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + getDbTableName() + " WHERE " + field + " = ?", id);
+	public static Vector<AbstractModel> loadAllModelsWhereId(final String DB_TABLE_NAME, String field, int id) {
+        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", id);
         Vector<AbstractModel> models = new Vector<AbstractModel>();
         
         try {
@@ -116,9 +119,5 @@ public class AbstractModel {
         }
         
         return models;
-    }
-	
-    public static String getDbTableName() {
-    	return "AbstractModel#getDbTableName";
     }
 }

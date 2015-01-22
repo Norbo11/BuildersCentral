@@ -2,6 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -264,6 +265,14 @@ public class Employee extends AbstractModel {
 		} catch (UsernameException | PasswordException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static Vector<Employee> loadAll() {
+		Vector<Employee> employees = new Vector<Employee>();
+		for (AbstractModel model : loadAllModels(DB_TABLE_NAME)) {
+			employees.add((Employee) model);
+		}
+		return employees;
 	}
 	
 	//TODO this is not ideal

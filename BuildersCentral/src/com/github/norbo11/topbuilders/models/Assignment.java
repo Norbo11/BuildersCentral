@@ -94,9 +94,4 @@ public class Assignment extends AbstractModel {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	@Override
-	public static String getDbTableName() {
-		return DB_TABLE_NAME;
-	}
 }

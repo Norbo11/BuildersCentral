@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
@@ -45,8 +44,8 @@ public class NewMessageScene extends AbstractController {
     
     @FXML
     public void initialize() {
-    	for (AbstractModel model : Employee.loadAll()) {
-    		toCombo.getItems().add((Employee) model);
+    	for (Employee employee : Employee.loadAll()) {
+    		toCombo.getItems().add(employee);
     	}
         
         toCombo.getSelectionModel().select(0);

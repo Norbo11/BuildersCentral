@@ -17,7 +17,6 @@ import javafx.util.Callback;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene;
-import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
@@ -56,8 +55,7 @@ public class EmployeesTab extends AbstractController {
             return row;
         });
         
-    	for (AbstractModel model : Employee.loadAll()) {
-    		Employee employee = (Employee) model;
+    	for (Employee employee : Employee.loadAll()) {
     		TreeItem<Employee> item = new TreeItem<Employee>(employee);
     		    		
     		switch (employee.getUserType()) {
