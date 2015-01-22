@@ -8,12 +8,11 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
-import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
-import com.github.norbo11.topbuilders.util.FXMLHelper;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.FXMLHelper;
 
 public class NotificationItem extends TitledPane {
     public static final String FXML_FILENAME = "NotificationItem.fxml";
@@ -69,7 +68,7 @@ public class NotificationItem extends TitledPane {
 	                break;
 	            case NEW_MESSAGE:
 	                Message message = (Message) associatedModel;
-	                MessagesTab.displayMessage(message);
+	                Message.displayMessage(message);
 	                break;
 	            case NEW_QUOTE_REQUEST:
 	                break;

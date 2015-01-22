@@ -70,9 +70,7 @@
 
 /* Tables */
 
-
-
-.table-cell {
+.table-cell, .tree-table-cell {
     -fx-alignment: center;
 }
 

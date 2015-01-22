@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<VBox spacing="20" alignment="top_left" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene">
+  <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
+    
+  <GridPane hgap="20" vgap="10" alignment="center">
+    <padding><Insets top="10" bottom="10" /></padding>
+    
+    <fx:define><Insets fx:id="rightMargin" right="150"/></fx:define>
+    
+    <Label text="%employees.username" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+    <TextField fx:id="username" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.margin="$rightMargin" />
+    
+    <Label text="%employees.email" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+    <TextField fx:id="email" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.margin="$rightMargin" />
+    
+    <Label text="%employees.firstName" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+    <TextField fx:id="firstName" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.margin="$rightMargin" />
+    
+    <Label text="%employees.lastName" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+    <TextField fx:id="lastName" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.margin="$rightMargin" />
+    
+    <Label text="%employees.defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+    <TextField fx:id="defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.margin="$rightMargin" />
+    
+    <Label text="%employees.firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+    <TextField fx:id="firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="3" />
+    
+    <Label text="%employees.secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <TextField fx:id="secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+    
+    <Label text="%employees.city" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+    <TextField fx:id="city" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+    
+    <Label text="%employees.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+    <TextField fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" />
+    
+    <Label text="%employees.userType" GridPane.rowIndex="4" GridPane.columnIndex="2" />
+    <ComboBox fx:id="userType" GridPane.rowIndex="4" GridPane.columnIndex="3" />
+  </GridPane>
+    
+  <HBox spacing="100" alignment="center">
+    <Button text="%employees.save" prefWidth="190" prefHeight="40" onAction="#saveEmployee" />
+    <Button text="%employees.delete" prefWidth="190" prefHeight="40" onAction="#deleteEmployee" />
+    <Button text="%general.discard" prefWidth="190" prefHeight="40" onAction="#close" />
+  </HBox>
+</VBox>

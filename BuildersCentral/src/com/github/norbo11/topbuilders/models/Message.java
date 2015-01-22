@@ -4,16 +4,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Vector;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.stage.Stage;
 
+import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
+import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.SceneHelper;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -111,5 +116,17 @@ public class Message extends AbstractModel {
             Log.error(e);
         }
         return 0;
+    }
+
+    public static void displayMessage(Message message) {
+        //Create new window
+        Stage stage = new Stage();
+        stage.setTitle(message.getTitle());
+        AbstractScene scene = SceneHelper.changeScene(stage, Employee.getCurrentEmployee().getSettings().isFullscreen(), DisplayMessageScene.FXML_FILENAME);
+        
+        //Display details
+        DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
+        controller.setMessage(message);
+        controller.update();
     }
 }

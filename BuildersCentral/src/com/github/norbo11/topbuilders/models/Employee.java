@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -19,37 +21,77 @@ import com.github.norbo11.topbuilders.util.SceneHelper;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
-    
     private static Employee currentEmployee;
     
-    private StringProperty username;
-    private StringProperty password;
-    private StringProperty firstName;
-    private StringProperty lastName;
-    private ObjectProperty<UserType> userType;
-    private ObjectProperty<EmployeeSettings> settings;
+    private StringProperty username = new SimpleStringProperty("");
+    private StringProperty password = new SimpleStringProperty("");
+    private StringProperty email = new SimpleStringProperty("");
+    private StringProperty firstName = new SimpleStringProperty("");
+    private StringProperty lastName = new SimpleStringProperty("");
+    
+    private StringProperty firstLineAddress = new SimpleStringProperty("");
+    private StringProperty secondLineAddress = new SimpleStringProperty("");
+    private StringProperty city = new SimpleStringProperty("");
+    private StringProperty postcode = new SimpleStringProperty("");
+
+    private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
+    private ObjectProperty<UserType> userType = new SimpleObjectProperty<UserType>();
+    private ObjectProperty<EmployeeSettings> settings = new SimpleObjectProperty<EmployeeSettings>();
 	
-	public Employee(int id, String username, String password, String firstName, String lastName, UserType userType) {
-	    super(id);
-	    
-        this.username = new SimpleStringProperty(username);
-        this.password = new SimpleStringProperty(password);
-        this.firstName = new SimpleStringProperty(firstName);
-        this.lastName = new SimpleStringProperty(lastName);
-        this.userType = new SimpleObjectProperty<UserType>(userType);
-        this.settings = new SimpleObjectProperty<EmployeeSettings>(EmployeeSettings.getSettingsFromEmployeeId(getId()));
+    /* Properties */
+    
+    public StringProperty usernameProperty() {
+        return username;
     }
-
-    public EmployeeSettings getSettings() {
-        return settings.get();
+    
+    public StringProperty passwordProperty() {
+        return password;
     }
-
-    public String getFirstName() {
-        return firstName.get();
+    
+    public StringProperty emailProperty() {
+        return email;
     }
-
-    public String getLastName() {
-        return lastName.get();
+    
+    public StringProperty firstNameProperty() {
+        return firstName;
+    }
+    
+    public StringProperty lastNameProperty() {
+        return lastName;
+    }
+    
+    public StringProperty firstLineAddressProperty() {
+        return firstLineAddress;
+    }
+    
+    public StringProperty secondLineAddressProperty() {
+        return secondLineAddress;
+    }
+    
+    public StringProperty cityProperty() {
+        return city;
+    }
+    
+    public StringProperty postcodeProperty() {
+        return postcode;
+    }
+    
+    public DoubleProperty defaultWageProperty() {
+        return defaultWage;
+    }
+    
+    public ObjectProperty<UserType> userTypeProperty() {
+        return userType;
+    }
+    
+	/* Getters and Setters */
+    
+    public static void setCurrentEmployee(Employee currentEmployee) {
+        Employee.currentEmployee = currentEmployee;
+    }
+    
+    public static Employee getCurrentEmployee() {
+        return currentEmployee;
     }
 
     public String getUsername() {
@@ -60,21 +102,98 @@ public class Employee extends AbstractModel {
         return password.get();
     }
 
+    public String getEmail() {
+        return email.get();
+    }
+    
+    public String getFirstName() {
+        return firstName.get();
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public String getFirstLineAddress() {
+        return firstLineAddress.get();
+    }
+
+    public String getSecondLineAddress() {
+        return secondLineAddress.get();
+    }
+
+    public String getCity() {
+        return city.get();
+    }
+
+    public String getPostcode() {
+        return postcode.get();
+    }
+    
     public UserType getUserType() {
         return userType.get();
     }
-    
-    public static void setCurrentEmployee(Employee user) {
-        Employee.currentEmployee = user;
+
+    public EmployeeSettings getSettings() {
+        return settings.get();
+    }
+
+    public void setFirstLineAddress(String firstLineAddress) {
+        this.firstLineAddress.set(firstLineAddress);
+    }
+
+    public void setSecondLineAddress(String secondLineAddress) {
+        this.secondLineAddress.set(secondLineAddress);
+    }
+
+    public void setCity(String city) {
+        this.city.set(city);
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode.set(postcode);
+    }
+
+    public void setUsername(String username) {
+        this.username.set(username);
+    }
+
+    public void setPassword(String password) {
+        this.password.set(password);
     }
     
-    public static Employee getCurrentEmployee() {
-        return Employee.currentEmployee;
+    public void setEmail(String email) {
+        this.email.set(email);
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType.set(userType);
+    }
+
+    public void setSettings(EmployeeSettings settings) {
+        this.settings.set(settings);
     }
     
-    @Override
-    public String toString() {
-        return getFirstName() + " " + getLastName();
+    /* Methods */
+    
+    public String getFullName() {
+        return getFirstName() + " " + (getLastName() != null ? getLastName() : "");
+    }
+    
+    public String getAddress() {
+        String address = getFirstLineAddress();
+        if (!getSecondLineAddress().equals("")) address += "\n" + getSecondLineAddress();
+        if (!getCity().equals("")) address += "\n" + getCity();
+        if (!getPostcode().equals("")) address += "\n" + getPostcode();
+        return address;
     }
 
     public static Employee login(String inputUser, String inputPassword) throws UsernameException, PasswordException {
@@ -125,13 +244,22 @@ public class Employee extends AbstractModel {
 	}
 	
 	private static Employee getEmployeeFromResult(ResultSet result) throws SQLException {
+	    Employee employee = new Employee();
+	    
 	    int id = result.getInt("id");
-        String username = result.getString("username");
-        String password = result.getString("password");
-        String firstName = result.getString("firstName");
-        String lastName = result.getString("lastName");
-        UserType userType = UserType.getUserType(result.getInt("userType"));
-        return new Employee(id, username, password, firstName, lastName, userType);
+	    employee.setId(id);
+        employee.setUsername(result.getString("username"));
+        employee.setPassword(result.getString("password"));
+        employee.setFirstName(result.getString("firstName"));
+        employee.setLastName(result.getString("lastName"));
+        employee.setEmail(result.getString("email"));
+        employee.setFirstLineAddress(result.getString("firstLineAddress"));
+        employee.setSecondLineAddress(result.getString("secondLineAddress"));
+        employee.setCity(result.getString("city"));
+        employee.setPostcode(result.getString("postcode"));
+        employee.setUserType(UserType.getUserType(result.getInt("userType")));
+        employee.setSettings(EmployeeSettings.getSettingsFromEmployeeId(id));
+        return employee;
 	}
 
     public static Employee getEmployeeFromId(int id) {
@@ -156,5 +284,9 @@ public class Employee extends AbstractModel {
             Log.error(e);
         }
         return null;
+    }
+
+    public static void deleteEmployee(Employee employee) {
+        Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE id = ?", employee.getId());
     }
 }

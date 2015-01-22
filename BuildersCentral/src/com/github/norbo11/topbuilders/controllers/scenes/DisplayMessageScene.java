@@ -28,10 +28,6 @@ public class DisplayMessageScene extends AbstractController {
         this.message = message;
     }
 
-    public static String getFxmlFilename() {
-        return FXML_FILENAME;
-    }
-
     public Text getTitle() {
         return title;
     }

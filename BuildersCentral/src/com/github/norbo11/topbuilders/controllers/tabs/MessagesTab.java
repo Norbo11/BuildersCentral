@@ -15,8 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
-import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
@@ -91,19 +89,6 @@ public class MessagesTab extends AbstractController {
 	        return row;
 	    });
 	}
-	
-	public static void displayMessage(Message message) {
-	    //Create new window
-	    Stage stage = new Stage();
-        stage.setTitle(message.getTitle());
-        AbstractScene scene = SceneHelper.changeScene(stage, Employee.getCurrentEmployee().getSettings().isFullscreen(), DisplayMessageScene.FXML_FILENAME);
-        
-        //Display details
-        DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
-        controller.setMessage(message);
-        controller.update();
-
-    }
 
     @FXML
 	public void newMessage(ActionEvent event) {
@@ -114,7 +99,8 @@ public class MessagesTab extends AbstractController {
     
     @FXML
     public void readMessage(ActionEvent event) {
-        displayMessage(table.getSelectionModel().getSelectedItem());
+        Message message = table.getSelectionModel().getSelectedItem();
+        Message.displayMessage(message);
     }
 	
 }

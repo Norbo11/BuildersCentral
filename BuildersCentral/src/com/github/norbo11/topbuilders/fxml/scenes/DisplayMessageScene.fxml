@@ -32,6 +32,6 @@
     <Button text="%messages.display.reply" prefWidth="190" prefHeight="40" onAction="#reply" />
     <Button text="%messages.display.forward" prefWidth="190" prefHeight="40" onAction="#forward" />
     <Button text="%messages.display.delete" prefWidth="190" prefHeight="40" onAction="#delete" />
-    <Button text="%messages.display.close" prefWidth="190" prefHeight="40" onAction="#close" />
+    <Button text="%general.close" prefWidth="190" prefHeight="40" onAction="#close" />
   </HBox>
 </VBox>

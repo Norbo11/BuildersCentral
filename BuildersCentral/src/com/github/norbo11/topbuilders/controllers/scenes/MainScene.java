@@ -31,7 +31,7 @@ public class MainScene extends AbstractController {
 
     @FXML
     public void initialize() {
-        welcomeText.setText(resources.getString("home.welcome") + ", " + Employee.getCurrentEmployee());
+        welcomeText.setText(resources.getString("home.welcome") + ", " + Employee.getCurrentEmployee().getFullName());
         
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d MMMM YYYY");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("kk:mm:ss");
