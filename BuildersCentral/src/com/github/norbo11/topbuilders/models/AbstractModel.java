@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -11,7 +10,7 @@ import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
 
 
-public class AbstractModel {
+public abstract class AbstractModel {
     private IntegerProperty id;
     private boolean dummy;
     
@@ -43,17 +42,11 @@ public class AbstractModel {
     
     /* Abstract methods */
     
-    public void save() {
-    	
-    }
+    public abstract void save();
     
-    public void loadFromResult(ResultSet result) throws SQLException {
-    	
-    }
+    public abstract void loadFromResult(ResultSet result) throws SQLException;
     
-    public String getDbTableName() {
-		return null;
-    }
+    public abstract String getDbTableName();
 	
     /* Instance methods */
 
@@ -85,39 +78,11 @@ public class AbstractModel {
         return false;
     }
 	
-    public static <T extends AbstractModel> Vector<AbstractModel> loadAllModels(final String DB_TABLE_NAME) {
-        Vector<T> models = new Vector<T>();
-
-        try {
-            ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
-            
-            while (result.next())
-            {
-            	AbstractModel model = new AbstractModel();
-            	model.loadFromResult(result);
-            	models.add(model);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return models;
+    public static ResultSet loadAllModels(final String DB_TABLE_NAME) {
+    	return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
     }
     
-	public static Vector<AbstractModel> loadAllModelsWhereId(final String DB_TABLE_NAME, String field, int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", id);
-        Vector<AbstractModel> models = new Vector<AbstractModel>();
-        
-        try {
-            while (result.next()) {
-            	AbstractModel model = new AbstractModel();
-            	model.loadFromResult(result);
-            	models.add(model);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return models;
+	public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T id) {
+        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", id);
     }
 }

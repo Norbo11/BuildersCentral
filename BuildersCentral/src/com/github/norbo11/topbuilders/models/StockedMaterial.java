@@ -30,7 +30,9 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 		this.quantityType = new SimpleObjectProperty<QuantityType>(quantityType);
 	}
 
-   public String getName() {
+	/* Getters and setters */
+	
+    public String getName() {
 		return name.get();
 	}
 
@@ -54,7 +56,28 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 		this.quantityType.set(startDate);
 	}
 	
+	/* Instance methods */
 
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loadFromResult(ResultSet result) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getDbTableName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/* Static methods */
+	
 	private static StockedMaterial getStockedMaterialFromResult(ResultSet result) throws SQLException {
 	    int id = result.getInt("id");
         String name = result.getString("name");

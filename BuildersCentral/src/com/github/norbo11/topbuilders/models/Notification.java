@@ -20,21 +20,13 @@ import com.github.norbo11.topbuilders.util.Log;
 public class Notification extends AbstractModel {
     public static final String DB_TABLE_NAME = "notifications";
     
-    private IntegerProperty employeeId;
-    private ObjectProperty<NotificationType> type;
-    private ObjectProperty<AbstractModel> associatedModel;
-    private ObjectProperty<LocalDateTime> date;
-    private BooleanProperty seen;
-
-    public Notification(int id, int employeeId, NotificationType type, AbstractModel associatedModel, LocalDateTime date, boolean seen) {
-        super(id);
-        
-        this.employeeId = new SimpleIntegerProperty(employeeId);
-        this.type = new SimpleObjectProperty<NotificationType>(type);
-        this.associatedModel = new SimpleObjectProperty<AbstractModel>(associatedModel);
-        this.date = new SimpleObjectProperty<LocalDateTime>(date);
-        this.seen = new SimpleBooleanProperty(seen);
-    }
+    private IntegerProperty employeeId = new SimpleIntegerProperty(0);
+    private IntegerProperty associatedModelId = new SimpleIntegerProperty();
+    private ObjectProperty<NotificationType> type = new SimpleObjectProperty<NotificationType>();
+    private ObjectProperty<LocalDateTime> date = new SimpleObjectProperty<LocalDateTime>();
+    private BooleanProperty seen = new SimpleBooleanProperty(false);
+    
+    /* Getters and setters */
     
     public Integer getEmployee() {
         return employeeId.get();
@@ -44,8 +36,8 @@ public class Notification extends AbstractModel {
         return type.get();
     }
 
-    public AbstractModel getAssociatedModel() {
-        return associatedModel.get();
+    public int getAssociatedModelId() {
+        return associatedModelId.get();
     }
 
     public LocalDateTime getDate() {
@@ -55,49 +47,99 @@ public class Notification extends AbstractModel {
     public boolean isSeen() {
         return seen.get();
     }
-    
-    public static Vector<Notification> getNotificationsFromEmployee(Employee employee) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE employeeId = ?", employee.getId());
-        Vector<Notification> notifications = new Vector<Notification>();
-        
+
+	public IntegerProperty getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(int employeeId) {
+		this.employeeId.set(employeeId);
+	}
+
+	public BooleanProperty getSeen() {
+		return seen;
+	}
+
+	public void setSeen(boolean seen) {
+		this.seen.set(seen);
+	}
+
+	public void setType(NotificationType type) {
+		this.type.set(type);
+	}
+
+	public void setAssociatedModelId(int associatedModelId) {
+		this.associatedModelId.set(associatedModelId);
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date.set(date);
+	}
+	
+    /* Instance methods */
+
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loadFromResult(ResultSet result) throws SQLException {
+        setId(result.getInt("id"));
+        setAssociatedModelId(result.getInt("associatedId"));
+        setEmployeeId(result.getInt("employeeId"));
+        setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
+        setType(NotificationType.getNotificationType(result.getInt("type")));
+        setSeen(result.getBoolean("seen"));
+	}
+
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+	
+	public AbstractModel getAssociatedModel() {
+		AbstractModel associatedModel = null;
+		switch (getType()) {
+        case ASSIGNMENT_CLOSE_TO_END: case EMPLOYEE_ASSIGNMENT_COMPLETE: case NEW_ASSIGNMENT:
+        	associatedModel = new Assignment();
+            break;
+        case NEW_MESSAGE:
+        	associatedModel = new Message();
+            break;
+        case NEW_QUOTE_REQUEST:
+        	associatedModel = new QuoteRequest();
+            break;
+		}
+        if (associatedModel != null) associatedModel.loadFromId(getAssociatedModelId());
+        else Log.error("Detected invalid notification type for notification #" + getId());
+        return associatedModel;
+	}
+	
+	/* Static methods */
+	
+	public static Vector<Notification> loadList(ResultSet result) {
+		Vector<Notification> notifications = new Vector<Notification>();
+        Log.info(result);
         try {
-            while (result.next()) {
-                notifications.add(getNotificationFromResult(result));
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
+			while (result.next()) {
+				Notification notification = new Notification();
+				notification.loadFromResult(result);
+				notifications.add(notification);
+			}
+		} catch (SQLException e) {
+			Log.error(e);
+		}
         return notifications;
-    }
-    
-    public static Notification getNotificationFromResult(ResultSet result) throws SQLException {
-        int id = result.getInt("id");
-        int associatedId = result.getInt("associatedId");
-        int employeeId = result.getInt("employeeId");
-        LocalDateTime date = DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp"));
-        NotificationType type = NotificationType.getNotificationType(result.getInt("type"));
-        boolean read = result.getBoolean("seen");
-        
-        AbstractModel associatedModel = null;
-        switch (type) {
-            case ASSIGNMENT_CLOSE_TO_END: case EMPLOYEE_ASSIGNMENT_COMPLETE: case NEW_ASSIGNMENT:
-            	associatedModel = new Assignment();
-            	associatedModel.loadFromId(associatedId);
-                break;
-            case NEW_MESSAGE:
-                associatedModel = Message.getMessageFromId(associatedId);
-                break;
-            case NEW_QUOTE_REQUEST:
-                associatedModel = QuoteRequest.getQuoteRequestFromId(associatedId);
-                break;
-        }
-        
-        return new Notification(id, employeeId, type, associatedModel, date, read);
-    }
+	}
     
     public static void addNotification(int employeeId, int type, int associatedId, long timestamp, boolean read) {
         Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME + " (employeeId, type, associatedId, timestamp, seen) VALUES (?,?,?,?,?)", 
         employeeId, type, associatedId, timestamp, read);
     }
+
+	public static Vector<Notification> loadNotificationsForEmployee(Employee employee) {
+        return loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()));
+	}
 }

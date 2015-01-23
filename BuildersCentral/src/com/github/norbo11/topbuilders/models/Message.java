@@ -23,21 +23,13 @@ import com.github.norbo11.topbuilders.util.SceneHelper;
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
 
-    private IntegerProperty senderId;
-    private IntegerProperty recipientId;
-    private StringProperty title;
-    private StringProperty content;
-    private ObjectProperty<LocalDateTime> date;
-    
-    public Message(int id, int senderId, int recipientId, String title, String content, LocalDateTime date) {
-        super(id);
-        
-        this.senderId = new SimpleIntegerProperty(senderId);
-        this.recipientId = new SimpleIntegerProperty(recipientId);
-        this.title = new SimpleStringProperty(title);
-        this.content = new SimpleStringProperty(content);
-        this.date = new SimpleObjectProperty<LocalDateTime>(date);
-    }
+    private IntegerProperty senderId = new SimpleIntegerProperty(0);
+    private IntegerProperty recipientId = new SimpleIntegerProperty(0);
+    private StringProperty title = new SimpleStringProperty("");
+    private StringProperty content = new SimpleStringProperty("");
+    private ObjectProperty<LocalDateTime> date = new SimpleObjectProperty<LocalDateTime>();
+  
+    /* Getters and setters */
     
     public ObjectProperty<LocalDateTime> dateProperty() {
         return date;
@@ -62,14 +54,68 @@ public class Message extends AbstractModel {
     public LocalDateTime getDate() {
         return date.get();
     }
+    
+    public int getSenderId() {
+		return senderId.get();
+	}
 
+	public void setSenderId(int senderId) {
+		this.senderId.set(senderId);
+	}
+
+	public int getRecipientId() {
+		return recipientId.get();
+	}
+
+	public void setRecipientId(int recipientId) {
+		this.recipientId.set(recipientId);
+	}
+
+	public void setTitle(String title) {
+		this.title.set(title);
+	}
+
+	public void setContent(String content) {
+		this.content.set(content);
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date.set(date);
+	}
+
+	/* Instance methods */
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void loadFromResult(ResultSet result) throws SQLException {
+        setId(result.getInt("id"));
+        setSenderId(result.getInt("senderId"));
+        setRecipientId(result.getInt("recipientId"));
+        setTitle(result.getString("title"));
+        setContent(result.getString("content"));
+        setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
+	}
+
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+	
+	/* Static methods */
+	
     public static Vector<Message> getMessagesByRecipient(Employee recipient) {
         ResultSet result = Database.executeQuery("SELECT * FROM " + Message.DB_TABLE_NAME + " WHERE recipientId = ? ORDER BY timestamp DESC", recipient.getId());
         Vector<Message> messages = new Vector<Message>();
         
         try {
             while (result.next()) {
-                messages.add(getMessageFromResult(result));
+            	Message message = new Message();
+            	message.loadFromResult(result);
+                messages.add(message);
             }
         } catch (SQLException e) {
             Log.error(e);
@@ -80,31 +126,6 @@ public class Message extends AbstractModel {
 
     public static void deleteMessage(Message item) {
         Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE id = ?", item.getId());
-    }
-
-    private static Message getMessageFromResult(ResultSet result) throws SQLException {
-        int id = result.getInt("id");
-        int senderId = result.getInt("senderId");
-        int recipientId = result.getInt("recipientId");
-        String title = result.getString("title");
-        String content = result.getString("content");
-        LocalDateTime timestamp = DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp"));
-        
-        return new Message(id, senderId, recipientId, title, content, timestamp);
-    }
-    
-    public static Message getMessageFromId(int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
-        
-        try {
-            if (result.next()) {
-                return getMessageFromResult(result);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return null;
     }
 
     public static int addMessage(int fromId, int toId, String title, String content, long timestamp) {

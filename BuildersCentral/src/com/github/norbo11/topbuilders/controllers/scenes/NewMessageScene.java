@@ -44,7 +44,7 @@ public class NewMessageScene extends AbstractController {
     
     @FXML
     public void initialize() {
-    	for (Employee employee : Employee.loadAll()) {
+    	for (Employee employee : Employee.getAllEmployees()) {
     		toCombo.getItems().add(employee);
     	}
         

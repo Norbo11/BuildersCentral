@@ -55,7 +55,7 @@ public class EmployeesTab extends AbstractController {
             return row;
         });
         
-    	for (Employee employee : Employee.loadAll()) {
+    	for (Employee employee : Employee.getAllEmployees()) {
     		TreeItem<Employee> item = new TreeItem<Employee>(employee);
     		    		
     		switch (employee.getUserType()) {

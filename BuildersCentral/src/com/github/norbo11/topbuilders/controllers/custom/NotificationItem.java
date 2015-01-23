@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.controllers;
+package com.github.norbo11.topbuilders.controllers.custom;
 
 import java.util.ResourceBundle;
 
@@ -45,7 +45,7 @@ public class NotificationItem extends TitledPane {
 	                break;
 	            case NEW_MESSAGE:
 	                Message message = (Message) associatedModel;
-	                setText(resources.getString("home.notifications.new_message"));
+	                setText(resources.getString("notifications.new_message"));
 	                content.setText(resources.getString("messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
 	                break;
 	            case NEW_QUOTE_REQUEST:

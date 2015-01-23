@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.controllers.NotificationItem;
+import com.github.norbo11.topbuilders.controllers.custom.NotificationItem;
 import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Notification;
@@ -38,7 +38,7 @@ public class EmployeeHomeTab extends AbstractController {
    public void initialize() {    
         ObservableList<Node> notifications = notificationsList.getChildren();
        
-        for (Notification notification : Notification.getNotificationsFromEmployee(Employee.getCurrentEmployee())) {
+        for (Notification notification : Employee.getCurrentEmployee().getNotifications()) {
             notifications.add(new NotificationItem(notification));
         }
         

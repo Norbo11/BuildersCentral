@@ -3,6 +3,7 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Vector;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -14,6 +15,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.Log;
 
 public class Assignment extends AbstractModel {
     public static final String DB_TABLE_NAME = "assignments";
@@ -94,4 +96,35 @@ public class Assignment extends AbstractModel {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+	
+	/* Static methods */
+	
+	public static Vector<Assignment> loadAll() {
+		return loadList(loadAllModels(DB_TABLE_NAME));
+	}
+	
+	public static <T> Vector<Assignment> loadAllWhere(String field, T id) {
+        return loadList(loadAllModelsWhere(DB_TABLE_NAME, field, id));
+    }
+	
+	public static Vector<Assignment> loadList(ResultSet result) {
+		Vector<Assignment> assignments = new Vector<Assignment>();
+        
+        try {
+			while (result.next()) {
+				Assignment assignment = new Assignment();
+				assignment.loadFromResult(result);
+				assignments.add(assignment);
+			}
+		} catch (SQLException e) {
+			Log.error(e);
+		}
+        return assignments;
+	}
+	
 }

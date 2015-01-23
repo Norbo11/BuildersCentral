@@ -234,6 +234,10 @@ public class Employee extends AbstractModel {
         setSettings(EmployeeSettings.getSettingsFromEmployeeId(id));
 	}
 	
+	public  Vector<Notification> getNotifications() {
+		return Notification.loadNotificationsForEmployee(this);
+    }
+	
 	/* Static methods */
 	
     public static Employee login(String inputUser, String inputPassword) throws UsernameException, PasswordException {
@@ -267,12 +271,23 @@ public class Employee extends AbstractModel {
 		}
 	}
 	
-	public static Vector<Employee> loadAll() {
+	public static Vector<Employee> getAllEmployees() {
+		return loadList(loadAllModels(DB_TABLE_NAME));
+	}
+
+	public static Vector<Employee> loadList(ResultSet result) {
 		Vector<Employee> employees = new Vector<Employee>();
-		for (AbstractModel model : loadAllModels(DB_TABLE_NAME)) {
-			employees.add((Employee) model);
+        
+        try {
+			while (result.next()) {
+				Employee employee = new Employee();
+				employee.loadFromResult(result);
+				employees.add(employee);
+			}
+		} catch (SQLException e) {
+			Log.error(e);
 		}
-		return employees;
+        return employees;
 	}
 	
 	//TODO this is not ideal
