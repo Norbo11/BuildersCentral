@@ -42,6 +42,8 @@ public abstract class AbstractModel {
     
     /* Abstract methods */
     
+    public abstract void add();
+    
     public abstract void save();
     
     public abstract void loadFromResult(ResultSet result) throws SQLException;
@@ -80,6 +82,10 @@ public abstract class AbstractModel {
 	
     public static ResultSet loadAllModels(final String DB_TABLE_NAME) {
     	return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
+    }
+    
+    public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T id, String sortField, boolean desc) {
+        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ? ORDER BY " + sortField + " " + (desc ? "DESC" : "ASC"), id);
     }
     
 	public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T id) {

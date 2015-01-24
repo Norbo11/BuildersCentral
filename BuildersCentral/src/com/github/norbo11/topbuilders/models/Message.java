@@ -15,10 +15,12 @@ import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
+import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.StageHelper;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -84,6 +86,19 @@ public class Message extends AbstractModel {
 	}
 
 	/* Instance methods */
+	
+    @Override
+    public void delete() {
+        super.delete();
+        MessagesTab.updateAllTabs();
+    }
+	
+    @Override
+    public void add() {
+        // TODO Auto-generated method stub
+        
+    }
+	
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
@@ -106,27 +121,6 @@ public class Message extends AbstractModel {
 	}
 	
 	/* Static methods */
-	
-    public static Vector<Message> getMessagesByRecipient(Employee recipient) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + Message.DB_TABLE_NAME + " WHERE recipientId = ? ORDER BY timestamp DESC", recipient.getId());
-        Vector<Message> messages = new Vector<Message>();
-        
-        try {
-            while (result.next()) {
-            	Message message = new Message();
-            	message.loadFromResult(result);
-                messages.add(message);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return messages;
-    }
-
-    public static void deleteMessage(Message item) {
-        Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE id = ?", item.getId());
-    }
 
     public static int addMessage(int fromId, int toId, String title, String content, long timestamp) {
         try {
@@ -141,13 +135,30 @@ public class Message extends AbstractModel {
 
     public static void displayMessage(Message message) {
         //Create new window
-        Stage stage = new Stage();
-        stage.setTitle(message.getTitle());
-        AbstractScene scene = SceneHelper.changeScene(stage, Employee.getCurrentEmployee().getSettings().isFullscreen(), DisplayMessageScene.FXML_FILENAME);
+        Stage stage = StageHelper.createDialogStage(message.getTitle());
+        AbstractScene scene = SceneHelper.changeScene(stage, DisplayMessageScene.FXML_FILENAME);
         
         //Display details
         DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
         controller.setMessage(message);
         controller.update();
+    }
+    
+    public static Vector<Message> loadList(ResultSet result) {
+        Vector<Message> messages = new Vector<Message>();
+        try {
+            while (result.next()) {
+                Message message = new Message();
+                message.loadFromResult(result);
+                messages.add(message);
+            }
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+        return messages;
+    }
+
+    public static Vector<Message> loadMessagesForEmployee(Employee employee) {
+        return loadList(loadAllModelsWhere(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
     }
 }

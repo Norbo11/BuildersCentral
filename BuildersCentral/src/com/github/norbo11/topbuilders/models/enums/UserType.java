@@ -2,6 +2,10 @@ package com.github.norbo11.topbuilders.models.enums;
 
 import java.lang.Comparable;
 
+import com.github.norbo11.topbuilders.models.Employee;
+
+import javafx.scene.control.ComboBox;
+
 public enum UserType implements Comparable<UserType> {
     SUPERUSER(0), MANAGER(1), EMPLOYEE(2);
     
@@ -21,5 +25,14 @@ public enum UserType implements Comparable<UserType> {
 
     public boolean isAtLeast(UserType type) {
         return rank <= type.getRank();
+    }
+
+    //Adds valid UserType choices to the ComboBox in the arugment, ensuring that only superusers can add managers. Nobody can add superusers (except directly through DB)
+    public static void populateCombo(ComboBox<UserType> combo) {
+        UserType loggedInUserType = Employee.getCurrentEmployee().getUserType();
+        
+        if (loggedInUserType.isAtLeast(UserType.SUPERUSER)) combo.getItems().add(UserType.MANAGER);
+        combo.getItems().add(UserType.EMPLOYEE);
+        combo.getSelectionModel().select(0);
     }
 }

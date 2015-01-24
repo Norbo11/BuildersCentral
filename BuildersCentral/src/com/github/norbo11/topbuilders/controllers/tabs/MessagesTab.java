@@ -3,6 +3,7 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
@@ -20,10 +21,10 @@ import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class MessagesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";
+    public static Vector<MessagesTab> tabs = new Vector<MessagesTab>();
     
     @FXML private ResourceBundle resources;
     @FXML public TableView<Message> table;
@@ -56,18 +57,15 @@ public class MessagesTab extends AbstractController {
             if (empty) setText("");
             else {
                 Button button = new Button("X");
-                button.setOnAction(e -> deleteMessage(item));
+                button.setOnAction(e -> item.delete());
                 setGraphic(button); //setGraphic allows me to set an actual node instead of text for these cell contents
             }
         }
     }
     
-    private void deleteMessage(Message item) {
-        Message.deleteMessage(item);
-        TabHelper.refreshAllTabs();
-    }
-    
-	@FXML
+    /* FXML methods */
+
+    @FXML
 	public void initialize() {				
 		//Set custom date/time cell display classes
 		dateCol.setCellFactory(column -> new DateCell());
@@ -79,7 +77,6 @@ public class MessagesTab extends AbstractController {
 		//Set the custom display class for X button cells
 		xCol.setCellFactory(column -> new ButtonCell());
 		
-	    table.getItems().addAll(Message.getMessagesByRecipient(Employee.getCurrentEmployee()));
 	    table.setRowFactory(value -> {
 	        TableRow<Message> row = new TableRow<Message>();
 	        row.setOnMouseClicked(e -> {
@@ -89,18 +86,39 @@ public class MessagesTab extends AbstractController {
 	        });
 	        return row;
 	    });
+	    
+	    update();
 	}
 
     @FXML
 	public void newMessage(ActionEvent event) {
 	    Stage stage = StageHelper.createDialogStage(resources.getString("messages.new"));
-	    SceneHelper.changeScene(stage, Employee.getCurrentEmployee().getSettings().isFullscreen(), NewMessageScene.FXML_FILENAME);
+	    SceneHelper.changeScene(stage, NewMessageScene.FXML_FILENAME);
 	}
     
     @FXML
     public void readMessage(ActionEvent event) {
-        Message message = table.getSelectionModel().getSelectedItem();
-        Message.displayMessage(message);
+        Message.displayMessage(table.getSelectionModel().getSelectedItem());
+    }
+    
+    
+    /* Instance methods */
+    
+    private void update() {
+        table.getItems().clear();
+        table.getItems().addAll(Employee.getCurrentEmployee().getMessages());
+    }
+    
+    /* Static methods */
+    
+    public static void updateAllTabs() {
+        for (MessagesTab tab : tabs) {
+            tab.update();
+        }
+    }
+
+    public static Vector<MessagesTab> getTabs() {
+        return tabs;
     }
 	
 }

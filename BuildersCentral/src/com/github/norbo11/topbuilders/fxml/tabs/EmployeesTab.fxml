@@ -16,12 +16,12 @@
   <TreeTableView fx:id="table" showRoot="false">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
-        <TreeTableColumn fx:id="fullName" text="%employees.fullName">
-            <cellValueFactory><TreeItemPropertyValueFactory property="fullName" /></cellValueFactory>
-        </TreeTableColumn>
-        
         <TreeTableColumn fx:id="username" text="%employees.username">
             <cellValueFactory><TreeItemPropertyValueFactory property="username" /></cellValueFactory>
+        </TreeTableColumn>
+    
+        <TreeTableColumn fx:id="fullName" text="%employees.fullName">
+            <cellValueFactory><TreeItemPropertyValueFactory property="fullName" /></cellValueFactory>
         </TreeTableColumn>
         
         <TreeTableColumn fx:id="email" text="%employees.email">
@@ -37,9 +37,9 @@
     <root>
       <TreeItem value="Employees" expanded="true">
         <children>
-          <TreeItem expanded="true" fx:id="superusers"><value><Employee firstName="%employees.types.superusers" dummy="true" /></value></TreeItem>
-          <TreeItem expanded="true" fx:id="managers"><value><Employee firstName="%employees.types.managers" dummy="true" /></value></TreeItem>
-          <TreeItem expanded="true" fx:id="employees"><value><Employee firstName="%employees.types.employees" dummy="true" /></value></TreeItem>
+          <TreeItem expanded="true" fx:id="superusers"><value><Employee username="%employees.types.superusers" dummy="true" /></value></TreeItem>
+          <TreeItem expanded="true" fx:id="managers"><value><Employee username="%employees.types.managers" dummy="true" /></value></TreeItem>
+          <TreeItem expanded="true" fx:id="employees"><value><Employee username="%employees.types.employees" dummy="true" /></value></TreeItem>
         </children>
       </TreeItem>
     </root>

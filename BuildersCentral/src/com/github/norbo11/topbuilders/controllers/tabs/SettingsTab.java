@@ -68,11 +68,10 @@ public class SettingsTab extends AbstractController {
 	
 	@FXML public void saveSettings(ActionEvent event) {
 	    EmployeeSettings settings = Employee.getCurrentEmployee().getSettings();
-		settings.setLocale(languagesCombo.getSelectionModel().getSelectedItem());
+		settings.setLocaleId(languagesCombo.getSelectionModel().getSelectedItem().getLanguage());
 		settings.setFullscreen(fullscreenCheckbox.isSelected());
 		
 		TabHelper.closeCurrentTab();
-		TabHelper.refreshAllTabs();
 		Main.getMainStage().setFullScreen(settings.isFullscreen());
 	}
 	

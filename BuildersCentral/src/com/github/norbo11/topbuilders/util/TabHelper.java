@@ -3,7 +3,10 @@ package com.github.norbo11.topbuilders.util;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
+import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.AbstractTab;
+import com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab;
+import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 
 public class TabHelper {
     private static TabPane tabPane;
@@ -11,9 +14,15 @@ public class TabHelper {
 	public static AbstractTab createAndSwitchTab(String tabName, String fxmlFilename) {
 		//Load the tab, set its name, add it to the tab pane and switch to it
         AbstractTab tab = loadTab(fxmlFilename);
-        tab.setText(tabName);
+        AbstractController controller = tab.getController();
         
+        tab.setText(tabName);
         tabPane.getTabs().add(tab);
+        
+        //TODO Add all controllers here so that they may refresh correctly
+        if (controller instanceof EmployeesTab) EmployeesTab.getTabs().add((EmployeesTab) controller);
+        if (controller instanceof MessagesTab) MessagesTab.getTabs().add((MessagesTab) controller);
+        
         switchTab(tab);
         return tab;
     }
@@ -34,12 +43,4 @@ public class TabHelper {
     	AbstractTab tab = (AbstractTab) tabPane.getSelectionModel().getSelectedItem();
     	tab.close();
     }
-
-	public static void refreshAllTabs() {
-		//Iterate through all tabs and update each one by loading it again
-		for (Tab tab : tabPane.getTabs()) {
-	    	AbstractTab abstractTab = (AbstractTab) tab;	
-	    	abstractTab = loadTab(abstractTab.getFxmlFilename());
-		}
-	}
 }

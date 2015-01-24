@@ -24,7 +24,7 @@ public class RegisterScene extends AbstractController {
     
     @FXML
     public void back(ActionEvent event) {
-        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME, false);
+        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
     }
 
     public static String getAbsoluteFxmlFilename() {

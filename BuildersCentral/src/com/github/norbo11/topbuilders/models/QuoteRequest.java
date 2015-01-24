@@ -7,6 +7,12 @@ public class QuoteRequest extends AbstractModel {
 	
 	public static final String DB_TABLE_NAME = "quoteRequests";
 
+    @Override
+    public void add() {
+        // TODO Auto-generated method stub
+        
+    }
+	
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub

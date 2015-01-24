@@ -30,7 +30,7 @@ public class EmployeeHomeTab extends AbstractController {
 		case "myAssignments": break;
 		case "messages": TabHelper.createAndSwitchTab(resources.getString("home.messages"), MessagesTab.FXML_FILENAME); break;
 		case "settings": TabHelper.createAndSwitchTab(resources.getString("home.settings"), SettingsTab.FXML_FILENAME); break;
-		case "logout": SceneHelper.changeMainScene(LoginScene.FXML_FILENAME, false);
+		case "logout": SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
 		}
 	}
 	

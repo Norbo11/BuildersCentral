@@ -18,7 +18,7 @@
     
     <fx:define>
       <Insets fx:id="rightMargin" right="150" />
-      <Double fx:id="prefWidth" fx:value="230" />
+      <Double fx:id="prefWidth" fx:value="240" />
     </fx:define>
     
     <Label text="%employees.username" GridPane.rowIndex="0" GridPane.columnIndex="0" />
@@ -50,6 +50,9 @@
     
     <Label text="%employees.userType" GridPane.rowIndex="4" GridPane.columnIndex="2" />
     <ComboBox fx:id="userType" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
+    
+    <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+    <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/>    
   </GridPane>
     
   <HBox spacing="100" alignment="center">

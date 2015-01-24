@@ -78,6 +78,12 @@ public class Notification extends AbstractModel {
 	
     /* Instance methods */
 
+    @Override
+    public void add() {
+        // TODO Auto-generated method stub
+        
+    }
+	
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
@@ -121,8 +127,8 @@ public class Notification extends AbstractModel {
 	
 	public static Vector<Notification> loadList(ResultSet result) {
 		Vector<Notification> notifications = new Vector<Notification>();
-        Log.info(result);
-        try {
+
+		try {
 			while (result.next()) {
 				Notification notification = new Notification();
 				notification.loadFromResult(result);

@@ -91,6 +91,12 @@ public class Assignment extends AbstractModel {
         setIsCompleted(result.getBoolean("isCompleted"));
 	}
 	
+    @Override
+    public void add() {
+        // TODO Auto-generated method stub
+        
+    }
+	
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
@@ -126,5 +132,5 @@ public class Assignment extends AbstractModel {
 		}
         return assignments;
 	}
-	
+
 }

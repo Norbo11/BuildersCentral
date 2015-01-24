@@ -5,13 +5,14 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.controllers.scenes.MainScene;
+import com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
@@ -34,9 +35,9 @@ public class Employee extends AbstractModel {
     private StringProperty city = new SimpleStringProperty("");
     private StringProperty postcode = new SimpleStringProperty("");
 
+    private StringProperty activationCode = new SimpleStringProperty("");
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
-    private ObjectProperty<UserType> userType = new SimpleObjectProperty<UserType>();
-    private ObjectProperty<EmployeeSettings> settings = new SimpleObjectProperty<EmployeeSettings>();
+    private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
 	
     /* Properties */
     
@@ -80,8 +81,12 @@ public class Employee extends AbstractModel {
         return defaultWage;
     }
     
-    public ObjectProperty<UserType> userTypeProperty() {
-        return userType;
+    public StringProperty activationCodeProperty() {
+        return activationCode;
+    }
+    
+    public IntegerProperty userTypeIdProperty() {
+        return userTypeId;
     }
     
 	/* Getters and setters */
@@ -130,16 +135,16 @@ public class Employee extends AbstractModel {
         return postcode.get();
     }
     
-    public double getDefaultWage() {
-        return defaultWage.get();
+    public int getUserTypeId() {
+        return userTypeId.get();
     }
     
-    public UserType getUserType() {
-        return userType.get();
+    public String getActivationCode() {
+        return activationCode.get();
     }
-
-    public EmployeeSettings getSettings() {
-        return settings.get();
+    
+    public double getDefaultWage() {
+        return defaultWage.get();
     }
 
     public void setFirstLineAddress(String firstLineAddress) {
@@ -178,19 +183,35 @@ public class Employee extends AbstractModel {
         this.lastName.set(lastName);
     }
 
-    public void setUserType(UserType userType) {
-        this.userType.set(userType);
+    public void setUserTypeId(int userType) {
+        this.userTypeId.set(userType);
+    }
+    
+    public void setActivationCode(String activationCode) {
+        this.activationCode.set(activationCode);
     }
 
     public void setDefaultWage(double defaultWage) {
         this.defaultWage.set(defaultWage);
     }
     
-    public void setSettings(EmployeeSettings settings) {
-        this.settings.set(settings);
+    /* Instance methods */
+    
+    public  Vector<Notification> getNotifications() {
+        return Notification.loadNotificationsForEmployee(this);
     }
     
-    /* Instance methods */
+    public  Vector<Message> getMessages() {
+        return Message.loadMessagesForEmployee(this);
+    }
+    
+    public EmployeeSettings getSettings() {
+        return EmployeeSettings.loadSettingsForEmployee(this);
+    }
+    
+    public UserType getUserType() {
+        return UserType.getUserType(getUserTypeId());
+    }
     
     public String getFullName() {
         return getFirstName() + " " + (getLastName() != null ? getLastName() : "");
@@ -203,24 +224,33 @@ public class Employee extends AbstractModel {
         if (!getPostcode().equals("")) address += "\n" + getPostcode();
         return address;
     }
-    
-	public void save() {
-        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?" +
-	    "secondLineAddress=?,city=?,postcode=?,defaultWage=,userType=? "
-	    + "WHERE id = ?", getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserType());
-	}
 	
 	/* Overrides */
 	
-	@Override
-	public String getDbTableName() {
-		return DB_TABLE_NAME;
-	}
-	
-	@Override
-	public void loadFromResult(ResultSet result) throws SQLException {	    
-	    int id = result.getInt("id");
-	    setId(id);
+    @Override
+    public void delete() {
+        super.delete();
+        EmployeesTab.updateAllTabs();
+    }
+    
+    @Override
+    public void add() {
+        Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+        + " (username,password,email,firstName,lastName,firstLineAddress,secondLineAddress,city,postcode,defaultWage,userType,activationCode) "
+        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+        , getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode());
+    }
+    
+    @Override
+    public void save() {                
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
+        + "username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,defaultWage=?,userType=?,activationCode=? "
+        + "WHERE id = ?", getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode(), getId());
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result) throws SQLException {      
+        setId(result.getInt("id"));
         setUsername(result.getString("username"));
         setPassword(result.getString("password"));
         setFirstName(result.getString("firstName"));
@@ -230,13 +260,15 @@ public class Employee extends AbstractModel {
         setSecondLineAddress(result.getString("secondLineAddress"));
         setCity(result.getString("city"));
         setPostcode(result.getString("postcode"));
-        setUserType(UserType.getUserType(result.getInt("userType")));
-        setSettings(EmployeeSettings.getSettingsFromEmployeeId(id));
-	}
-	
-	public  Vector<Notification> getNotifications() {
-		return Notification.loadNotificationsForEmployee(this);
+        setDefaultWage(result.getDouble("defaultWage"));
+        setActivationCode(result.getString("activationCode"));
+        setUserTypeId(result.getInt("userType"));
     }
+    
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
 	
 	/* Static methods */
 	
@@ -251,6 +283,7 @@ public class Employee extends AbstractModel {
                 
                 if (employee.getPassword().equals(inputPassword)) {
                     Employee.setCurrentEmployee(employee);
+                    SceneHelper.setFullscreen(employee.getSettings().isFullscreen());
                     return employee; 
                 } else throw new PasswordException();
             } else throw new UsernameException();
@@ -262,10 +295,9 @@ public class Employee extends AbstractModel {
     }
 
 	public static void loginTestAccount() {
-	    Employee user = null;
 		try {
-		    user = login("test", "abc123");
-	        SceneHelper.changeMainScene(MainScene.FXML_FILENAME, user.getSettings().isFullscreen());
+		    login("test", "abc123");
+	        SceneHelper.changeMainScene(MainScene.FXML_FILENAME);
 		} catch (UsernameException | PasswordException e) {
 			e.printStackTrace();
 		}
