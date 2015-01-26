@@ -84,11 +84,11 @@ public abstract class AbstractModel {
     	return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
     }
     
-    public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T id, String sortField, boolean desc) {
-        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ? ORDER BY " + sortField + " " + (desc ? "DESC" : "ASC"), id);
+    public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T param, String sortField, boolean desc) {
+        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ? ORDER BY " + sortField + " " + (desc ? "DESC" : "ASC"), param);
     }
     
-	public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T id) {
-        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", id);
+	public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T param) {
+        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", param);
     }
 }

@@ -19,6 +19,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
+import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
 
@@ -92,7 +93,7 @@ public class MessagesTab extends AbstractController {
 
     @FXML
 	public void newMessage(ActionEvent event) {
-	    Stage stage = StageHelper.createDialogStage(resources.getString("messages.new"));
+	    Stage stage = StageHelper.createDialogStage(Resources.getResource(resources, "messages.new"));
 	    SceneHelper.changeScene(stage, NewMessageScene.FXML_FILENAME);
 	}
     

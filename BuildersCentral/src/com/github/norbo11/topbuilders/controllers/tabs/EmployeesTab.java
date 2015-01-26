@@ -19,6 +19,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene;
 import com.github.norbo11.topbuilders.models.Employee;
+import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
 
@@ -68,7 +69,7 @@ public class EmployeesTab extends AbstractController {
     @FXML
     public void addEmployee(ActionEvent event) {
         //Create new window
-        Stage stage = StageHelper.createDialogStage(resources.getString("employees.add"));
+        Stage stage = StageHelper.createDialogStage(Resources.getResource(resources, "employees.add"));
         AbstractScene scene = SceneHelper.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME);
         
         //Display details

@@ -14,6 +14,7 @@ import com.github.norbo11.topbuilders.controllers.custom.NotificationItem;
 import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Notification;
+import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.TabHelper;
 
@@ -28,8 +29,8 @@ public class EmployeeHomeTab extends AbstractController {
 	public void buttonAction(ActionEvent event) {
 		switch (((Button) event.getSource()).getId()) {
 		case "myAssignments": break;
-		case "messages": TabHelper.createAndSwitchTab(resources.getString("home.messages"), MessagesTab.FXML_FILENAME); break;
-		case "settings": TabHelper.createAndSwitchTab(resources.getString("home.settings"), SettingsTab.FXML_FILENAME); break;
+		case "messages": TabHelper.createAndSwitchTab(Resources.getResource(resources, "home.messages"), MessagesTab.FXML_FILENAME); break;
+		case "settings": TabHelper.createAndSwitchTab(Resources.getResource(resources, "home.settings"), SettingsTab.FXML_FILENAME); break;
 		case "logout": SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
 		}
 	}

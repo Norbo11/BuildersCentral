@@ -2,10 +2,18 @@ package com.github.norbo11.topbuilders.util;
 
 import java.util.ResourceBundle;
 
-public class ResourceUtil {
+public class Resources {
     public static final String PARAMETER_MARKER = "(?)";
     
-    public static String getResourceWithParameters(ResourceBundle bundle, String key, String... params) {
+    public static String getResource(ResourceBundle bundle, String key) {
+    	return bundle.getString(key);
+    }
+    
+    public static String getResource(ResourceBundle bundle, String key, String... params) {
+    	return getResourceWithParameters(bundle, key, params);
+    }
+    
+    private static String getResourceWithParameters(ResourceBundle bundle, String key, String... params) {
         StringBuilder resource = new StringBuilder(bundle.getString(key));
         String lastThree = "";
         int paramCount = 0;

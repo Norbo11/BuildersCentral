@@ -13,6 +13,7 @@ import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.FXMLHelper;
+import com.github.norbo11.topbuilders.util.Resources;
 
 public class NotificationItem extends TitledPane {
     public static final String FXML_FILENAME = "NotificationItem.fxml";
@@ -45,8 +46,8 @@ public class NotificationItem extends TitledPane {
 	                break;
 	            case NEW_MESSAGE:
 	                Message message = (Message) associatedModel;
-	                setText(resources.getString("notifications.new_message"));
-	                content.setText(resources.getString("messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
+	                setText(Resources.getResource(resources, "notifications.new_message"));
+	                content.setText(Resources.getResource(resources, "messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
 	                break;
 	            case NEW_QUOTE_REQUEST:
 	                break;

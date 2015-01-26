@@ -19,6 +19,7 @@ import com.github.norbo11.topbuilders.controllers.tabs.EmployeeHomeTab;
 import com.github.norbo11.topbuilders.controllers.tabs.ManagerHomeTab;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.enums.UserType;
+import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class MainScene extends AbstractController {
@@ -31,7 +32,7 @@ public class MainScene extends AbstractController {
 
     @FXML
     public void initialize() {
-        welcomeText.setText(resources.getString("home.welcome") + ", " + Employee.getCurrentEmployee().getFullName());
+        welcomeText.setText(Resources.getResource(resources, "home.welcome") + ", " + Employee.getCurrentEmployee().getFullName());
         
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d MMMM YYYY");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("kk:mm:ss");
@@ -50,6 +51,6 @@ public class MainScene extends AbstractController {
         TabHelper.setTabPane(tabPane);
         
         String scene = Employee.getCurrentEmployee().getUserType().isAtLeast(UserType.MANAGER) ? ManagerHomeTab.FXML_FILENAME : EmployeeHomeTab.FXML_FILENAME;
-        TabHelper.createAndSwitchTab(resources.getString("home"), scene).setClosable(false);
+        TabHelper.createAndSwitchTab(Resources.getResource(resources, "home"), scene).setClosable(false);
     }
 }

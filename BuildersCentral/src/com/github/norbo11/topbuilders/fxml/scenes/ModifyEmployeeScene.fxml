@@ -52,7 +52,12 @@
     <ComboBox fx:id="userType" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
     
     <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
-    <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/>    
+    <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/> 
+    
+    <Label fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+    <VBox fx:id="errors" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="4">
+
+    </VBox>
   </GridPane>
     
   <HBox spacing="100" alignment="center">

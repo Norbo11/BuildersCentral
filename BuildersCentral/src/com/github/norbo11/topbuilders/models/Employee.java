@@ -332,4 +332,22 @@ public class Employee extends AbstractModel {
         }
         return null;
     }
+
+	public static boolean checkUsernameExists(String username) {
+		try {
+			return loadAllModelsWhere(DB_TABLE_NAME, "username", username).next();
+		} catch (SQLException e) {
+			Log.error(e);
+			return true;
+		}
+	}
+	
+	public static boolean checkEmailExists(String email) {
+		try {
+			return loadAllModelsWhere(DB_TABLE_NAME, "email", email).next();
+		} catch (SQLException e) {
+			Log.error(e);
+			return true;
+		}
+	}
 }
