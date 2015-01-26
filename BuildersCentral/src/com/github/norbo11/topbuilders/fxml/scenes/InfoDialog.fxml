@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.*?>
+
+<VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.InfoDialog">
+  <padding><Insets right="75" left="75" bottom="5" /></padding>
+    
+  <FlowPane>
+    <Label fx:id="infoText" textAlignment="center" minHeight="80" />
+  </FlowPane>
+  
+  <HBox alignment="center">
+    <Button text="%general.ok" prefWidth="190" prefHeight="40" onAction="#ok" />
+  </HBox>
+</VBox>
