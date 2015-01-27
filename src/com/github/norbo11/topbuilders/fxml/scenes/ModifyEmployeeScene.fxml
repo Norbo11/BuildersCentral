@@ -20,7 +20,7 @@
       <Insets fx:id="rightMargin" right="150" />
       <Double fx:id="prefWidth" fx:value="240" />
     </fx:define>
-    
+   
     <Label text="%employees.username" GridPane.rowIndex="0" GridPane.columnIndex="0" />
     <TextField fx:id="username" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
     
@@ -54,15 +54,12 @@
     <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
     <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/> 
     
-    <Label fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-    <VBox fx:id="errors" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="4">
-
-    </VBox>
+    <Label fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+    <VBox fx:id="errorsList" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="4" />
   </GridPane>
     
   <HBox spacing="100" alignment="center">
     <Button text="%employees.save" prefWidth="190" prefHeight="40" onAction="#saveEmployee" />
-    <Button text="%employees.delete" prefWidth="190" prefHeight="40" onAction="#deleteEmployee" />
     <Button text="%general.discard" prefWidth="190" prefHeight="40" onAction="#close" />
   </HBox>
 </VBox>

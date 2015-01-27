@@ -9,6 +9,7 @@ public class StageHelper {
 		Stage stage = new Stage();
         stage.setTitle(title);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
         return stage;
 	}
 

@@ -15,19 +15,15 @@ import com.github.norbo11.topbuilders.util.SceneHelper;
 public class LoginScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/LoginScene.fxml";
     
-    @FXML TextField usernameField;
-    @FXML TextField passwordField;
-    @FXML Text statusText;
-    @FXML Button submitButton;
-    
+    @FXML private TextField usernameField;
+    @FXML private TextField passwordField;
+    @FXML private Text statusText;
+    @FXML private Button submitButton;
+
     @FXML
     public void initialize() {
-        //TODO This is still broken
-        /*Log.info(submitButton);
-        Log.info(submitButton.getScene());
-        Log.info(submitButton.getScene().getAccelerators());
-        Log.info(new KeyCodeCombination(KeyCode.ENTER));
-        submitButton.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), () -> submitButton.fire());*/
+        usernameField.setOnAction(e -> submitButton.fire());
+        passwordField.setOnAction(e -> submitButton.fire());
     }
     
     @FXML
@@ -53,4 +49,9 @@ public class LoginScene extends AbstractController {
 	public static String getAbsoluteFxmlFilename() {
 		return "/com/github/norbo11/topbuilders/scenes/fxml/" + FXML_FILENAME;
 	}
+
+    @Override
+    public void update() {
+
+    }
 }

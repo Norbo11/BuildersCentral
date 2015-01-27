@@ -3,7 +3,6 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +21,7 @@ import com.github.norbo11.topbuilders.util.TabHelper;
 public class SettingsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/SettingsTab.fxml";
     
-    @FXML private ResourceBundle resources;
+    
     @FXML ComboBox<Locale> languagesCombo;
     @FXML CheckBox fullscreenCheckbox;
     
@@ -78,4 +77,9 @@ public class SettingsTab extends AbstractController {
 	@FXML public void cancel(ActionEvent event) {
 		TabHelper.closeCurrentTab();
 	}
+
+    @Override
+    public void update() {
+        
+    }
 }

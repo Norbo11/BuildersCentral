@@ -57,7 +57,7 @@ public class EmployeeSettings extends AbstractModel {
     }
 
     @Override
-    public void loadFromResult(ResultSet result) throws SQLException {
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {
         while (result.next()) {
             int settingTypeId = result.getInt("settingTypeId");
             String value = result.getString("value");

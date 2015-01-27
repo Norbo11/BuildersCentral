@@ -1,11 +1,18 @@
 package com.github.norbo11.topbuilders.controllers.scenes;
 
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.util.LoadedFXML;
 
 public class AbstractScene extends Scene {
+    
+    public AbstractScene(Parent root) {
+        super(root);
+        
+        loadStylesheet();
+    }
     
     public AbstractScene(LoadedFXML fxml) {
     	super(fxml.getRoot());
@@ -17,7 +24,7 @@ public class AbstractScene extends Scene {
    
     private String stylesheetPath;
     private AbstractController controller;
-        
+
     public AbstractController getController() {
         return controller;
     }

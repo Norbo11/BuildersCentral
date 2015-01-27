@@ -1,5 +1,7 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
 
+import java.util.Vector;
+
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,8 +26,9 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
 
-public class EmployeesTab extends AbstractController {
+public class StockedMaterialsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/EmployeesTab.fxml";
+    public final static Vector<EmployeesTab> tabs = new Vector<EmployeesTab>();
     
     //Makes all addresses become hyperlinks which open up Google Maps
     private class EmployeeAddressCell extends TreeTableCell<Employee, String> {
@@ -61,7 +64,7 @@ public class EmployeesTab extends AbstractController {
     @FXML private TreeTableColumn<Employee, String> defaultWageCol, deleteCol, addressCol;
     
     @FXML
-	public void initialize() {	    
+    public void initialize() {      
         defaultWageCol.setCellValueFactory(new EmployeeDefaultWageFactory());
         addressCol.setCellFactory(column -> new EmployeeAddressCell());
         
@@ -76,15 +79,12 @@ public class EmployeesTab extends AbstractController {
             return row;
         });
         
-    	update(); 
-	}
+        update(); 
+    }
 
     @FXML
     public void deleteEmployee(ActionEvent event) {
-        Employee employee = table.getSelectionModel().getSelectedItem().getValue();
-        if (!employee.isDummy()) {
-            SceneHelper.showConfirmationDialog(Resources.getResource("general.confirm"), Resources.getResource("employees.delete.confirm", employee.getFullName()), () -> employee.delete());
-        }
+        table.getSelectionModel().getSelectedItem().getValue().delete();
     }
     
     @FXML
@@ -130,5 +130,17 @@ public class EmployeesTab extends AbstractController {
             case EMPLOYEE: employees.getChildren().add(item); break;
             }
         }
+    }
+    
+    /* Static methods */
+    
+    public static void updateAllTabs() {
+        for (EmployeesTab tab : tabs) {
+            tab.update();
+        }
+    }
+
+    public static Vector<EmployeesTab> getTabs() {
+        return tabs;
     }
 }

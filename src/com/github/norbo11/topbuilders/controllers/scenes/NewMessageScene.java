@@ -8,13 +8,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class NewMessageScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/NewMessageScene.fxml";
@@ -35,7 +35,7 @@ public class NewMessageScene extends AbstractController {
         int messageId = Message.addMessage(fromId, toId, title, content, timestamp);
         Notification.addNotification(toId, NotificationType.NEW_MESSAGE.ordinal(), messageId, timestamp, false);
         discard(event);
-        MessagesTab.updateAllTabs();
+        TabHelper.updateAllTabs();
     }
     
     @FXML
@@ -50,5 +50,10 @@ public class NewMessageScene extends AbstractController {
     	}
         
         toCombo.getSelectionModel().select(0);
+    }
+
+    @Override
+    public void update() {
+
     }
 }

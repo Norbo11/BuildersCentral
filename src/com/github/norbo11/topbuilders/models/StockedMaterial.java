@@ -4,31 +4,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import com.github.norbo11.topbuilders.controllers.tabs.StockedMaterialsTab;
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.Log;
 
 public class StockedMaterial extends AbstractModel {
 
 public static final String DB_TABLE_NAME = "stockedMaterials";
 	
-	private StringProperty name;
-	private DoubleProperty quantityInStock;
-	private ObjectProperty<QuantityType> quantityType;
-	
-	public StockedMaterial(int id, String name, double quantityInStock, QuantityType quantityType) {
-		super(id);
-		
-		this.name = new SimpleStringProperty(name);
-		this.quantityInStock = new SimpleDoubleProperty(quantityInStock);
-		this.quantityType = new SimpleObjectProperty<QuantityType>(quantityType);
-	}
+	private StringProperty name = new SimpleStringProperty("");
+	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
+	private IntegerProperty quantityTypeId = new SimpleIntegerProperty(0);
 
 	/* Getters and setters */
 	
@@ -48,61 +40,71 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 		this.quantityInStock.set(hourlyWage);
 	}
 
-	public QuantityType getQuantityType() {
-		return quantityType.get();
+	public int getQuantityTypeId() {
+		return quantityTypeId.get();
 	}
 
-	public void setQuantityType(QuantityType startDate) {
-		this.quantityType.set(startDate);
+	public void setQuantityTypeId(int quantityTypeId) {
+		this.quantityTypeId.set(quantityTypeId);
 	}
+	
+	/* Property getters */
+	
+	public StringProperty nameProperty() {
+        return name;
+    }
+
+    public DoubleProperty quantityInStockProperty() {
+        return quantityInStock;
+    }
+
+    public IntegerProperty quantityTypeIdProperty() {
+        return quantityTypeId;
+    }
 	
 	/* Instance methods */
 
+    public QuantityType getQuantityType() {
+        return QuantityType.getQuantityType(getQuantityTypeId());
+    }
+    
+    /* Inherited methods */
+    
+    @Override
+    public void delete() {
+        super.delete();
+        StockedMaterialsTab.updateAllTabs();
+    }
+    
     @Override
     public void add() {
-        // TODO Auto-generated method stub
-        
+        Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+        + " (name,quantityInStock,quantityTypeId) "
+        + "VALUES (?,?,?)"
+        , getName(), getQuantityInStock(), getQuantityTypeId());
     }
-	
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
+    
+    @Override
+    public void save() {                
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
+        + "name=?,quantityInStock=?,quantityTypeId=? "
+        + "WHERE id = ?", getName(), getQuantityInStock(), getQuantityType(), getId());
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {      
+        if (containsColumn(columns, "id")) setId(result.getInt("id"));
+        if (containsColumn(columns, "name")) setName(result.getString("name"));
+        if (containsColumn(columns, "quantityInStock")) setQuantityInStock(result.getDouble("quantityInStock"));
+        if (containsColumn(columns, "quantityTypeId")) setQuantityTypeId(result.getInt("quantityTypeId"));
+    }
 
-	@Override
-	public void loadFromResult(ResultSet result) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public String getDbTableName() {
-		// TODO Auto-generated method stub
-		return null;
+	    return DB_TABLE_NAME;
 	}
 	
 	/* Static methods */
-	
-	private static StockedMaterial getStockedMaterialFromResult(ResultSet result) throws SQLException {
-	    int id = result.getInt("id");
-        String name = result.getString("name");
-        double quantityInStock = result.getDouble("quantityInStock");
-        QuantityType quantityType = QuantityType.getSettingType(result.getInt("quantityType"));
-        return new StockedMaterial(id, name, quantityInStock, quantityType);
-	}
 
-    public static StockedMaterial getStockedMaterialFromId(int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
-        
-        try {
-            if (result.next()) {
-                return getStockedMaterialFromResult(result);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        
-        return null;
-    }
 }

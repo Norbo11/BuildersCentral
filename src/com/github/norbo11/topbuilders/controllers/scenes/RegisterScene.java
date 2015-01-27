@@ -30,4 +30,9 @@ public class RegisterScene extends AbstractController {
     public static String getAbsoluteFxmlFilename() {
         return "/com/github/norbo11/topbuilders/scenes/fxml/" + FXML_FILENAME;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

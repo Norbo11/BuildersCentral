@@ -16,23 +16,23 @@
   <TreeTableView fx:id="table" showRoot="false">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
-        <TreeTableColumn fx:id="username" text="%employees.username">
+        <TreeTableColumn text="%employees.username">
             <cellValueFactory><TreeItemPropertyValueFactory property="username" /></cellValueFactory>
         </TreeTableColumn>
     
-        <TreeTableColumn fx:id="fullName" text="%employees.fullName">
+        <TreeTableColumn text="%employees.fullName">
             <cellValueFactory><TreeItemPropertyValueFactory property="fullName" /></cellValueFactory>
         </TreeTableColumn>
         
-        <TreeTableColumn fx:id="email" text="%employees.email">
+        <TreeTableColumn text="%employees.email">
             <cellValueFactory><TreeItemPropertyValueFactory property="email" /></cellValueFactory>
         </TreeTableColumn>
         
-        <TreeTableColumn fx:id="address" text="%employees.address">
+        <TreeTableColumn fx:id="addressCol" text="%employees.address">
             <cellValueFactory><TreeItemPropertyValueFactory property="address" /></cellValueFactory>
         </TreeTableColumn>
         
-        <TreeTableColumn fx:id="defaultWage" text="%employees.defaultWage" />
+        <TreeTableColumn fx:id="defaultWageCol" text="%employees.defaultWage" />
     </columns>
     <root>
       <TreeItem value="Employees" expanded="true">

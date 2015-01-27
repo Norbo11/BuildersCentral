@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -27,7 +26,7 @@ public class MessagesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";
     public static Vector<MessagesTab> tabs = new Vector<MessagesTab>();
     
-    @FXML private ResourceBundle resources;
+    
     @FXML public TableView<Message> table;
     @FXML public TableColumn<Message, LocalDateTime> dateCol, timeCol;
     @FXML public TableColumn<Message, String> senderCol, titleCol;
@@ -93,7 +92,7 @@ public class MessagesTab extends AbstractController {
 
     @FXML
 	public void newMessage(ActionEvent event) {
-	    Stage stage = StageHelper.createDialogStage(Resources.getResource(resources, "messages.new"));
+	    Stage stage = StageHelper.createDialogStage(Resources.getResource("messages.new"));
 	    SceneHelper.changeScene(stage, NewMessageScene.FXML_FILENAME);
 	}
     
@@ -105,21 +104,9 @@ public class MessagesTab extends AbstractController {
     
     /* Instance methods */
     
-    private void update() {
+    @Override
+    public void update() {
         table.getItems().clear();
         table.getItems().addAll(Employee.getCurrentEmployee().getMessages());
     }
-    
-    /* Static methods */
-    
-    public static void updateAllTabs() {
-        for (MessagesTab tab : tabs) {
-            tab.update();
-        }
-    }
-
-    public static Vector<MessagesTab> getTabs() {
-        return tabs;
-    }
-	
 }

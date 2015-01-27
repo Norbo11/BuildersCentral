@@ -91,13 +91,13 @@ public class Notification extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(ResultSet result) throws SQLException {
-        setId(result.getInt("id"));
-        setAssociatedModelId(result.getInt("associatedId"));
-        setEmployeeId(result.getInt("employeeId"));
-        setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
-        setType(NotificationType.getNotificationType(result.getInt("type")));
-        setSeen(result.getBoolean("seen"));
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+        if (containsColumn(columns, "id")) setId(result.getInt("id"));
+        if (containsColumn(columns, "associatedId")) setAssociatedModelId(result.getInt("associatedId"));
+        if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
+        if (containsColumn(columns, "timestamp")) setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
+        if (containsColumn(columns, "type")) setType(NotificationType.getNotificationType(result.getInt("type")));
+        if (containsColumn(columns, "seen")) setSeen(result.getBoolean("seen"));
 	}
 
 	@Override

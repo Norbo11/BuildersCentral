@@ -20,7 +20,7 @@ public class QuoteRequest extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(ResultSet result) throws SQLException {
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}

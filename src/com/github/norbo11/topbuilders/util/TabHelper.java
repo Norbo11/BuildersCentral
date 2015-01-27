@@ -1,15 +1,16 @@
 package com.github.norbo11.topbuilders.util;
 
+import java.util.Vector;
+
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.AbstractTab;
-import com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab;
-import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 
 public class TabHelper {
     private static TabPane tabPane;
+    private static Vector<AbstractController> tabs = new Vector<AbstractController>();
 
 	public static AbstractTab createAndSwitchTab(String tabName, String fxmlFilename) {
 		//Load the tab, set its name, add it to the tab pane and switch to it
@@ -18,10 +19,7 @@ public class TabHelper {
         
         tab.setText(tabName);
         tabPane.getTabs().add(tab);
-        
-        //TODO Add all controllers here so that they may refresh correctly
-        if (controller instanceof EmployeesTab) EmployeesTab.getTabs().add((EmployeesTab) controller);
-        if (controller instanceof MessagesTab) MessagesTab.getTabs().add((MessagesTab) controller);
+        tabs.add(controller);
         
         switchTab(tab);
         return tab;
@@ -42,5 +40,11 @@ public class TabHelper {
     public static void closeCurrentTab() {
     	AbstractTab tab = (AbstractTab) tabPane.getSelectionModel().getSelectedItem();
     	tab.close();
+    }
+
+    public static void updateAllTabs() {
+        for (AbstractController tab : tabs) {
+            tab.update();
+        }
     }
 }

@@ -1,14 +1,11 @@
 package com.github.norbo11.topbuilders.util;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import com.github.norbo11.topbuilders.Main;
-import com.github.norbo11.topbuilders.models.Employee;
 
 public class FXMLHelper {
     public static LoadedFXML loadFxml(String filename) {
@@ -26,7 +23,7 @@ public class FXMLHelper {
         	if (root != null) loader.setRoot(root);
         	if (controller != null) loader.setController(controller);
         	
-    		setResources(loader);
+    		Resources.setResources(loader);
         	
         	loadedRoot = loader.load();
         	loadedController = loader.getController();
@@ -34,15 +31,5 @@ public class FXMLHelper {
             e.printStackTrace();
         }
         return new LoadedFXML(loadedRoot, loadedController, filename);
-    }
-    
-    public static void setResources(FXMLLoader loader) {
-    	Employee user = Employee.getCurrentEmployee();
-		
-		//If the user is logged in
-		if (user != null) {
-    		Locale locale = Employee.getCurrentEmployee().getSettings().getLocale();
-    		loader.setResources(ResourceBundle.getBundle("lang.lang", locale, ClassLoader.getSystemClassLoader()));
-		}
     }
 }

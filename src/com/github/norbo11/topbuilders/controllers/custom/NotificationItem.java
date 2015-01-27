@@ -1,7 +1,5 @@
 package com.github.norbo11.topbuilders.controllers.custom;
 
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
@@ -18,7 +16,6 @@ import com.github.norbo11.topbuilders.util.Resources;
 public class NotificationItem extends TitledPane {
     public static final String FXML_FILENAME = "NotificationItem.fxml";
     
-    @FXML private ResourceBundle resources;  
     @FXML private ImageView image;
     @FXML private Label title;
     @FXML private Label content;
@@ -46,8 +43,8 @@ public class NotificationItem extends TitledPane {
 	                break;
 	            case NEW_MESSAGE:
 	                Message message = (Message) associatedModel;
-	                setText(Resources.getResource(resources, "notifications.new_message"));
-	                content.setText(Resources.getResource(resources, "messages.sender") + ": " + message.getSenderName() + "\nTitle: " + message.getTitle());
+	                setText(Resources.getResource("notifications.new_message"));
+	                content.setText(Resources.getResource("messages.sender") + ": " + message.getSender().getFullName() + "\nTitle: " + message.getTitle());
 	                break;
 	            case NEW_QUOTE_REQUEST:
 	                break;

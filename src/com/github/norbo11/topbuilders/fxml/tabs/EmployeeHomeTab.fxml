@@ -9,7 +9,7 @@
 <HBox alignment="center" spacing="50" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.EmployeeHomeTab">
   <padding><Insets top="25" bottom="25" right="100" left="100" /></padding>
   
-  <TitledPane fx:id="notificationsPane" text="%home.notifications.heading" prefWidth="400" collapsible="false" maxHeight="520">
+  <TitledPane fx:id="notificationsPane" text="%notifications.heading" prefWidth="400" collapsible="false" maxHeight="520">
     <ScrollPane fitToHeight="true" fitToWidth="true">
       <padding><Insets top="0" bottom="0" left="0" right="0"></Insets></padding>
       <VBox fx:id="notificationsList">

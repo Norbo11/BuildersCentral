@@ -74,6 +74,10 @@
     -fx-alignment: center;
 }
 
+.tree-table-cell.address {
+    -fx-alignment: center_left;
+}
+
 /* Notifications */
 
 #notificationsPane .title {

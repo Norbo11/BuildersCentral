@@ -2,19 +2,24 @@ package com.github.norbo11.topbuilders.util;
 
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXMLLoader;
+
+import com.github.norbo11.topbuilders.models.Employee;
+
 public class Resources {
     public static final String PARAMETER_MARKER = "(?)";
-    
-    public static String getResource(ResourceBundle bundle, String key) {
-    	return bundle.getString(key);
+    private static ResourceBundle currentBundle;
+
+    public static String getResource(String key) {
+    	return currentBundle.getString(key);
     }
     
-    public static String getResource(ResourceBundle bundle, String key, String... params) {
-    	return getResourceWithParameters(bundle, key, params);
+    public static String getResource(String key, String... params) {
+    	return getResourceWithParameters(key, params);
     }
     
-    private static String getResourceWithParameters(ResourceBundle bundle, String key, String... params) {
-        StringBuilder resource = new StringBuilder(bundle.getString(key));
+    private static String getResourceWithParameters(String key, String... params) {
+        StringBuilder resource = new StringBuilder(currentBundle.getString(key));
         String lastThree = "";
         int paramCount = 0;
         
@@ -34,5 +39,15 @@ public class Resources {
         //Debug info
         if (paramCount != params.length) Log.error("ResourceUtil#getResourceWithParameters: expected " + paramCount + " parameters, received " + params.length);
         return resource.toString();
+    }
+
+    public static void setCurrentBundle(Employee employee) {
+        currentBundle = ResourceBundle.getBundle("lang.lang", employee.getSettings().getLocale(), ClassLoader.getSystemClassLoader());
+    }
+    
+    public static void setResources(FXMLLoader loader) {
+        if (currentBundle != null) {
+            loader.setResources(currentBundle);
+        }
     }
 }

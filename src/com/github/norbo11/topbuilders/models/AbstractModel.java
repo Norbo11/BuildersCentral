@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.StringHelper;
 
 
 public abstract class AbstractModel {
@@ -46,18 +47,33 @@ public abstract class AbstractModel {
     
     public abstract void save();
     
-    public abstract void loadFromResult(ResultSet result) throws SQLException;
+    //Sets all of the properties for this model as obtained by the ResultSet - will only load the specified columns
+    public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;
     
     public abstract String getDbTableName();
 	
     /* Instance methods */
+    
+    //This is called by loadFromResult - if no columns were specified, then an empty array will be passed here, for which we check and return true (because that
+    //means all columns were requested
+    public boolean containsColumn(String[] columns, String needle) {
+        if (columns.length == 0) return true;
+        
+        for (String column : columns) {
+            if (column.equals(needle)) return true;
+        }
+        
+        return false;
+    }
 
-    public void loadFromId(int id) {
-        ResultSet result = Database.executeQuery("SELECT * FROM " + getDbTableName() + " WHERE id = ?", id);
+    //Load specified columns
+    public void loadFromId(int id, String... columns) {
+        String columnString = columns.length > 0 ? StringHelper.join(columns, ",") : "*";
+        ResultSet result = Database.executeQuery("SELECT " + columnString + " FROM " + getDbTableName() + " WHERE id = ?", id);
         
         try {
             if (result.next()) {
-                loadFromResult(result);
+                loadFromResult(result, columns);
             }
         } catch (SQLException e) {
             Log.error(e);

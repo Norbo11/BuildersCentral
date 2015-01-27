@@ -12,9 +12,7 @@
 <VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.InfoDialog">
   <padding><Insets right="75" left="75" bottom="5" /></padding>
     
-  <FlowPane>
-    <Label fx:id="infoText" textAlignment="center" minHeight="80" />
-  </FlowPane>
+  <Label fx:id="infoText" textAlignment="center" minHeight="80" />
   
   <HBox alignment="center">
     <Button text="%general.ok" prefWidth="190" prefHeight="40" onAction="#ok" />

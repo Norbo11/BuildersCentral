@@ -81,14 +81,14 @@ public class Assignment extends AbstractModel {
 
 
 	@Override
-	public void loadFromResult(ResultSet result) throws SQLException {
-	    setId(result.getInt("id"));
-	    setEmployeeId(result.getInt("employeeId"));
-        setJobId(result.getInt("jobId"));
-        setHourlyWage(result.getDouble("hourlyWage"));
-        setStartDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("startDate")));
-        setEndDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("endDate")));
-        setIsCompleted(result.getBoolean("isCompleted"));
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+	    if (containsColumn(columns, "id")) setId(result.getInt("id"));
+	    if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
+	    if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
+	    if (containsColumn(columns, "hourlyWage")) setHourlyWage(result.getDouble("hourlyWage"));
+	    if (containsColumn(columns, "startDate")) setStartDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("startDate")));
+	    if (containsColumn(columns, "endDate")) setEndDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("endDate")));
+        if (containsColumn(columns, "isCompleted")) setIsCompleted(result.getBoolean("isCompleted"));
 	}
 	
     @Override

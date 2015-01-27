@@ -15,12 +15,12 @@ import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
-import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
+import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -37,12 +37,16 @@ public class Message extends AbstractModel {
         return date;
     }
     
-    public String getSenderName() {
-        return Employee.getNameFromId(senderId.get());
+    public Employee getSender() {
+        Employee employee = new Employee();
+        employee.loadFromId(getSenderId(), "firstname", "lastname");
+        return employee;
     }
-
-    public int getRecipient() {
-        return recipientId.get();
+    
+    public Employee getRecipient() {
+        Employee employee = new Employee();
+        employee.loadFromId(getRecipientId(), "firstname", "lastname");
+        return employee;
     }
 
     public String getTitle() {
@@ -90,7 +94,7 @@ public class Message extends AbstractModel {
     @Override
     public void delete() {
         super.delete();
-        MessagesTab.updateAllTabs();
+        TabHelper.updateAllTabs();
     }
 	
     @Override
@@ -106,13 +110,13 @@ public class Message extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(ResultSet result) throws SQLException {
-        setId(result.getInt("id"));
-        setSenderId(result.getInt("senderId"));
-        setRecipientId(result.getInt("recipientId"));
-        setTitle(result.getString("title"));
-        setContent(result.getString("content"));
-        setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+        if (containsColumn(columns, "id")) setId(result.getInt("id"));
+        if (containsColumn(columns, "senderId")) setSenderId(result.getInt("senderId"));
+        if (containsColumn(columns, "recipientId")) setRecipientId(result.getInt("recipientId"));
+        if (containsColumn(columns, "title")) setTitle(result.getString("title"));
+        if (containsColumn(columns, "content")) setContent(result.getString("content"));
+        if (containsColumn(columns, "timestamp")) setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
 	}
 
 	@Override

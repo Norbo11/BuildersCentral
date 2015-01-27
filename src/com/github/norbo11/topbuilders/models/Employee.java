@@ -12,13 +12,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.controllers.scenes.MainScene;
-import com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
@@ -230,13 +231,13 @@ public class Employee extends AbstractModel {
     @Override
     public void delete() {
         super.delete();
-        EmployeesTab.updateAllTabs();
+        TabHelper.updateAllTabs();
     }
     
     @Override
     public void add() {
         Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
-        + " (username,password,email,firstName,lastName,firstLineAddress,secondLineAddress,city,postcode,defaultWage,userType,activationCode) "
+        + " (username,password,email,firstName,lastName,firstLineAddress,secondLineAddress,city,postcode,defaultWage,userTypeId,activationCode) "
         + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
         , getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode());
     }
@@ -244,30 +245,35 @@ public class Employee extends AbstractModel {
     @Override
     public void save() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
-        + "username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,defaultWage=?,userType=?,activationCode=? "
+        + "username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,defaultWage=?,userTypeId=?,activationCode=? "
         + "WHERE id = ?", getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode(), getId());
     }
     
     @Override
-    public void loadFromResult(ResultSet result) throws SQLException {      
-        setId(result.getInt("id"));
-        setUsername(result.getString("username"));
-        setPassword(result.getString("password"));
-        setFirstName(result.getString("firstName"));
-        setLastName(result.getString("lastName"));
-        setEmail(result.getString("email"));
-        setFirstLineAddress(result.getString("firstLineAddress"));
-        setSecondLineAddress(result.getString("secondLineAddress"));
-        setCity(result.getString("city"));
-        setPostcode(result.getString("postcode"));
-        setDefaultWage(result.getDouble("defaultWage"));
-        setActivationCode(result.getString("activationCode"));
-        setUserTypeId(result.getInt("userType"));
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+        if (containsColumn(columns, "id")) setId(result.getInt("id"));
+        if (containsColumn(columns, "username")) setUsername(result.getString("username"));
+        if (containsColumn(columns, "password")) setPassword(result.getString("password"));
+        if (containsColumn(columns, "firstName")) setFirstName(result.getString("firstName"));
+        if (containsColumn(columns, "lastName")) setLastName(result.getString("lastName"));
+        if (containsColumn(columns, "email")) setEmail(result.getString("email"));
+        if (containsColumn(columns, "firstLineAddress")) setFirstLineAddress(result.getString("firstLineAddress"));
+        if (containsColumn(columns, "secondLineAddress")) setSecondLineAddress(result.getString("secondLineAddress"));
+        if (containsColumn(columns, "city")) setCity(result.getString("city"));
+        if (containsColumn(columns, "postcode")) setPostcode(result.getString("postcode"));
+        if (containsColumn(columns, "defaultWage")) setDefaultWage(result.getDouble("defaultWage"));
+        if (containsColumn(columns, "activationCode")) setActivationCode(result.getString("activationCode"));
+        if (containsColumn(columns, "userTypeId")) setUserTypeId(result.getInt("userTypeId"));
     }
     
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
+	}
+	
+	@Override
+	public String toString() {
+	    return getFullName();
 	}
 	
 	/* Static methods */
@@ -284,6 +290,7 @@ public class Employee extends AbstractModel {
                 if (employee.getPassword().equals(inputPassword)) {
                     Employee.setCurrentEmployee(employee);
                     SceneHelper.setFullscreen(employee.getSettings().isFullscreen());
+                    Resources.setCurrentBundle(employee);
                     return employee; 
                 } else throw new PasswordException();
             } else throw new UsernameException();
@@ -321,17 +328,6 @@ public class Employee extends AbstractModel {
 		}
         return employees;
 	}
-	
-	//TODO this is not ideal
-    public static String getNameFromId(int id) {
-        ResultSet result = Database.executeQuery("SELECT firstname, lastname FROM " + DB_TABLE_NAME + " WHERE id = ?", id);
-        try {
-            if (result.next()) return result.getString("firstName") + " " + result.getString("lastName");
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        return null;
-    }
 
 	public static boolean checkUsernameExists(String username) {
 		try {

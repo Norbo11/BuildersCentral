@@ -1,6 +1,4 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
-import java.util.ResourceBundle;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -16,7 +14,7 @@ public class QuotesTab extends AbstractController {
 
     public final static String FXML_FILENAME = "tabs/QuotesTab.fxml";
     
-    @FXML private ResourceBundle resources;
+    
     @FXML private ComboBox<Project> projectPicker;
     @FXML private TextField clientNameField;
     @FXML private GridPane jobsGrid;
@@ -67,4 +65,9 @@ public class QuotesTab extends AbstractController {
 		populatePicker(null);
 		addJobRow();
 	}
+
+    @Override
+    public void update() {
+
+    }
 }

@@ -1,10 +1,8 @@
 package com.github.norbo11.topbuilders.models.enums;
 
-import java.lang.Comparable;
+import javafx.scene.control.ComboBox;
 
 import com.github.norbo11.topbuilders.models.Employee;
-
-import javafx.scene.control.ComboBox;
 
 public enum UserType implements Comparable<UserType> {
     SUPERUSER(0), MANAGER(1), EMPLOYEE(2);
