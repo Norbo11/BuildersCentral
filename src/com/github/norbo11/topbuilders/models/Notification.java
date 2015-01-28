@@ -124,21 +124,6 @@ public class Notification extends AbstractModel {
 	}
 	
 	/* Static methods */
-	
-	public static Vector<Notification> loadList(ResultSet result) {
-		Vector<Notification> notifications = new Vector<Notification>();
-
-		try {
-			while (result.next()) {
-				Notification notification = new Notification();
-				notification.loadFromResult(result);
-				notifications.add(notification);
-			}
-		} catch (SQLException e) {
-			Log.error(e);
-		}
-        return notifications;
-	}
     
     public static void addNotification(int employeeId, int type, int associatedId, long timestamp, boolean read) {
         Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME + " (employeeId, type, associatedId, timestamp, seen) VALUES (?,?,?,?,?)", 
@@ -147,5 +132,9 @@ public class Notification extends AbstractModel {
 
 	public static Vector<Notification> loadNotificationsForEmployee(Employee employee) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()));
+	}
+	
+	public static Vector<Notification> loadList(ResultSet result) {
+		return loadList(result, Notification.class);
 	}
 }

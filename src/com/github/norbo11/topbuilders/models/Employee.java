@@ -39,7 +39,7 @@ public class Employee extends AbstractModel {
     private StringProperty activationCode = new SimpleStringProperty("");
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
-	
+    
     /* Properties */
     
     public StringProperty usernameProperty() {
@@ -275,7 +275,7 @@ public class Employee extends AbstractModel {
 	public String toString() {
 	    return getFullName();
 	}
-	
+
 	/* Static methods */
 	
     public static Employee login(String inputUser, String inputPassword) throws UsernameException, PasswordException {
@@ -314,21 +314,6 @@ public class Employee extends AbstractModel {
 		return loadList(loadAllModels(DB_TABLE_NAME));
 	}
 
-	public static Vector<Employee> loadList(ResultSet result) {
-		Vector<Employee> employees = new Vector<Employee>();
-        
-        try {
-			while (result.next()) {
-				Employee employee = new Employee();
-				employee.loadFromResult(result);
-				employees.add(employee);
-			}
-		} catch (SQLException e) {
-			Log.error(e);
-		}
-        return employees;
-	}
-
 	public static boolean checkUsernameExists(String username) {
 		try {
 			return loadAllModelsWhere(DB_TABLE_NAME, "username", username).next();
@@ -345,5 +330,9 @@ public class Employee extends AbstractModel {
 			Log.error(e);
 			return true;
 		}
+	}
+	
+	public static Vector<Employee> loadList(ResultSet result) {
+		return loadList(result, Employee.class);
 	}
 }

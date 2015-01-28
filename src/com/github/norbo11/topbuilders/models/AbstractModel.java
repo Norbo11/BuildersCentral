@@ -2,6 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -51,7 +52,7 @@ public abstract class AbstractModel {
     public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;
     
     public abstract String getDbTableName();
-	
+        
     /* Instance methods */
     
     //This is called by loadFromResult - if no columns were specified, then an empty array will be passed here, for which we check and return true (because that
@@ -85,7 +86,7 @@ public abstract class AbstractModel {
     }
     
     /* Overrides */
-
+    
 	@Override
     public boolean equals(Object o) {
         if (o instanceof AbstractModel) {
@@ -96,15 +97,30 @@ public abstract class AbstractModel {
         return false;
     }
 	
-    public static ResultSet loadAllModels(final String DB_TABLE_NAME) {
+    protected static ResultSet loadAllModels(final String DB_TABLE_NAME) {
     	return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
     }
     
-    public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T param, String sortField, boolean desc) {
+    protected static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T param, String sortField, boolean desc) {
         return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ? ORDER BY " + sortField + " " + (desc ? "DESC" : "ASC"), param);
     }
     
-	public static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T param) {
+    protected static <T> ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, T param) {
         return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", param);
     }
+    
+	protected static <T extends AbstractModel> Vector<T> loadList(ResultSet result, Class<T> clazz) {
+		Vector<T> models = new Vector<T>();
+        		
+        try {
+			while (result.next()) {
+				T model = clazz.newInstance();
+				model.loadFromResult(result);
+				models.add(model);
+			}
+		} catch (SQLException | InstantiationException | IllegalAccessException e) {
+			Log.error(e);
+		}
+        return models;
+	}
 }

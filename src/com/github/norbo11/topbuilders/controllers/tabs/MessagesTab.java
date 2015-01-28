@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Vector;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
@@ -23,9 +22,7 @@ import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
 
 public class MessagesTab extends AbstractController {
-    public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";
-    public static Vector<MessagesTab> tabs = new Vector<MessagesTab>();
-    
+    public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";    
     
     @FXML public TableView<Message> table;
     @FXML public TableColumn<Message, LocalDateTime> dateCol, timeCol;

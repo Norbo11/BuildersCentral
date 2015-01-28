@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<VBox spacing="20" alignment="top_left" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene">
+  <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
+    
+  <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
+    <padding><Insets top="10" bottom="10" /></padding>
+    
+    <Label text="%messages.title" GridPane.rowIndex="0" />
+    <Text fx:id="title" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+    
+    <Label text="%messages.date" GridPane.rowIndex="1" />
+    <Text fx:id="date" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    
+    <Label text="%messages.sender" GridPane.rowIndex="2" />
+    <Text fx:id="from" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    
+    <Label text="%messages.content" GridPane.rowIndex="3" />
+    <WebView fx:id="content" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+  </GridPane>
+    
+  <HBox spacing="100" alignment="center">
+    <Button text="%messages.display.reply" prefWidth="190" prefHeight="40" onAction="#reply" />
+    <Button text="%messages.display.forward" prefWidth="190" prefHeight="40" onAction="#forward" />
+    <Button text="%messages.display.delete" prefWidth="190" prefHeight="40" onAction="#delete" />
+    <Button text="%general.close" prefWidth="190" prefHeight="40" onAction="#close" />
+  </HBox>
+</VBox>

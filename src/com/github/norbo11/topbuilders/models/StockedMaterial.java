@@ -2,6 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -107,4 +108,11 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	
 	/* Static methods */
 
+	public static Vector<StockedMaterial> getAllStockedMaterials() {
+		return loadList(loadAllModels(DB_TABLE_NAME));
+	}
+	
+	public static Vector<StockedMaterial> loadList(ResultSet result) {
+		return loadList(result, StockedMaterial.class);
+	}
 }

@@ -33,7 +33,7 @@ public class ManagerHomeTab extends AbstractController {
         case "employees": TabHelper.createAndSwitchTab(Resources.getResource("home.employees"), EmployeesTab.FXML_FILENAME); break;
         case "quotes": break;
         case "requests": break;
-        case "materials": break;
+        case "materials": TabHelper.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME);
         case "manageAssignments": break;
         }
     }

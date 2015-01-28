@@ -148,21 +148,11 @@ public class Message extends AbstractModel {
         controller.update();
     }
     
-    public static Vector<Message> loadList(ResultSet result) {
-        Vector<Message> messages = new Vector<Message>();
-        try {
-            while (result.next()) {
-                Message message = new Message();
-                message.loadFromResult(result);
-                messages.add(message);
-            }
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        return messages;
-    }
-
     public static Vector<Message> loadMessagesForEmployee(Employee employee) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
     }
+    
+    public static Vector<Message> loadList(ResultSet result) {
+		return loadList(result, Message.class);
+	}
 }
