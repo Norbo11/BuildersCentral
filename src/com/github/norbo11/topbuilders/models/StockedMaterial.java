@@ -69,6 +69,10 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
         return QuantityType.getQuantityType(getQuantityTypeId());
     }
     
+	public Double getQuantityRequired() {
+		return 5d;
+	}
+    
     /* Inherited methods */
     
     @Override
@@ -89,7 +93,7 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
     public void save() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "name=?,quantityInStock=?,quantityTypeId=? "
-        + "WHERE id = ?", getName(), getQuantityInStock(), getQuantityType(), getId());
+        + "WHERE id = ?", getName(), getQuantityInStock(), getQuantityTypeId(), getId());
     }
     
     @Override
