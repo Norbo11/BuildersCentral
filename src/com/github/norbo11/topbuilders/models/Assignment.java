@@ -2,19 +2,16 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.Vector;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
+import javafx.beans.property.SimpleLongProperty;
 
 public class Assignment extends AbstractModel {
     public static final String DB_TABLE_NAME = "assignments";
@@ -22,8 +19,8 @@ public class Assignment extends AbstractModel {
 	private IntegerProperty employeeId = new SimpleIntegerProperty(0);
 	private IntegerProperty jobId = new SimpleIntegerProperty(0);
 	private DoubleProperty hourlyWage = new SimpleDoubleProperty(0);
-	private ObjectProperty<LocalDateTime> startDate = new SimpleObjectProperty<LocalDateTime>();
-	private ObjectProperty<LocalDateTime> endDate = new SimpleObjectProperty<LocalDateTime>();
+	private LongProperty startTimestamp = new SimpleLongProperty();
+	private LongProperty endTimestamp = new SimpleLongProperty();
 	private BooleanProperty isCompleted = new SimpleBooleanProperty(false);
 	
     /* Getters and setters */
@@ -44,20 +41,20 @@ public class Assignment extends AbstractModel {
 		this.hourlyWage.set(hourlyWage);
 	}
 
-	public LocalDateTime getStartDate() {
-		return startDate.get();
+	public long getStartTimestamp() {
+		return startTimestamp.get();
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
-		this.startDate.set(startDate);
+	public void setStartTimestamp(long startTimestamp) {
+		this.startTimestamp.set(startTimestamp);
 	}
 
-	public LocalDateTime getEndDate() {
-		return endDate.get();
+	public long getEndTimestamp() {
+		return endTimestamp.get();
 	}
 
-	public void setEndDate(LocalDateTime endDate) {
-		this.endDate.set(endDate);
+	public void setEndTimestamp(long endTimestamp) {
+		this.endTimestamp.set(endTimestamp);
 	}
 
 	public boolean getIsCompleted() {
@@ -85,13 +82,14 @@ public class Assignment extends AbstractModel {
 	    if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
 	    if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
 	    if (containsColumn(columns, "hourlyWage")) setHourlyWage(result.getDouble("hourlyWage"));
-	    if (containsColumn(columns, "startDate")) setStartDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("startDate")));
-	    if (containsColumn(columns, "endDate")) setEndDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("endDate")));
+	    if (containsColumn(columns, "startDate")) setStartTimestamp(result.getLong("startDate"));
+	    if (containsColumn(columns, "endDate")) setEndTimestamp(result.getLong("endDate"));
         if (containsColumn(columns, "isCompleted")) setIsCompleted(result.getBoolean("isCompleted"));
 	}
 	
     @Override
-    public void add() {
+    public int add() {
+        return 0;
         // TODO Auto-generated method stub
         
     }

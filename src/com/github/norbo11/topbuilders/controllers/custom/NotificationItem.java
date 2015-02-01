@@ -32,7 +32,8 @@ public class NotificationItem extends TitledPane {
     }
 
     @FXML
-    public void initialize() {           
+    public void initialize() {  
+        
     	if (associatedModel != null) {
 	        switch (notification.getType()) {
 	            case ASSIGNMENT_CLOSE_TO_END:
@@ -43,6 +44,7 @@ public class NotificationItem extends TitledPane {
 	                break;
 	            case NEW_MESSAGE:
 	                Message message = (Message) associatedModel;
+	                
 	                setText(Resources.getResource("notifications.new_message"));
 	                content.setText(Resources.getResource("messages.sender") + ": " + message.getSender().getFullName() + "\nTitle: " + message.getTitle());
 	                break;

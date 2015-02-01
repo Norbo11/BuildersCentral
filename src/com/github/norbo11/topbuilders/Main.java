@@ -27,7 +27,7 @@ public class Main extends Application {
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         stage.setTitle(Constants.APPLICATION_NAME);
-        
+                
         SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
         if (Constants.DEBUG_MODE) Employee.loginTestAccount();
 	}

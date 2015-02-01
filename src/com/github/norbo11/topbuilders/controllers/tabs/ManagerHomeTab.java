@@ -3,7 +3,6 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,7 +32,7 @@ public class ManagerHomeTab extends AbstractController {
         case "employees": TabHelper.createAndSwitchTab(Resources.getResource("home.employees"), EmployeesTab.FXML_FILENAME); break;
         case "quotes": break;
         case "requests": break;
-        case "materials": TabHelper.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME);
+        case "materials": TabHelper.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME); break;
         case "manageAssignments": break;
         }
     }
@@ -46,16 +45,18 @@ public class ManagerHomeTab extends AbstractController {
    @Override
    public void update() {
        ObservableList<Node> notifications = getNotificationsList().getChildren();
+       notifications.clear();
         
        for (Notification notification : Employee.getCurrentEmployee().getNotifications()) {
            notifications.add(new NotificationItem(notification));
        }
          
-        if (notifications.size() > 0)
+        if (notifications.size() > 0) {
             notifications.get(notifications.size() - 1).getStyleClass().add("notification-item-last");
-        else {
+            getNotificationsList().getStyleClass().remove("empty");
+       } else {
             Label label = new Label(Resources.getResource("notifications.empty"));
-            getNotificationsList().setAlignment(Pos.CENTER);
+            getNotificationsList().getStyleClass().add("empty");
             notifications.add(label);
         }
     }

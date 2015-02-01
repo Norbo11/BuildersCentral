@@ -97,30 +97,29 @@ public class ModifyEmployeeScene extends AbstractValidationScene {
     
 
     public boolean validate() {
-        clearErrors();
     	boolean userChanged = !employee.getUsername().equals(username.getText());
     	boolean emailChanged = !employee.getEmail().equals(email.getText());
     	
     	/* Username */
     	if (username.getText().length() > 0) {
     		if (userChanged && Employee.checkUsernameExists(username.getText())) {
-    		    addError("validation.usernameExists");
+    		    addErrorFromResource("validation.usernameExists");
         	}
-    	} else addError("validation.usernameRequired");
+    	} else addErrorFromResource("validation.usernameRequired");
     	
     	
     	/* Email */
     	if (email.getText().length() > 0) {
     		if (Validation.checkEmailFormat(email.getText())) {
     			if (emailChanged && Employee.checkEmailExists(email.getText())) {
-    			    addError("validation.emailExists");
+    			    addErrorFromResource("validation.emailExists");
             	}
-        	} else addError("validation.invalidEmail");
-    	} else addError("validation.emailRequired");
+        	} else addErrorFromResource("validation.invalidEmail");
+    	} else addErrorFromResource("validation.emailRequired");
     	
     	/* Name */
     	if (firstName.getText().length() == 0 || lastName.getText().length() == 0) {
-    	    addError("validation.namesRequired");
+    	    addErrorFromResource("validation.namesRequired");
     	}
     	
 		return displayErrors();

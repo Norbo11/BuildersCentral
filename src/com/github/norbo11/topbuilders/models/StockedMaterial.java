@@ -11,7 +11,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import com.github.norbo11.topbuilders.controllers.tabs.StockedMaterialsTab;
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.Database;
 
@@ -23,6 +22,17 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
 	private IntegerProperty quantityTypeId = new SimpleIntegerProperty(0);
 
+	public StockedMaterial() {
+	    super();
+	}
+	
+	public StockedMaterial(String name, double quantityInStock, QuantityType quantityType) {
+	    setName(name);
+	    setQuantityInStock(quantityInStock);
+	    setQuantityTypeId(quantityType.getId());
+	    setId(add());
+	}
+	
 	/* Getters and setters */
 	
     public String getName() {
@@ -37,8 +47,8 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 		return quantityInStock.get();
 	}
 
-	public void setQuantityInStock(double hourlyWage) {
-		this.quantityInStock.set(hourlyWage);
+	public void setQuantityInStock(double quantityInStock) {
+		this.quantityInStock.set(quantityInStock);
 	}
 
 	public int getQuantityTypeId() {
@@ -70,20 +80,15 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
     }
     
 	public Double getQuantityRequired() {
+	    //TODO implement properly
 		return 5d;
 	}
     
-    /* Inherited methods */
-    
+    /* Override methods */
+
     @Override
-    public void delete() {
-        super.delete();
-        StockedMaterialsTab.updateAllTabs();
-    }
-    
-    @Override
-    public void add() {
-        Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+    public int add() {
+        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
         + " (name,quantityInStock,quantityTypeId) "
         + "VALUES (?,?,?)"
         , getName(), getQuantityInStock(), getQuantityTypeId());

@@ -7,16 +7,33 @@
 <?import javafx.scene.text.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
 
-<VBox spacing="20" fillWidth="false" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.RegisterScene">
-  <prefWidth><Constants fx:constant="WINDOW_WIDTH" /></prefWidth>
-  <prefHeight><Constants fx:constant="WINDOW_HEIGHT" /></prefHeight>
+<VBox fx:id="parent" spacing="20" fillWidth="false" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.RegisterScene">
   <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
   
-  <Label text="%register.info" />
-  <TextField prefWidth="340" />
+  <Label fx:id="errorsLabel" visible="false" text="Errors:" />
+  <VBox fx:id="errorsList" />
   
-  <HBox spacing="20">
-    <Button prefWidth="150" text="%register.back" onAction="#back" />
-    <Button prefWidth="150" text="%register.activate" onAction="#activate" />
-  </HBox>
+  <VBox fx:id="activateForm" spacing="20">
+    <Label text="Please enter the 12-character code provided by your employer" />
+    <TextField fx:id="code" onAction="#activate" />
+    
+    <HBox spacing="20" alignment="center">
+      <Button prefWidth="150" text="Back" onAction="#back" />
+      <Button prefWidth="150" text="Next" onAction="#next" />
+    </HBox>
+  </VBox>
+
+  <VBox fx:id="passwordForm" visible="false" spacing="20">
+    <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
+      <Label text="New password" GridPane.rowIndex="1" />
+      <PasswordField fx:id="newPass" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+      
+      <Label text="Confirm password" GridPane.rowIndex="2" />
+      <PasswordField fx:id="confirmPass" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    </GridPane>
+    
+    <HBox spacing="20" alignment="center">
+      <Button prefWidth="150" text="Activate account!" onAction="#activate" />
+    </HBox>
+  </VBox>
 </VBox>

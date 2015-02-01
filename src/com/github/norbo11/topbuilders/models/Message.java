@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import java.util.Vector;
 
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
@@ -17,10 +17,8 @@ import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
-import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -29,24 +27,23 @@ public class Message extends AbstractModel {
     private IntegerProperty recipientId = new SimpleIntegerProperty(0);
     private StringProperty title = new SimpleStringProperty("");
     private StringProperty content = new SimpleStringProperty("");
-    private ObjectProperty<LocalDateTime> date = new SimpleObjectProperty<LocalDateTime>();
+    private LongProperty timestamp = new SimpleLongProperty(0);
   
     /* Getters and setters */
     
-    public ObjectProperty<LocalDateTime> dateProperty() {
-        return date;
+    public Message() {
+        super();
     }
     
-    public Employee getSender() {
-        Employee employee = new Employee();
-        employee.loadFromId(getSenderId(), "firstname", "lastname");
-        return employee;
-    }
-    
-    public Employee getRecipient() {
-        Employee employee = new Employee();
-        employee.loadFromId(getRecipientId(), "firstname", "lastname");
-        return employee;
+    public Message(int senderId, int recipientId, String title, String content, long timestamp) {
+        super();
+        
+        setSenderId(senderId);
+        setRecipientId(recipientId);
+        setTitle(title);
+        setContent(content);
+        setTimestamp(timestamp);
+        setId(add());
     }
 
     public String getTitle() {
@@ -57,8 +54,8 @@ public class Message extends AbstractModel {
         return content.get();
     }
 
-    public LocalDateTime getDate() {
-        return date.get();
+    public long getTimestamp() {
+        return timestamp.get();
     }
     
     public int getSenderId() {
@@ -85,22 +82,34 @@ public class Message extends AbstractModel {
 		this.content.set(content);
 	}
 
-	public void setDate(LocalDateTime date) {
-		this.date.set(date);
+	public void setTimestamp(long timestamp) {
+		this.timestamp.set(timestamp);
 	}
 
 	/* Instance methods */
-	
-    @Override
-    public void delete() {
-        super.delete();
-        TabHelper.updateAllTabs();
+
+	public Employee getSender() {
+        Employee employee = new Employee();
+        employee.loadFromId(getSenderId(), "firstName", "lastName");
+        return employee;
+    }
+    
+    public Employee getRecipient() {
+        Employee employee = new Employee();
+        employee.loadFromId(getRecipientId(), "firstName", "lastName");
+        return employee;
     }
 	
+	public LocalDateTime getDate() {
+        return DateTimeUtil.getDateTimeFromTimestamp(getTimestamp());
+	}
+	
+	/* Override methods */
+	
     @Override
-    public void add() {
-        // TODO Auto-generated method stub
-        
+    public int add() {
+        return Database.executeUpdate("INSERT INTO " + Message.DB_TABLE_NAME + " (senderId, recipientId, title, content, timestamp) VALUES (?,?,?,?,?)", 
+        getSenderId(), getRecipientId(), getTitle(), getContent(), getTimestamp());
     }
 	
 	@Override
@@ -116,7 +125,7 @@ public class Message extends AbstractModel {
         if (containsColumn(columns, "recipientId")) setRecipientId(result.getInt("recipientId"));
         if (containsColumn(columns, "title")) setTitle(result.getString("title"));
         if (containsColumn(columns, "content")) setContent(result.getString("content"));
-        if (containsColumn(columns, "timestamp")) setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
+        if (containsColumn(columns, "timestamp")) setTimestamp(result.getInt("timestamp"));
 	}
 
 	@Override
@@ -125,17 +134,6 @@ public class Message extends AbstractModel {
 	}
 	
 	/* Static methods */
-
-    public static int addMessage(int fromId, int toId, String title, String content, long timestamp) {
-        try {
-            ResultSet result = Database.executeUpdate("INSERT INTO " + Message.DB_TABLE_NAME + " (senderId, recipientId, title, content, timestamp) VALUES (?,?,?,?,?)", 
-            fromId, toId, title, content, timestamp);
-            return result.getInt(1);
-        } catch (SQLException e) {
-            Log.error(e);
-        }
-        return 0;
-    }
 
     public static void displayMessage(Message message) {
         //Create new window
@@ -149,7 +147,7 @@ public class Message extends AbstractModel {
     }
     
     public static Vector<Message> loadMessagesForEmployee(Employee employee) {
-        return loadList(loadAllModelsWhere(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
+        return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
     }
     
     public static Vector<Message> loadList(ResultSet result) {

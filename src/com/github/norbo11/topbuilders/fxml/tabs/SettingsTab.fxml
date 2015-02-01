@@ -7,7 +7,6 @@
 <?import javafx.scene.text.*?>
 <?import javafx.collections.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
-<?import com.github.norbo11.topbuilders.util.StylableComboBox?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.SettingsTab">
   <padding><Insets top="25" bottom="25" right="170" left="170" /></padding>
@@ -67,7 +66,7 @@
       
       <right>
         <VBox spacing="10">
-          <StylableComboBox fx:id="languagesCombo" />
+          <ComboBox fx:id="languagesCombo" />
           <CheckBox fx:id="fullscreenCheckbox" />
         </VBox>
       </right>

@@ -19,6 +19,7 @@ public class Database {
         try
         {
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            String debug = Resources.replaceStringWithParameters(query, "?", objects);
             
             if (statement.getParameterMetaData().getParameterCount() == objects.length) {
                 //Replace every '?' in the query with the corresponding object from the objects array
@@ -26,16 +27,18 @@ public class Database {
                     statement.setObject(i, objects[i - 1]);
                 }
                 
-                System.out.println("Executing SQL: " + query);
+                System.out.println("Executing SQL: " + debug);
+                
+                //If this is an update statement, get the ID of the inserted row (if one was inserted) and return it
+                //If this isn't an update, just execture the statement, returning the requested data
                 if (update) {
                     statement.executeUpdate();
                     ResultSet result = statement.getGeneratedKeys();
-                    result.next();
                     return result;
                 } else {
                     return statement.executeQuery();
                 }
-            } else Log.error("Query error: inconsistent objects array. SQL: " + query);
+            } else Log.error("Query error: inconsistent objects array. SQL: " + debug);
         } catch (SQLException e)
         {
             Log.error(e);
@@ -48,9 +51,20 @@ public class Database {
         return execute(query, false, objects);
     }
     
-    //Executes a query, without returning anything (used for UPDATE, INSERT, CREATE, etc)
-    public static ResultSet executeUpdate(String query, Object... objects) {
-        return execute(query, true, objects);
+    //Executes a query without returning any data (used for UPDATE, INSERT, CREATE, etc). When used to INSERT, will return ID of the row inserted
+    public static int executeUpdate(String query, Object... objects) {
+        try {
+            ResultSet result = execute(query, true, objects);
+            if (result.next()) {
+                int insertedId = result.getInt(1);
+                
+                Log.info("ID of inserted row: #" + insertedId);
+                return insertedId;
+            }
+        } catch (SQLException e) {
+            Log.error(e);
+        }
+        return 0;
     }
 
     public static void disconnect() {

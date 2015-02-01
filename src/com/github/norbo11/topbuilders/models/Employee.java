@@ -16,10 +16,10 @@ import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.HashUtil;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
@@ -215,7 +215,7 @@ public class Employee extends AbstractModel {
     }
     
     public String getFullName() {
-        return getFirstName() + " " + (getLastName() != null ? getLastName() : "");
+        return getFirstName() + " " + (!getLastName().equals("") ? getLastName() : "");
     }
     
     public String getAddress() {
@@ -225,18 +225,24 @@ public class Employee extends AbstractModel {
         if (!getPostcode().equals("")) address += "\n" + getPostcode();
         return address;
     }
-	
-	/* Overrides */
-	
-    @Override
-    public void delete() {
-        super.delete();
-        TabHelper.updateAllTabs();
+    
+    public void removeActivationCode() {
+        setActivationCode("");
+        save();
     }
     
+    public void login() {
+        Employee.setCurrentEmployee(this);
+        Resources.setCurrentBundle(this);
+        SceneHelper.setFullscreen(getSettings().isFullscreen());
+        SceneHelper.changeMainScene(MainScene.FXML_FILENAME);
+    }
+	
+	/* Overrides */
+    
     @Override
-    public void add() {
-        Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+    public int add() {
+        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
         + " (username,password,email,firstName,lastName,firstLineAddress,secondLineAddress,city,postcode,defaultWage,userTypeId,activationCode) "
         + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
         , getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode());
@@ -246,7 +252,7 @@ public class Employee extends AbstractModel {
     public void save() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,defaultWage=?,userTypeId=?,activationCode=? "
-        + "WHERE id = ?", getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode(), getId());
+        + "WHERE id = ?", getUsername(), HashUtil.generateMD5Hash(getPassword()), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode(), getId());
     }
     
     @Override
@@ -287,10 +293,8 @@ public class Employee extends AbstractModel {
                 Employee employee = new Employee();
                 employee.loadFromResult(result);
                 
-                if (employee.getPassword().equals(inputPassword)) {
-                    Employee.setCurrentEmployee(employee);
-                    SceneHelper.setFullscreen(employee.getSettings().isFullscreen());
-                    Resources.setCurrentBundle(employee);
+                if (employee.getPassword().equals(HashUtil.generateMD5Hash(inputPassword))) {
+                    employee.login();
                     return employee; 
                 } else throw new PasswordException();
             } else throw new UsernameException();
@@ -330,6 +334,15 @@ public class Employee extends AbstractModel {
 			Log.error(e);
 			return true;
 		}
+	}
+	
+	public static Employee checkActivationCode(String code) {
+	    Vector<Employee> employees = loadList(loadAllModelsWhere(DB_TABLE_NAME, "activationCode", code));
+	    
+	    if (employees.size() == 1) {
+	        return employees.get(0);
+	    }
+	    return null;
 	}
 	
 	public static Vector<Employee> loadList(ResultSet result) {

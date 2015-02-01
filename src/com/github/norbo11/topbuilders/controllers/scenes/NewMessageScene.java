@@ -25,15 +25,15 @@ public class NewMessageScene extends AbstractController {
     
     @FXML
     public void sendMessage(ActionEvent event) {
-        //TODO redo this
         int fromId = Employee.getCurrentEmployee().getId();
         int toId = toCombo.getSelectionModel().getSelectedItem().getId();
         String title = titleField.getText();
         String content = contentEditor.getHtmlText().replace("contenteditable=\"true\"", "");
         long timestamp = DateTimeUtil.getCurrentTimestamp();
                 
-        int messageId = Message.addMessage(fromId, toId, title, content, timestamp);
-        Notification.addNotification(toId, NotificationType.NEW_MESSAGE.ordinal(), messageId, timestamp, false);
+        Message message = new Message(fromId, toId, title, content, timestamp);
+        new Notification(toId, NotificationType.NEW_MESSAGE, message.getId(), timestamp, false);
+        
         discard(event);
         TabHelper.updateAllTabs();
     }

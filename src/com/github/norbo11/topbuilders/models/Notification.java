@@ -7,134 +7,169 @@ import java.util.Vector;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
 
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.TabHelper;
 
 public class Notification extends AbstractModel {
     public static final String DB_TABLE_NAME = "notifications";
     
     private IntegerProperty employeeId = new SimpleIntegerProperty(0);
-    private IntegerProperty associatedModelId = new SimpleIntegerProperty();
-    private ObjectProperty<NotificationType> type = new SimpleObjectProperty<NotificationType>();
-    private ObjectProperty<LocalDateTime> date = new SimpleObjectProperty<LocalDateTime>();
+    private IntegerProperty typeId = new SimpleIntegerProperty(0);
+    private IntegerProperty associatedId = new SimpleIntegerProperty(0);
+    private LongProperty timestamp = new SimpleLongProperty(0);
     private BooleanProperty seen = new SimpleBooleanProperty(false);
+    
+    public Notification() {
+        super();
+    }
+    
+    public Notification(int employeeId, NotificationType type, int associatedId, long timestamp, boolean seen) {
+        super();
+        
+        setEmployeeId(employeeId);
+        setTypeId(type.getId());
+        setAssociatedId(associatedId);
+        setTimestamp(timestamp);
+        setSeen(seen);
+        setId(add());
+    }
     
     /* Getters and setters */
     
-    public Integer getEmployee() {
+    public int getEmployeeId() {
         return employeeId.get();
     }
 
-    public NotificationType getType() {
-        return type.get();
+    public int getTypeId() {
+        return typeId.get();
     }
 
-    public int getAssociatedModelId() {
-        return associatedModelId.get();
+    public int getAssociatedId() {
+        return associatedId.get();
     }
 
-    public LocalDateTime getDate() {
-        return date.get();
+    public long getTimestamp() {
+        return timestamp.get();
     }
 
-    public boolean isSeen() {
+    public boolean getSeen() {
         return seen.get();
     }
 
-	public IntegerProperty getEmployeeId() {
-		return employeeId;
-	}
+    public void setEmployeeId(int employeeId) {
+        this.employeeId.set(employeeId);
+    }
 
-	public void setEmployeeId(int employeeId) {
-		this.employeeId.set(employeeId);
-	}
+    public void setTypeId(int typeId) {
+        this.typeId.set(typeId);
+    }
 
-	public BooleanProperty getSeen() {
-		return seen;
-	}
+    public void setAssociatedId(int associatedId) {
+        this.associatedId.set(associatedId);
+    }
 
-	public void setSeen(boolean seen) {
-		this.seen.set(seen);
-	}
+    public void setTimestamp(long timestamp) {
+        this.timestamp.set(timestamp);
+    }
 
-	public void setType(NotificationType type) {
-		this.type.set(type);
-	}
-
-	public void setAssociatedModelId(int associatedModelId) {
-		this.associatedModelId.set(associatedModelId);
-	}
-
-	public void setDate(LocalDateTime date) {
-		this.date.set(date);
-	}
-	
-    /* Instance methods */
-
-    @Override
-    public void add() {
-        // TODO Auto-generated method stub
-        
+    public void setSeen(boolean seen) {
+        this.seen.set(seen);
     }
 	
-	@Override
+    /* Instance methods */
+    
+    public LocalDateTime getDate() {
+        return DateTimeUtil.getDateTimeFromTimestamp(getTimestamp());
+    }
+    
+    public NotificationType getType() {
+        return NotificationType.getNotificationType(getTypeId());
+    }
+
+    public AbstractModel getAssociatedModel() {
+        AbstractModel associatedModel = null;
+                
+        switch (getType()) {
+        case ASSIGNMENT_CLOSE_TO_END: case EMPLOYEE_ASSIGNMENT_COMPLETE: case NEW_ASSIGNMENT:
+            associatedModel = new Assignment();
+            break;
+        case NEW_MESSAGE:
+            associatedModel = new Message();
+            break;
+        case NEW_QUOTE_REQUEST:
+            associatedModel = new QuoteRequest();
+            break;
+        }
+        
+        if (associatedModel != null) associatedModel.loadFromId(getAssociatedId());
+        else Log.error("Detected invalid notification type for notification #" + getId());
+        
+        return associatedModel;
+    }
+    
+    /* Override methods */
+    
+    @Override
+    public int add() {
+        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME + " (employeeId, typeId, associatedId, timestamp, seen) VALUES (?,?,?,?,?)", 
+        getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), getSeen());
+    }
+
+    @Override
 	public void save() {
-		// TODO Auto-generated method stub
-		
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET employeeId=?, typeId=?, associatedId=?, timestamp=?, seen=? WHERE id=?", 
+        getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), getSeen(), getId());
 	}
 
 	@Override
 	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
-        if (containsColumn(columns, "associatedId")) setAssociatedModelId(result.getInt("associatedId"));
         if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
-        if (containsColumn(columns, "timestamp")) setDate(DateTimeUtil.getDateTimeFromTimestamp(result.getString("timestamp")));
-        if (containsColumn(columns, "type")) setType(NotificationType.getNotificationType(result.getInt("type")));
+        if (containsColumn(columns, "typeId")) setTypeId(result.getInt("typeId"));
+        if (containsColumn(columns, "associatedId")) setAssociatedId(result.getInt("associatedId"));
+        if (containsColumn(columns, "timestamp")) setTimestamp(result.getInt("timestamp"));
         if (containsColumn(columns, "seen")) setSeen(result.getBoolean("seen"));
 	}
-
+	
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
 	}
 	
-	public AbstractModel getAssociatedModel() {
-		AbstractModel associatedModel = null;
-		switch (getType()) {
-        case ASSIGNMENT_CLOSE_TO_END: case EMPLOYEE_ASSIGNMENT_COMPLETE: case NEW_ASSIGNMENT:
-        	associatedModel = new Assignment();
-            break;
-        case NEW_MESSAGE:
-        	associatedModel = new Message();
-            break;
-        case NEW_QUOTE_REQUEST:
-        	associatedModel = new QuoteRequest();
-            break;
-		}
-        if (associatedModel != null) associatedModel.loadFromId(getAssociatedModelId());
-        else Log.error("Detected invalid notification type for notification #" + getId());
-        return associatedModel;
-	}
-	
 	/* Static methods */
-    
-    public static void addNotification(int employeeId, int type, int associatedId, long timestamp, boolean read) {
-        Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME + " (employeeId, type, associatedId, timestamp, seen) VALUES (?,?,?,?,?)", 
-        employeeId, type, associatedId, timestamp, read);
+
+	//Override
+	public static Vector<Notification> loadList(ResultSet result) {
+        return loadList(result, Notification.class);
     }
 
 	public static Vector<Notification> loadNotificationsForEmployee(Employee employee) {
-        return loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()));
+        return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "employeeId", employee.getId(), "timestamp", true));
 	}
 	
-	public static Vector<Notification> loadList(ResultSet result) {
-		return loadList(result, Notification.class);
-	}
+	
+    public static void deleteCorrespondingNotification(AbstractModel model) {
+        if (model instanceof Message) {
+            Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_MESSAGE.getId(), model.getId());
+        }
+        
+        if (model instanceof Assignment) {
+            Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? OR typeId=? OR typeId=? AND associatedId=?", 
+            NotificationType.ASSIGNMENT_CLOSE_TO_END, NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE, NotificationType.NEW_ASSIGNMENT.getId(), model.getId());
+        }
+        
+        if (model instanceof QuoteRequest) {
+            Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_QUOTE_REQUEST.getId(), model.getId());
+        }
+        
+        TabHelper.updateAllTabs();
+    }
 }

@@ -3,10 +3,8 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -17,6 +15,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
+import com.github.norbo11.topbuilders.util.DeleteModelButtonCellFactory;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
@@ -47,19 +46,6 @@ public class MessagesTab extends AbstractController {
         }
     }
     
-    private class ButtonCell extends TableCell<Message, Message> {
-        @Override
-        protected void updateItem(Message item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty) setText("");
-            else {
-                Button button = new Button("X");
-                button.setOnAction(e -> item.delete());
-                setGraphic(button); //setGraphic allows me to set an actual node instead of text for these cell contents
-            }
-        }
-    }
-    
     /* FXML methods */
 
     @FXML
@@ -67,12 +53,8 @@ public class MessagesTab extends AbstractController {
 		//Set custom date/time cell display classes
 		dateCol.setCellFactory(column -> new DateCell());
 		timeCol.setCellFactory(column -> new TimeCell());
-		
-		//Set the cell value of each X cell to contain the actual message object
-		xCol.setCellValueFactory(data -> new ReadOnlyObjectWrapper<Message>(data.getValue()));
-		
-		//Set the custom display class for X button cells
-		xCol.setCellFactory(column -> new ButtonCell());
+
+		DeleteModelButtonCellFactory.assignCellFactory(xCol);
 		
 	    table.setRowFactory(value -> {
 	        TableRow<Message> row = new TableRow<Message>();

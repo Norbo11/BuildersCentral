@@ -1,6 +1,8 @@
 package com.github.norbo11.topbuilders.controllers.scenes;
 
+import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -16,10 +18,19 @@ public class MapScene extends AbstractController {
     private String query;
     @FXML private WebView webView;
     @FXML private WebEngine engine;
+    @FXML private ProgressBar progress;
 
     @FXML
     public void initialize() {
         engine = webView.getEngine();
+        
+        progress.progressProperty().bind(engine.getLoadWorker().progressProperty());
+
+        engine.getLoadWorker().stateProperty().addListener((value, oldState, newState) -> {
+            if (newState == State.SUCCEEDED) {
+                 progress.setVisible(false);
+            }
+        });
     }
 
     public void update() {
@@ -37,8 +48,8 @@ public class MapScene extends AbstractController {
         "</html>";
         
         engine.loadContent(content);
-        webView.setPrefWidth(MAP_WIDTH + 19);
-        webView.setPrefHeight(MAP_HEIGHT + 19);
+        webView.setPrefWidth(MAP_WIDTH + 20);
+        webView.setPrefHeight(MAP_HEIGHT + 20);
         webView.getScene().getWindow().sizeToScene();
     }
 

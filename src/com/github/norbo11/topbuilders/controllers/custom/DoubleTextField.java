@@ -5,16 +5,28 @@ import javafx.scene.input.KeyEvent;
 
 public class DoubleTextField extends TextField {
 	public DoubleTextField() {
-		super();
-	
-		addEventFilter(KeyEvent.KEY_TYPED, e -> {
-			if (!e.getCharacter().matches("\\d*")) {
-				e.consume();
-	        }                
-	    });
+		this("");
 	}
 	
-	public double getDouble() {
+	public DoubleTextField(String string) {
+	    super(string);
+	    
+        addEventFilter(KeyEvent.KEY_TYPED, e -> {
+            String character = e.getCharacter();
+            
+            //If the character is a dot, and one already exists, cancel the event
+            if (character.equals(".")) {
+                if (getText().contains(".")) e.consume();
+            }
+            
+            //Also, if the character isn't a dot but is anything but a number, cancel the event
+            else if (!character.matches("\\d*")) {
+                e.consume();
+            }                
+        });    
+    }
+
+    public double getDouble() {
 		return Double.valueOf(getText());
 	}
 }

@@ -8,7 +8,8 @@ public class QuoteRequest extends AbstractModel {
 	public static final String DB_TABLE_NAME = "quoteRequests";
 
     @Override
-    public void add() {
+    public int add() {
+        return 0;
         // TODO Auto-generated method stub
         
     }

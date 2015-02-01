@@ -13,22 +13,28 @@ import com.github.norbo11.topbuilders.util.Resources;
 public abstract class AbstractValidationScene extends AbstractController {
     private Vector<Label> errors = new Vector<Label>();
     
-    public void addError(String key) {
-        errors.add(new Label(Resources.getResource(key)));
+    public void addErrorFromResource(String key) {
+        addError(Resources.getResource(key));
     }
-
-
-    public void clearErrors() {
-        errors.clear();
+    
+    public void addError(String string) {
+        errors.add(new Label(string));
     }
     
     public boolean displayErrors() {
+        return displayErrors(false);
+    }
+    
+    public boolean displayErrors(boolean resize) {
+        ObservableList<Node> errorList = getErrorsList().getChildren();
+        errorList.clear();
+        getErrorsLabel().setVisible(false);
+        
         if (errors.size() > 0) {
-            ObservableList<Node> errorList = getErrorsList().getChildren();
-            errorList.clear();
             errorList.addAll(errors);
+            errors.clear();
             
-            getErrorsLabel().getScene().getWindow().sizeToScene();
+            if (resize) getErrorsLabel().getScene().getWindow().sizeToScene();
             getErrorsLabel().setVisible(true);
             return false;
         } 

@@ -12,7 +12,7 @@ public class DateTimeUtil {
     }
 
     public static String formatDateAndTime(LocalDateTime date) {
-        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss"));
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
     }
     
     public static String formatDate(LocalDateTime date) {
@@ -20,11 +20,11 @@ public class DateTimeUtil {
     }
     
     public static String formatTime(LocalDateTime date) {
-        return date.format(DateTimeFormatter.ofPattern("hh:mm:ss"));
+        return date.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
-	public static LocalDateTime getDateTimeFromTimestamp(String timestamp) {
-		return LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.valueOf(timestamp)), TimeZone.getDefault().toZoneId());
+	public static LocalDateTime getDateTimeFromTimestamp(long timestamp) {
+		return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), TimeZone.getDefault().toZoneId());
 	}
 
 }

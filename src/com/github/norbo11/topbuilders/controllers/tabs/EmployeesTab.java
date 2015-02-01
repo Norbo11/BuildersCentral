@@ -4,7 +4,6 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
@@ -32,10 +31,12 @@ public class EmployeesTab extends AbstractController {
         @Override
         protected void updateItem(String address, boolean empty) {
             super.updateItem(address, empty);
-            if (empty) setText("");
+            if (empty) {
+                setText("");
+                setGraphic(null);
+            }
             else {                
                 Hyperlink link = new Hyperlink(address);
-                link.setAlignment(Pos.CENTER_LEFT);
                 link.setOnAction(e -> GoogleMaps.openMap(address));
                 
                 getStyleClass().add("address");

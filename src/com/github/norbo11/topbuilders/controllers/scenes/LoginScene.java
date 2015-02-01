@@ -30,7 +30,6 @@ public class LoginScene extends AbstractController {
     public void submitLogin(ActionEvent event) {
         try {
             Employee.login(usernameField.getText(), passwordField.getText());            
-            SceneHelper.changeMainScene(MainScene.FXML_FILENAME);
         } catch (UsernameException | PasswordException e) {
             statusText.setText(e.getMessage());
         }

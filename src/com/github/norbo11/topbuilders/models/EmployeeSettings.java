@@ -45,7 +45,8 @@ public class EmployeeSettings extends AbstractModel {
 	}
 	
     @Override
-    public void add() {
+    public int add() {
+        return 0;
         // TODO Auto-generated method stub
         
     }

@@ -1,24 +1,16 @@
 package com.github.norbo11.topbuilders.util;
 
-import javafx.stage.Stage;
-
-import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
-import com.github.norbo11.topbuilders.controllers.scenes.InfoDialog;
 
 public class Log {
 
     public static void error(Exception e)
     {
-        e.printStackTrace();
+        error("", e);
     }
 
     public static void error(String string) {
         System.out.println(string);
-        
-        Stage stage = StageHelper.createDialogStage("Error!");
-        AbstractScene scene = SceneHelper.changeScene(stage, InfoDialog.FXML_FILENAME);
-        InfoDialog dialog = (InfoDialog) scene.getController();
-        dialog.setText(string);
+        SceneHelper.showInfoDialog("Error!", string);
     }
     
     public static void error(String string, Exception e) {
@@ -27,7 +19,6 @@ public class Log {
         }
         
         error(string);
-        
     }
 
     public static void info(Object object) {

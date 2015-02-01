@@ -77,9 +77,4 @@ public class SettingsTab extends AbstractController {
 	@FXML public void cancel(ActionEvent event) {
 		TabHelper.closeCurrentTab();
 	}
-
-    @Override
-    public void update() {
-        
-    }
 }

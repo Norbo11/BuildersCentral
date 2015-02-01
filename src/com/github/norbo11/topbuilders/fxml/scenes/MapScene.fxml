@@ -12,4 +12,9 @@
 <VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.MapScene">
     <WebView fx:id="webView">
     </WebView>
+    
+    <ProgressBar fx:id="progress">
+        <padding><Insets left="150" right="150" bottom="25" /></padding>
+        <maxWidth><Double fx:constant="MAX_VALUE" /></maxWidth>
+    </ProgressBar>
 </VBox>

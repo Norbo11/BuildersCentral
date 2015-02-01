@@ -20,22 +20,18 @@
             <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
         </TableColumn>
         
-        <TableColumn fx:id="quantityInStockColumn" text="%materials.quantityInStock">
-            <cellValueFactory><PropertyValueFactory property="quantityInStock" /></cellValueFactory>
-        </TableColumn>
+        <TableColumn fx:id="quantityInStockColumn" text="%materials.quantityInStock" />
         
-        <TableColumn fx:id="requiredColumn" text="%materials.requiredInProjects">
-        </TableColumn>
+        <TableColumn fx:id="requiredColumn" text="%materials.requiredInProjects" />
         
-        <TableColumn fx:id="balanceColumn" text="%materials.balance">
-        </TableColumn>
+        <TableColumn fx:id="balanceColumn" text="%materials.balance" />
         
-        <TableColumn fx:id="xColumn" text="X" />
+        <TableColumn fx:id="xColumn" text="%materials.delete" />
     </columns>
   </TableView>
   
   <HBox spacing="100" alignment="center">
     <Button text="%materials.generateReport" prefWidth="190" prefHeight="40" onAction="#generateReport" />
-    <Button fx:id="addMaterial" text="%materials.addMaterial" prefWidth="190" prefHeight="40" onAction="#addMaterial" />
+    <Button fx:id="addMaterial" text="%materials.add" prefWidth="190" prefHeight="40" onAction="#addMaterial" />
   </HBox>
 </VBox>

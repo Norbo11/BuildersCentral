@@ -80,7 +80,7 @@
 
 /* Notifications */
 
-#notificationsPane .title {
+#notificationsPane .title, #notificationsList.empty {
     -fx-alignment: center;
 }
 

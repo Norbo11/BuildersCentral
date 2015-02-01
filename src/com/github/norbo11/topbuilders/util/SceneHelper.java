@@ -51,8 +51,12 @@ public class SceneHelper {
         stage.close();
     }
     
+    public static void showInfoDialog(String title, String info) {
+        showInfoDialog(title, info, () -> {});
+    }
+    
     public static void showInfoDialog(String title, String info, Runnable runnable) {
-        Button button = new Button(Resources.getResource("general.ok"));
+        Button button = new Button("OK");
         
         button.setOnAction(e -> { 
             runnable.run();

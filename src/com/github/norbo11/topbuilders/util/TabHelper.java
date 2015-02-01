@@ -47,4 +47,8 @@ public class TabHelper {
             tab.update();
         }
     }
+
+    public static void removeTab(AbstractController tab) {
+        tabs.remove(tab);
+    }
 }
