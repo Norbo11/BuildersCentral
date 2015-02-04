@@ -30,6 +30,10 @@ public class Project extends AbstractModel {
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
     
+    public Project() {
+    	super();
+    }
+    
     public Project(String firstLineAddress) {
     	super();
     	

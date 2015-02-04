@@ -95,6 +95,7 @@ public class SceneHelper {
         Label label = new Label(info);
         label.setMinHeight(80);
         label.setTextAlignment(TextAlignment.CENTER);
+        label.setWrapText(true);
         
         HBox hbox = new HBox(20);
         hbox.setAlignment(Pos.CENTER);
