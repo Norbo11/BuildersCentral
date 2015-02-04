@@ -30,7 +30,7 @@ public class ManagerHomeTab extends AbstractController {
         case "settings": TabHelper.createAndSwitchTab(Resources.getResource("home.settings"), SettingsTab.FXML_FILENAME); break;
         case "logout": SceneHelper.changeMainScene(LoginScene.FXML_FILENAME); break;
         case "employees": TabHelper.createAndSwitchTab(Resources.getResource("home.employees"), EmployeesTab.FXML_FILENAME); break;
-        case "quotes": break;
+        case "quotes": TabHelper.createAndSwitchTab(Resources.getResource("home.quotes"), QuotesTab.FXML_FILENAME); break;
         case "requests": break;
         case "materials": TabHelper.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME); break;
         case "manageAssignments": break;

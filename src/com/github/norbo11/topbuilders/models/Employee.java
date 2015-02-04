@@ -279,7 +279,7 @@ public class Employee extends AbstractModel {
 	
 	@Override
 	public String toString() {
-	    return getFullName();
+		return getFullName();
 	}
 
 	/* Static methods */
@@ -313,10 +313,6 @@ public class Employee extends AbstractModel {
 			e.printStackTrace();
 		}
 	}
-	
-	public static Vector<Employee> getAllEmployees() {
-		return loadList(loadAllModels(DB_TABLE_NAME));
-	}
 
 	public static boolean checkUsernameExists(String username) {
 		try {
@@ -343,6 +339,12 @@ public class Employee extends AbstractModel {
 	        return employees.get(0);
 	    }
 	    return null;
+	}
+	
+	/* Standard static methods */
+	
+	public static Vector<Employee> getAllEmployees() {
+		return loadList(loadAllModels(DB_TABLE_NAME));
 	}
 	
 	public static Vector<Employee> loadList(ResultSet result) {

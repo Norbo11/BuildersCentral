@@ -68,15 +68,26 @@ public class EmployeesTab extends AbstractController {
         
         //Allow double clicking to modify employee
         table.setRowFactory(value -> {
-            TreeTableRow<Employee> row = new TreeTableRow<Employee>();
+            TreeTableRow<Employee> row = new TreeTableRow<Employee>() {
+            	@Override
+                protected void updateItem(Employee employee, boolean empty) {
+                    super.updateItem(employee, empty);
+                    
+                    //TODO broken
+                    if (employee != null && employee.isDummy()) getStyleClass().add("heading");
+                    else getStyleClass().remove("heading");
+                }
+            };
+            
             row.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 2 && !row.isEmpty()) {
                     modifyEmployee(null);
                 }
             });
+            
             return row;
         });
-        
+                
     	update(); 
 	}
 

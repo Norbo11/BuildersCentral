@@ -1,129 +1,197 @@
 package com.github.norbo11.topbuilders.models;
 
-import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
 
-public class Project {
+
+public class Project extends AbstractModel {
+    public static final String DB_TABLE_NAME = "projects";    
     
-    public Project(int id, boolean isQuoteRequested, HashMap<String, String> projectDetails) {
-        super();
-        this.id = id;
-        this.isQuoteRequested = isQuoteRequested;
-        clientName = projectDetails.get("clientName");
-        firstLineAddress = projectDetails.get("firstLineAddress");
-        secondLineAddress = projectDetails.get("secondLineAddress");
-        city = projectDetails.get("city");
-        postcode = projectDetails.get("postcode");
-        contactNumber = projectDetails.get("contactNumber");
-        email = projectDetails.get("email");
-        projectDescription = projectDetails.get("projectDescription");
-    }
-
-    public Project() {
-    }
-
-    public static final String DB_TABLE_NAME = "projects";
-    private int id;
-    protected boolean isQuoteRequested;
-    protected String clientName;
-    protected String firstLineAddress;
-    protected String secondLineAddress;
-    protected String city;
-    protected String postcode;
-    protected String contactNumber;
-    protected String email;
-    protected String projectDescription;
+    private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
+    private BooleanProperty completed = new SimpleBooleanProperty(false);
+    private StringProperty clientFirstName = new SimpleStringProperty("");
+    private StringProperty clientLastName = new SimpleStringProperty("");
     
-    public boolean isQuoteRequested() {
-        return isQuoteRequested;
-    }
+    private StringProperty firstLineAddress = new SimpleStringProperty("");
+    private StringProperty secondLineAddress = new SimpleStringProperty("");
+    private StringProperty city = new SimpleStringProperty("");
+    private StringProperty postcode = new SimpleStringProperty("");
 
-    public String getClientName() {
-        return clientName;
-    }
+    private StringProperty contactNumber = new SimpleStringProperty("");
+    private StringProperty email = new SimpleStringProperty("");
+    private StringProperty projectDescription = new SimpleStringProperty("");
+    private StringProperty projectNote = new SimpleStringProperty("");
+    
+    public Project(String firstLineAddress) {
+    	super();
+    	
+    	setFirstLineAddress(firstLineAddress);
+	}
 
-    public String getFirstLineAddress() {
-        return firstLineAddress;
-    }
+    /* Getters and setters */
 
-    public String getSecondLineAddress() {
-        return secondLineAddress;
-    }
+	public boolean isQuoteRequested() {
+		return quoteRequested.get();
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public void setQuoteRequested(boolean quoteRequested) {
+		this.quoteRequested.set(quoteRequested);
+	}
 
-    public String getPostcode() {
-        return postcode;
-    }
+	public boolean isCompleted() {
+		return completed.get();
+	}
 
-    public String getContactNumber() {
-        return contactNumber;
-    }
+	public void setCompleted(boolean completed) {
+		this.completed.set(completed);
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getClientFirstName() {
+		return clientFirstName.get();
+	}
 
-    public String getProjectDescription() {
-        return projectDescription;
-    }
+	public void setClientFirstName(String clientFirstName) {
+		this.clientFirstName.set(clientFirstName);
+	}
 
-    public void setQuoteRequested(boolean isQuoteRequested) {
-        this.isQuoteRequested = isQuoteRequested;
-    }
+	public String getClientLastName() {
+		return clientLastName.get();
+	}
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
+	public void setClientLastName(String clientLastName) {
+		this.clientLastName.set(clientLastName);
+	}
 
-    public void setFirstLineAddress(String firstLineAddress) {
-        this.firstLineAddress = firstLineAddress;
-    }
+	public String getFirstLineAddress() {
+		return firstLineAddress.get();
+	}
 
-    public void setSecondLineAddress(String secondLineAddress) {
-        this.secondLineAddress = secondLineAddress;
-    }
+	public void setFirstLineAddress(String firstLineAddress) {
+		this.firstLineAddress.set(firstLineAddress);
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public String getSecondLineAddress() {
+		return secondLineAddress.get();
+	}
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
+	public void setSecondLineAddress(String secondLineAddress) {
+		this.secondLineAddress.set(secondLineAddress);
+	}
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
+	public String getCity() {
+		return city.get();
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setCity(String city) {
+		this.city.set(city);
+	}
 
-    public void setProjectDescription(String projectDescription) {
-        this.projectDescription = projectDescription;
-    }
+	public String getPostcode() {
+		return postcode.get();
+	}
 
+	public void setPostcode(String postcode) {
+		this.postcode.set(postcode);
+	}
+
+	public String getContactNumber() {
+		return contactNumber.get();
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber.set(contactNumber);
+	}
+
+	public String getEmail() {
+		return email.get();
+	}
+
+	public void setEmail(String email) {
+		this.email.set(email);
+	}
+
+	public String getProjectDescription() {
+		return projectDescription.get();
+	}
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription.set(projectDescription);
+	}
+
+	public String getProjectNote() {
+		return projectNote.get();
+	}
+
+	public void setProjectNote(String projectNote) {
+		this.projectNote.set(projectNote);
+	}
+    
+	/* Instance methods */
+	
+	public String getClientFullName() {
+		return getClientFirstName() + " " + getClientLastName();
+	}
+	
+	/* Override methods */
+	
     @Override
-    public String toString() {
-        return clientName + " - " + firstLineAddress;
+    public int add() {
+        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+        + " (quoteRequested,completed,clientFirstName,clientLastName,firstLineAddress,secondLineAddress,city,postcode,contactNumber,email,projectDescription,projectNote) "
+        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+        , isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote());
+    }
+    
+    @Override
+    public void save() {                
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
+        + "quoteRequested=?,completed=?,clientFirstName=?,clientLastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,contactNumber=?,email=?,projectDescription=?,projectNote=? "
+        + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+        if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
+        if (containsColumn(columns, "completed")) setCompleted(result.getBoolean("completed"));
+        if (containsColumn(columns, "clientFirstName")) setClientFirstName(result.getString("clientFirstName"));
+        if (containsColumn(columns, "clientLastName")) setClientLastName(result.getString("clientLastName"));
+        if (containsColumn(columns, "firstLineAddress")) setFirstLineAddress(result.getString("firstLineAddress"));
+        if (containsColumn(columns, "secondLineAddress")) setSecondLineAddress(result.getString("secondLineAddress"));
+        if (containsColumn(columns, "city")) setCity(result.getString("city"));
+        if (containsColumn(columns, "postcode")) setPostcode(result.getString("postcode"));
+        if (containsColumn(columns, "contactNumber")) setContactNumber(result.getString("contactNumber"));
+        if (containsColumn(columns, "email")) setEmail(result.getString("email"));
+        if (containsColumn(columns, "projectDescription")) setProjectDescription(result.getString("projectDescription"));
+        if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
     }
 
-    public void save() {
-        Database.executeUpdate("UPDATE " + Project.DB_TABLE_NAME + " SET "
-        + "isQuoteRequested = ?"
-        + ",clientName = ?"
-        + ",firstLineAddress = ?"
-        + ",secondLineAddress = ?"
-        + ",city = ?"
-        + ",postcode = ?"
-        + ",contactNumber = ?"
-        + ",email = ?"
-        + ",projectDescription = ?"
-        + " WHERE id = ?"
-        , isQuoteRequested, clientName, firstLineAddress, secondLineAddress, city, postcode, contactNumber, email, projectDescription, id);
-    }
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+	
+	@Override
+	public String toString() {
+		return getFirstLineAddress();
+	}
+	
+	/* Static methods */
+    
+	/* Standard static methods */
+	
+	public static Vector<Project> getAllProjects() {
+		return loadList(loadAllModels(DB_TABLE_NAME));
+	}
+	
+	public static Vector<Project> loadList(ResultSet result) {
+		return loadList(result, Project.class);
+	}
 }

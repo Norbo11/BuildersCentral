@@ -36,16 +36,16 @@
     <Label text="%employees.defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="0" />
     <DoubleTextField fx:id="defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
     
-    <Label text="%employees.firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+    <Label text="%general.address.firstLine" GridPane.rowIndex="0" GridPane.columnIndex="2" />
     <TextField fx:id="firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
     
-    <Label text="%employees.secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <Label text="%general.address.secondLine" GridPane.rowIndex="1" GridPane.columnIndex="2" />
     <TextField fx:id="secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
     
-    <Label text="%employees.city" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+    <Label text="%general.address.city" GridPane.rowIndex="2" GridPane.columnIndex="2" />
     <TextField fx:id="city" GridPane.rowIndex="2" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
     
-    <Label text="%employees.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+    <Label text="%general.address.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
     <TextField fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
     
     <Label text="%employees.userType" GridPane.rowIndex="4" GridPane.columnIndex="2" />

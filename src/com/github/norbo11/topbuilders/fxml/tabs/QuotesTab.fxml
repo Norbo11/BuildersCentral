@@ -6,55 +6,73 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.QuotesTab">
-  <padding><Insets top="20" bottom="20" right="0" left="0" /></padding>
-        
+  <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
+  
   <HBox spacing="20" alignment="TOP_CENTER">
     <Label text="Select quote to edit" />
     <ComboBox fx:id="projectPicker" onAction="#updateFields" />
   </HBox>
   
-  <HBox spacing="30" >
-    <padding><Insets top="20" bottom="20" right="20" left="20" /></padding>
+  <TreeTableView fx:id="table" showRoot="false">
+    <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+    <columns>
+    </columns>
+    <root>
+    </root>
+  </TreeTableView>
+  
+  <GridPane hgap="20" vgap="10" alignment="center">
+    <padding><Insets top="10" bottom="10" /></padding>
     
-    <GridPane fx:id="projectDetailsGrid" hgap="20" vgap="20">
-        <padding><Insets top="27" bottom="0" right="0" left="0" /></padding>
-  
-        <Label text="Client name" GridPane.columnIndex="0"  GridPane.rowIndex="0" />
-        <TextField fx:id="clientNameField" GridPane.columnIndex="1"  GridPane.rowIndex="0" /> 
-        
-        <Label text="Project address" GridPane.columnIndex="0"  GridPane.rowIndex="1" />
-        <TextArea prefHeight="100" GridPane.columnIndex="1"  GridPane.rowIndex="1" />
-    </GridPane>
+    <fx:define>
+      <Insets fx:id="rightMargin" right="150" />
+      <Double fx:id="prefWidth" fx:value="240" />
+    </fx:define>
+   
+    <Label text="%quotes.projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+    <TextField fx:id="username" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
     
-    <VBox>
-      <GridPane fx:id="titleGrid" hgap="10" vgap="10">
-        <Label text="Job Description" prefWidth="200" GridPane.columnIndex="0">
-          <padding><Insets left="3" /></padding>
-        </Label>
-        
-        <Label text="Materials required" prefWidth="200" GridPane.columnIndex="1">
-          <padding><Insets left="3" /></padding>
-        </Label>
-        
-        <Label text="Cost" prefWidth="200" GridPane.columnIndex="2">
-          <padding><Insets left="3" /></padding>
-        </Label>
-      </GridPane>
+    <Label text="%quotes.projectNote" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+    <TextField fx:id="email" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
+    
+    <Label text="%employees.firstName" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+    <TextField fx:id="firstName" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
+    
+    <Label text="%employees.lastName" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+    <TextField fx:id="lastName" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
+    
+    <Label text="%employees.defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+    <DoubleTextField fx:id="defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
+    
+    <Label text="%general.address.firstLine" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+    <TextField fx:id="firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
+    
+    <Label text="%general.address.secondLine" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+    <TextField fx:id="secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
+    
+    <Label text="%general.address.city" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+    <TextField fx:id="city" GridPane.rowIndex="2" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
+    
+    <Label text="%general.address.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+    <TextField fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
+    
+    <Label text="%employees.userType" GridPane.rowIndex="4" GridPane.columnIndex="2" />
+    <ComboBox fx:id="userType" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
+    
+    <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+    <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/> 
+    
+    <Label fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+    <VBox fx:id="errorsList" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+  </GridPane>
   
-      <ScrollPane prefWidth="700" style="-fx-background-color:transparent;">
-        <prefHeight><Constants fx:constant="WINDOW_HEIGHT" /></prefHeight>
-      
-        <GridPane fx:id="jobsGrid" hgap="10" vgap="10">
-        </GridPane>
-      </ScrollPane>
-    </VBox>
-  </HBox>
-  
-  <HBox spacing="20" alignment="BOTTOM_CENTER">    
-    <Button text="Export to Excel" />
-    <Button text="Add new job" onAction="#addJobRow" />
-    <Button text="Save quote" onAction="#updateProject" />
-  </HBox>
+  <HBox spacing="100" alignment="center">
+    <Button text="%quotes.export" prefWidth="190" prefHeight="40" onAction="#export" />
+    <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJobRow" />
+    <Button text="%quotes.viewMap" prefWidth="190" prefHeight="40" onAction="#viewMap" />
+    <Button text="%quotes.save" prefWidth="190" prefHeight="40" onAction="#save" />
+  </HBox> 
 </VBox>
