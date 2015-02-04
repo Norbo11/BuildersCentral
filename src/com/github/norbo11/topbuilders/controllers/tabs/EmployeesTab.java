@@ -73,9 +73,9 @@ public class EmployeesTab extends AbstractController {
                 protected void updateItem(Employee employee, boolean empty) {
                     super.updateItem(employee, empty);
                     
-                    //TODO broken
-                    if (employee != null && employee.isDummy()) getStyleClass().add("heading");
-                    else getStyleClass().remove("heading");
+                    if (employee != null && employee.isDummy()) {
+                        if (!getStyleClass().contains("heading")) getStyleClass().add("heading");
+                    } else getStyleClass().remove("heading");
                 }
             };
             

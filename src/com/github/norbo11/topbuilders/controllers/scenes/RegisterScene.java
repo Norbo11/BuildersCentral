@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import com.github.norbo11.topbuilders.models.Employee;
+import com.github.norbo11.topbuilders.util.HashUtil;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 
 public class RegisterScene extends AbstractValidationScene {
@@ -35,13 +36,12 @@ public class RegisterScene extends AbstractValidationScene {
         addError("Invalid activation code! Please ensure that you have typed the 12-character code EXACTLY as it was given to you, or contact your manager.");
         displayErrors(false);
     }
-    
 
     @FXML
     public void activate(ActionEvent event) {        
         if (newPass.getText().length() > 0) {
             if (newPass.getText().equals(confirmPass.getText())) {
-                employee.setPassword(newPass.getText());
+                employee.setPassword(HashUtil.generateMD5Hash(newPass.getText()));
                 employee.removeActivationCode();
                 employee.save();
                 employee.login();

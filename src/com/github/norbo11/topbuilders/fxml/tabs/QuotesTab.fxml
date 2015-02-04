@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import com.github.norbo11.topbuilders.Constants?>
 <?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.QuotesTab">
@@ -13,7 +12,7 @@
   
   <HBox spacing="20" alignment="TOP_CENTER">
     <Label text="Select quote to edit" />
-    <ComboBox fx:id="projectPicker" onAction="#updateFields" />
+    <ComboBox fx:id="projectPicker" onAction="#updateFields" prefWidth="300" />
   </HBox>
   
   <TreeTableView fx:id="table" showRoot="false">
@@ -24,42 +23,40 @@
     </root>
   </TreeTableView>
   
-  <HBox spacing="20">
-    <GridPane hgap="10" vgap="10" alignment="center">
-      <padding><Insets top="10" bottom="10" /></padding>
-  
+  <HBox alignment="center" spacing="20">
+    <GridPane hgap="15" vgap="10" alignment="top_center">  
       <Label wrapText="true" text="%quotes.projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-      <TextArea minHeight="50" fx:id="projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.rowSpan="4" />
+      <TextArea wrapText="true" minHeight="30" fx:id="projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.rowSpan="4" />
       
       <Label wrapText="true" text="%quotes.projectNote" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-      <TextArea minHeight="50" fx:id="projectNote" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.rowSpan="4" />
+      <TextArea wrapText="true" minHeight="30" fx:id="projectNote" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.rowSpan="4" />
     </GridPane>
-      
-    <GridPane hgap="10" vgap="10" alignment="center">
+    
+    <GridPane HBox.hgrow="always" hgap="15" vgap="10" alignment="top_center">      
       <Label wrapText="true" text="%quotes.clientFirstName" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-      <TextField fx:id="firstName" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+      <TextField GridPane.hgrow="always" fx:id="firstName" GridPane.rowIndex="0" GridPane.columnIndex="1" />
       
       <Label wrapText="true" text="%quotes.clientLastName" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-      <TextField fx:id="lastName" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+      <TextField GridPane.hgrow="always" fx:id="lastName" GridPane.rowIndex="1" GridPane.columnIndex="1" />
       
       <Label wrapText="true" text="%quotes.clientEmail" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-      <TextField fx:id="email" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+      <TextField GridPane.hgrow="always" fx:id="email" GridPane.rowIndex="2" GridPane.columnIndex="1" />
       
       <Label wrapText="true" text="%quotes.clientContactNumber" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-      <TextField fx:id="contactNumber" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+      <TextField GridPane.hgrow="always" fx:id="contactNumber" GridPane.rowIndex="3" GridPane.columnIndex="1" />
       
       
       <Label wrapText="true" text="%general.address.firstLine" GridPane.rowIndex="0" GridPane.columnIndex="2" />
-      <TextField fx:id="firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="3" />
+      <TextField GridPane.hgrow="always" fx:id="firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="3" />
       
       <Label wrapText="true" text="%general.address.secondLine" GridPane.rowIndex="1" GridPane.columnIndex="2" />
-      <TextField fx:id="secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+      <TextField GridPane.hgrow="always" fx:id="secondLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="3" />
       
       <Label wrapText="true" text="%general.address.city" GridPane.rowIndex="2" GridPane.columnIndex="2" />
-      <TextField fx:id="city" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+      <TextField GridPane.hgrow="always" fx:id="city" GridPane.rowIndex="2" GridPane.columnIndex="3" />
       
       <Label wrapText="true" text="%general.address.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
-      <TextField fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" />
+      <TextField GridPane.hgrow="always" fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" />
       
   
       <Label wrapText="true" fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="4" GridPane.columnIndex="0" />

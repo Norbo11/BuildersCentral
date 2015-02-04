@@ -78,7 +78,7 @@
     -fx-alignment: center_left;
 }
 
-.heading, .notification-item .title {
+.tree-table-row-cell.heading, .notification-item .title {
 	-fx-background-color: #C7E7FC;
 }
 

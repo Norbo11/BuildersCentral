@@ -28,7 +28,7 @@
             <cellValueFactory><TreeItemPropertyValueFactory property="email" /></cellValueFactory>
         </TreeTableColumn>
         
-        <TreeTableColumn fx:id="addressCol" text="%employees.address">
+        <TreeTableColumn fx:id="addressCol" text="%general.address">
             <cellValueFactory><TreeItemPropertyValueFactory property="address" /></cellValueFactory>
         </TreeTableColumn>
         

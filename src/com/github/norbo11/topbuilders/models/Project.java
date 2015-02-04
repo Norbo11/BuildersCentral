@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.Resources;
 
 
 public class Project extends AbstractModel {
@@ -162,7 +163,8 @@ public class Project extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {  
+        if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
         if (containsColumn(columns, "completed")) setCompleted(result.getBoolean("completed"));
         if (containsColumn(columns, "clientFirstName")) setClientFirstName(result.getString("clientFirstName"));
@@ -184,7 +186,7 @@ public class Project extends AbstractModel {
 	
 	@Override
 	public String toString() {
-		return getFirstLineAddress();
+		return getFirstLineAddress().equals("") ? Resources.getResource("quotes.unnamedProject") : getFirstLineAddress();
 	}
 	
 	/* Static methods */
