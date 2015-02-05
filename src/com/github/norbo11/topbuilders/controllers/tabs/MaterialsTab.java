@@ -116,7 +116,7 @@ public class MaterialsTab extends AbstractController {
         }
         
         private void createTextField() {
-            textField = new DoubleTextField(getItem().getQuantityInStock() + "");
+            textField = new DoubleTextField(getItem().getQuantityInStock());
             textField.setPrefWidth(60);
             textField.setOnAction((e) -> commit());
         }

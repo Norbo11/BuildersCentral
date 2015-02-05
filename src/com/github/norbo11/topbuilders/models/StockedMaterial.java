@@ -117,6 +117,12 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	
 	/* Static methods */
 
+	public static StockedMaterial loadStockedMaterialForRequiredMaterial(RequiredMaterial requiredMaterial) {
+		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "id", requiredMaterial.getId())).get(0);
+	}
+	
+	/* Standard static methods */
+	
 	public static Vector<StockedMaterial> getAllStockedMaterials() {
 		return loadList(loadAllModels(DB_TABLE_NAME));
 	}

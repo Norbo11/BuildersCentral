@@ -145,6 +145,10 @@ public class Project extends AbstractModel {
 		return getClientFirstName() + " " + getClientLastName();
 	}
 	
+	public Vector<JobGroup> getJobGroups() {
+		return JobGroup.loadJobGroupsForProject(this);
+	}
+	
 	/* Override methods */
 	
     @Override

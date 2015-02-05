@@ -5,11 +5,11 @@ import javafx.scene.input.KeyEvent;
 
 public class DoubleTextField extends TextField {
 	public DoubleTextField() {
-		this("");
+		this(0);
 	}
 	
-	public DoubleTextField(String string) {
-	    super(string);
+	public DoubleTextField(double initialValue) {
+	    super(initialValue + "");
 	    
         addEventFilter(KeyEvent.KEY_TYPED, e -> {
             String character = e.getCharacter();

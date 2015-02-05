@@ -18,13 +18,29 @@
   <TreeTableView fx:id="table" showRoot="false">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
+      <TreeTableColumn text="%jobs.title">
+       <cellValueFactory><TreeItemPropertyValueFactory property="title" /></cellValueFactory>
+      </TreeTableColumn>
+  
+      <TreeTableColumn text="%jobs.description">
+          <cellValueFactory><TreeItemPropertyValueFactory property="description" /></cellValueFactory>
+      </TreeTableColumn>
+      
+      <TreeTableColumn fx:id="materialsCol" text="%jobs.materials" />
+      
+      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" />
+      
+      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" />
+      
+      <TreeTableColumn fx:id="totalCostCol" text="%jobs.totalCost" />
     </columns>
     <root>
+      <TreeItem value="Job Groups" expanded="true" />
     </root>
   </TreeTableView>
   
   <HBox alignment="center" spacing="20">
-    <GridPane hgap="15" vgap="10" alignment="top_center">  
+    <GridPane hgap="10" vgap="10" alignment="top_center">  
       <Label wrapText="true" text="%quotes.projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="0" />
       <TextArea wrapText="true" minHeight="30" fx:id="projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.rowSpan="4" />
       
@@ -32,7 +48,7 @@
       <TextArea wrapText="true" minHeight="30" fx:id="projectNote" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.rowSpan="4" />
     </GridPane>
     
-    <GridPane HBox.hgrow="always" hgap="15" vgap="10" alignment="top_center">      
+    <GridPane HBox.hgrow="always" hgap="10" vgap="10" alignment="top_center">      
       <Label wrapText="true" text="%quotes.clientFirstName" GridPane.rowIndex="0" GridPane.columnIndex="0" />
       <TextField GridPane.hgrow="always" fx:id="firstName" GridPane.rowIndex="0" GridPane.columnIndex="1" />
       

@@ -20,6 +20,7 @@ import com.github.norbo11.topbuilders.util.HashUtil;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.StringHelper;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
@@ -219,11 +220,7 @@ public class Employee extends AbstractModel {
     }
     
     public String getAddress() {
-        String address = getFirstLineAddress();
-        if (!getSecondLineAddress().equals("")) address += "\n" + getSecondLineAddress();
-        if (!getCity().equals("")) address += "\n" + getCity();
-        if (!getPostcode().equals("")) address += "\n" + getPostcode();
-        return address;
+        return StringHelper.formatAddress(getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode());
     }
     
     public void removeActivationCode() {

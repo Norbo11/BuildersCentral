@@ -1,19 +1,30 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
 import java.util.Vector;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractValidationScene;
+import com.github.norbo11.topbuilders.models.Job;
+import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
+import com.github.norbo11.topbuilders.models.RequiredMaterial;
+import com.github.norbo11.topbuilders.util.GoogleMaps;
+import com.github.norbo11.topbuilders.util.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.StringHelper;
 import com.github.norbo11.topbuilders.util.TabHelper;
 import com.github.norbo11.topbuilders.util.Validation;
 
@@ -29,10 +40,55 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML private VBox errorsList;
     @FXML private Label errorsLabel;
-    @FXML private TreeTableView<Project> table;
+    @FXML private TreeTableView<Job> table;
+    @FXML private TreeTableColumn<Job, Job> materialsCol; 
+    @FXML private TreeTableColumn<Job, Double> materialsCostCol, labourCostCol, totalCostCol;
         
+    /* Factories */
+    
+    private class MaterialsCell extends TreeTableCell<Job, Job> {
+    	
+    	GridPane grid;
+    	
+    	private void addMaterialRow() {
+    		grid.addRow(lastRow++, children);
+    	}
+    	
+        @Override
+        protected void updateItem(Job job, boolean empty) {
+            super.updateItem(job, empty);
+            if (empty) {
+                setText("");
+                setGraphic(null);
+            }
+            else {                
+                grid = new GridPane();
+                grid.setVgap(5);
+                grid.setHgap(5);
+                
+                Vector<RequiredMaterial> materials = job.getRequiredMaterials();
+                for (int i = 0; i < materials.size(); i++) {
+                	RequiredMaterial required = materials.get(i);
+                	
+                	TextField nameField = new TextField(required.getStockedMaterial().getName());
+                	DoubleTextField quantityField = new DoubleTextField(required.getQuantityRequired());
+                	
+                	grid.addRow(i, nameField, quantityField);
+                }
+                
+                setGraphic(grid);
+            }
+        }
+    }
+    
+    /* FXML Methods */
+    
     @FXML
 	public void initialize() {
+    	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
+    	materialsCol.setCellFactory(column -> new MaterialsCell());
+    	table.setRowFactory(row -> new HeadingTreeTableRow<Job>());
+    	
 		update();
 		addJobRow(null);
 	}
@@ -58,6 +114,18 @@ public class QuotesTab extends AbstractValidationScene {
         	secondLineAddress.setText(project.getSecondLineAddress());
         	city.setText(project.getCity());
         	postcode.setText(project.getPostcode());
+        	
+        	table.getRoot().getChildren().clear();
+        	for (JobGroup group : project.getJobGroups()) {
+        		TreeItem<Job> groupRoot = new TreeItem<Job>(new Job(group.getGroupName()));
+        		groupRoot.setExpanded(true);
+        		
+        		for (Job job : group.getJobs()) {
+        			groupRoot.getChildren().add(new TreeItem<Job>(job));
+        		}
+        		
+        		table.getRoot().getChildren().add(groupRoot);
+        	}
     	}
     }
 
@@ -68,7 +136,7 @@ public class QuotesTab extends AbstractValidationScene {
 
     @FXML
     public void viewMap(ActionEvent e) {
-    	
+    	GoogleMaps.openMap(StringHelper.formatAddress(firstLineAddress.getText(), secondLineAddress.getText(), city.getText(), postcode.getText()));
     }
     
     @FXML

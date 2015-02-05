@@ -19,12 +19,31 @@ import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
+import com.github.norbo11.topbuilders.util.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.SceneHelper;
 import com.github.norbo11.topbuilders.util.StageHelper;
 
 public class EmployeesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/EmployeesTab.fxml";
+    
+    /* Factories */
+    
+    private class EmployeesRowFactory implements Callback<TreeTableView<Employee>, TreeTableRow<Employee>> {
+		@Override
+		public TreeTableRow<Employee> call(TreeTableView<Employee> param) {
+			TreeTableRow<Employee> row = new HeadingTreeTableRow<Employee>();
+            
+            //Allow double clicking to modify employee
+            row.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2 && !row.isEmpty()) {
+                    modifyEmployee(null);
+                }
+            });
+            
+            return row;
+		}
+    }
     
     //Makes all addresses become hyperlinks which open up Google Maps
     private class EmployeeAddressCell extends TreeTableCell<Employee, String> {
@@ -65,28 +84,7 @@ public class EmployeesTab extends AbstractController {
 	public void initialize() {	    
         defaultWageCol.setCellValueFactory(new EmployeeDefaultWageFactory());
         addressCol.setCellFactory(column -> new EmployeeAddressCell());
-        
-        //Allow double clicking to modify employee
-        table.setRowFactory(value -> {
-            TreeTableRow<Employee> row = new TreeTableRow<Employee>() {
-            	@Override
-                protected void updateItem(Employee employee, boolean empty) {
-                    super.updateItem(employee, empty);
-                    
-                    if (employee != null && employee.isDummy()) {
-                        if (!getStyleClass().contains("heading")) getStyleClass().add("heading");
-                    } else getStyleClass().remove("heading");
-                }
-            };
-            
-            row.setOnMouseClicked(e -> {
-                if (e.getClickCount() == 2 && !row.isEmpty()) {
-                    modifyEmployee(null);
-                }
-            });
-            
-            return row;
-        });
+        table.setRowFactory(new EmployeesRowFactory());
                 
     	update(); 
 	}
