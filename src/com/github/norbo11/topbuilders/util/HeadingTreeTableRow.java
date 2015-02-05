@@ -7,10 +7,10 @@ import com.github.norbo11.topbuilders.models.AbstractModel;
 public class HeadingTreeTableRow<T extends AbstractModel> extends TreeTableRow<T> {
 	//Add a "heading" CSS class to all dummy (title) rows
 	@Override
-    protected void updateItem(T job, boolean empty) {
-        super.updateItem(job, empty);
+    protected void updateItem(T item, boolean empty) {
+        super.updateItem(item, empty);
         
-        if (job != null && job.isDummy()) {
+        if (item != null && item.isDummy()) {
             if (!getStyleClass().contains("heading")) getStyleClass().add("heading");
         } else getStyleClass().remove("heading");
     }

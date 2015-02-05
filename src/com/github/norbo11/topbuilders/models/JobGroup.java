@@ -17,8 +17,21 @@ public class JobGroup extends AbstractModel {
     private IntegerProperty projectId = new SimpleIntegerProperty(0);
     private StringProperty groupName = new SimpleStringProperty("");
     
+    private Vector<Job> jobs;
+    
 	/* Getters and setters */
     
+    public JobGroup() {
+        super();
+    }
+    
+    public JobGroup(String groupName, Vector<Job> jobs) {
+        super();
+        
+        setGroupName(groupName);
+        setJobs(jobs);
+    }
+
     public int getProjectId() {
 		return projectId.get();
 	}
@@ -35,9 +48,17 @@ public class JobGroup extends AbstractModel {
 		this.groupName.set(groupName);
 	}
     
+	public Vector<Job> getJobs() {
+	    return jobs;
+	}
+	
+	public void setJobs(Vector<Job> jobs) {
+	    this.jobs = jobs;
+	}
+	
 	/* Instance methods */	
 
-	public Vector<Job> getJobs() {
+	public Vector<Job> loadJobs() {
 		return Job.loadJobsForJobGroup(this);
 	}
 	 

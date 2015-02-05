@@ -15,30 +15,46 @@
     <ComboBox fx:id="projectPicker" onAction="#updateFields" prefWidth="300" />
   </HBox>
   
-  <TreeTableView fx:id="table" showRoot="false">
+  <TreeTableView fx:id="table" showRoot="false" editable="true">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
-      <TreeTableColumn text="%jobs.title">
-       <cellValueFactory><TreeItemPropertyValueFactory property="title" /></cellValueFactory>
+      <TreeTableColumn fx:id="titleCol" text="%jobs.title" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="title" /></cellValueFactory>
       </TreeTableColumn>
   
-      <TreeTableColumn text="%jobs.description">
-          <cellValueFactory><TreeItemPropertyValueFactory property="description" /></cellValueFactory>
+      <TreeTableColumn fx:id="descriptionCol" text="%jobs.description" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="description" /></cellValueFactory>
       </TreeTableColumn>
       
       <TreeTableColumn fx:id="materialsCol" text="%jobs.materials" />
       
-      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" />
+      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" prefWidth="200" editable="true" />
       
-      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" />
+      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" prefWidth="200" editable="true" />
       
-      <TreeTableColumn fx:id="totalCostCol" text="%jobs.totalCost" />
+      <TreeTableColumn fx:id="totalCostCol" text="%jobs.totalCost" prefWidth="200" />
     </columns>
     <root>
       <TreeItem value="Job Groups" expanded="true" />
     </root>
   </TreeTableView>
   
+  <BorderPane>
+    <left>
+      <HBox spacing="40">
+        <ComboBox fx:id="jobGroupCombo" />
+        <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJobRow" />
+      </HBox>
+    </left>
+    
+    <right>
+      <HBox spacing="40">
+        <CheckBox fx:id="completedCheckBox" />
+        <Label text="%quotes.completed" />
+      </HBox>
+    </right>
+  </BorderPane>
+
   <HBox alignment="center" spacing="20">
     <GridPane hgap="10" vgap="10" alignment="top_center">  
       <Label wrapText="true" text="%quotes.projectDescription" GridPane.rowIndex="0" GridPane.columnIndex="0" />
@@ -83,7 +99,6 @@
   <HBox spacing="100" alignment="center">
     <Button text="%quotes.save" prefWidth="190" prefHeight="40" onAction="#saveProject" />
     <Button text="%quotes.export" prefWidth="190" prefHeight="40" onAction="#export" />
-    <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJobRow" />
     <Button text="%quotes.viewMap" prefWidth="190" prefHeight="40" onAction="#viewMap" />
     <Button text="%quotes.settings" prefWidth="190" prefHeight="40" onAction="#settings" />
   </HBox> 

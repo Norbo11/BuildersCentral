@@ -31,6 +31,8 @@ public class Project extends AbstractModel {
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
     
+    private Vector<JobGroup> jobGroups;
+    
     public Project() {
     	super();
     }
@@ -139,14 +141,18 @@ public class Project extends AbstractModel {
 		this.projectNote.set(projectNote);
 	}
     
+	public Vector<JobGroup> getJobGroups() {
+        return jobGroups;
+    }
+	
 	/* Instance methods */
 	
 	public String getClientFullName() {
 		return getClientFirstName() + " " + getClientLastName();
 	}
 	
-	public Vector<JobGroup> getJobGroups() {
-		return JobGroup.loadJobGroupsForProject(this);
+	public void loadJobGroups() {
+	    jobGroups = JobGroup.loadJobGroupsForProject(this);
 	}
 	
 	/* Override methods */
@@ -204,4 +210,19 @@ public class Project extends AbstractModel {
 	public static Vector<Project> loadList(ResultSet result) {
 		return loadList(result, Project.class);
 	}
+
+    public void updateJobGroup(String title, Vector<Job> jobs) {
+        Vector<JobGroup> jobGroups = getJobGroups();
+        
+        for (JobGroup group : jobGroups) {
+            if (group.getGroupName().equals(title)) {
+                group.addJobs(jobs);
+                return;
+            }
+        }
+        
+        //If no matching job group was found, create one
+        JobGroup jobGroup = new JobGroup(title, jobs);
+        jobGroups.add(jobGroup);
+    }
 }

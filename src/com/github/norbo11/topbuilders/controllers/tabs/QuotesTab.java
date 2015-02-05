@@ -3,7 +3,10 @@ import java.util.Vector;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -12,8 +15,12 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.DoubleStringConverter;
 
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractValidationScene;
@@ -21,6 +28,7 @@ import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.models.RequiredMaterial;
+import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
 import com.github.norbo11.topbuilders.util.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.Resources;
@@ -34,6 +42,8 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML private GridPane jobsGrid;
     @FXML private ComboBox<Project> projectPicker;
+    @FXML private ComboBox<JobGroup> jobGroupCombo;
+    @FXML private CheckBox completedCheckBox;
     
     @FXML private TextArea projectDescription, projectNote;
     @FXML private TextField firstName, lastName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode;
@@ -42,16 +52,96 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private Label errorsLabel;
     @FXML private TreeTableView<Job> table;
     @FXML private TreeTableColumn<Job, Job> materialsCol; 
+    @FXML private TreeTableColumn<Job, String> titleCol, descriptionCol;
     @FXML private TreeTableColumn<Job, Double> materialsCostCol, labourCostCol, totalCostCol;
         
     /* Factories */
     
+    private class JobTreeItem extends TreeItem<Job> {
+        private EventHandler<TreeModificationEvent<Job>> cancelExpandHandler = new EventHandler<TreeModificationEvent<Job>>() {
+            @Override
+            public void handle(TreeModificationEvent<Job> e) {
+                e.consume();
+            }
+        };
+
+        public JobTreeItem(Job job) {
+            super(job);
+            
+            this.setGraphic(null);
+            this.addEventHandler(branchExpandedEvent(), cancelExpandHandler);
+            this.addEventHandler(branchCollapsedEvent(), cancelExpandHandler);
+        }
+    }
+    
     private class MaterialsCell extends TreeTableCell<Job, Job> {
-    	
     	GridPane grid;
+    	int lastRow = 0;
+    	Button newMaterialButton;
+    	//boolean toggled = false;
+    	    	
+    	public MaterialsCell() {
+    	    super();
+    	    
+    	    grid = new GridPane();
+            grid.setVgap(5);
+            grid.setHgap(5);
+            grid.setMaxWidth(Double.MAX_VALUE);
+            
+            //Set the second column to always grow
+            ColumnConstraints constraint = new ColumnConstraints();
+            constraint.setFillWidth(true);
+            constraint.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().addAll(new ColumnConstraints(), constraint);
+    	    
+    	    newMaterialButton = new Button(Resources.getResource("quotes.newMaterial"));
+            newMaterialButton.setMaxWidth(Double.MAX_VALUE);
+            newMaterialButton.setOnAction(e -> {
+                removeButton(); 
+                addMaterialRow("", 0, ""); 
+                addButton();
+             });
+            
+            GridPane.setColumnSpan(newMaterialButton, 4);
+            GridPane.setHgrow(newMaterialButton, Priority.ALWAYS);
+    	}
     	
-    	private void addMaterialRow() {
-    		grid.addRow(lastRow++, children);
+        /*private void toggleButton() {
+            if (!toggled) {
+                 addButton();
+             } else {
+                 removeButton();
+             }
+        }*/
+    	
+    	private void addButton() {
+    	    grid.addRow(lastRow, newMaterialButton);
+            lastRow++;
+            //toggled = true;
+        }
+
+        private void removeButton() {
+    	    grid.getChildren().remove(newMaterialButton);
+            lastRow--;
+            //toggled = false;
+        }
+
+        private void addMaterialRow(String materialName, double quantityRequired, String materialType) {
+            Button deleteButton = new Button("X");
+            
+    		TextField nameField = new TextField(materialName);
+    		nameField.setMaxHeight(Double.MAX_VALUE);
+    		
+            DoubleTextField quantityField = new DoubleTextField(quantityRequired);
+            quantityField.setMinWidth(50);
+            quantityField.setPrefWidth(50);
+            
+            Label typeLabel = new Label(materialType);
+            typeLabel.setMinWidth(30);
+            typeLabel.setPrefWidth(30);
+            
+            grid.addRow(lastRow, deleteButton, nameField, quantityField, typeLabel);
+            lastRow++;
     	}
     	
         @Override
@@ -61,23 +151,33 @@ public class QuotesTab extends AbstractValidationScene {
                 setText("");
                 setGraphic(null);
             }
-            else {                
-                grid = new GridPane();
-                grid.setVgap(5);
-                grid.setHgap(5);
-                
-                Vector<RequiredMaterial> materials = job.getRequiredMaterials();
-                for (int i = 0; i < materials.size(); i++) {
-                	RequiredMaterial required = materials.get(i);
-                	
-                	TextField nameField = new TextField(required.getStockedMaterial().getName());
-                	DoubleTextField quantityField = new DoubleTextField(required.getQuantityRequired());
-                	
-                	grid.addRow(i, nameField, quantityField);
+            else {            
+                if (!job.isDummy()) {
+                    /*setOnMouseExited(e -> toggleButton());
+                    setOnMouseEntered(e -> toggleButton());*/
+                    lastRow = 0;
+                    grid.getChildren().clear();
+                    
+                    Vector<RequiredMaterial> materials = job.getRequiredMaterials();
+                    
+                    for (RequiredMaterial requiredMaterial : materials) {
+                        StockedMaterial stockedMaterial = requiredMaterial.getStockedMaterial();
+                    	addMaterialRow(stockedMaterial.getName(), requiredMaterial.getQuantityRequired(), stockedMaterial.getQuantityType().toString());
+                    }
+                    
+                    addButton();
+                    setGraphic(grid);
                 }
-                
-                setGraphic(grid);
             }
+        }
+    }
+    
+    private class JobTableRow extends HeadingTreeTableRow<Job> {        
+        @Override
+        protected void updateItem(Job job, boolean empty) {
+            super.updateItem(job, empty);
+            
+            setDisclosureNode(null);
         }
     }
     
@@ -85,9 +185,15 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML
 	public void initialize() {
+        titleCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+        descriptionCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+        
     	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	materialsCol.setCellFactory(column -> new MaterialsCell());
-    	table.setRowFactory(row -> new HeadingTreeTableRow<Job>());
+    	table.setRowFactory(row -> new JobTableRow());
+    	
+    	materialsCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
+    	labourCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
     	
 		update();
 		addJobRow(null);
@@ -95,7 +201,13 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML
     public void addJobRow(ActionEvent e) {     
-    	
+    	for (TreeItem<Job> item : table.getRoot().getChildren()) {
+    	    Job job = item.getValue();
+    	    if (job.isDummy() && job.getTitle().equals(jobGroupCombo.getSelectionModel().getSelectedItem().getGroupName())) {
+    	        item.getChildren().add(new JobTreeItem(new Job()));
+    	        return;
+    	    }
+    	}
     }
     
     //Called whenever the the user picks a project using the ComboBox
@@ -117,15 +229,18 @@ public class QuotesTab extends AbstractValidationScene {
         	
         	table.getRoot().getChildren().clear();
         	for (JobGroup group : project.getJobGroups()) {
-        		TreeItem<Job> groupRoot = new TreeItem<Job>(new Job(group.getGroupName()));
+        	    JobTreeItem groupRoot = new JobTreeItem(new Job(group.getGroupName()));
         		groupRoot.setExpanded(true);
         		
         		for (Job job : group.getJobs()) {
-        			groupRoot.getChildren().add(new TreeItem<Job>(job));
+        			groupRoot.getChildren().add(new JobTreeItem(job));
         		}
         		
         		table.getRoot().getChildren().add(groupRoot);
         	}
+        	
+        	jobGroupCombo.getItems().clear();
+        	jobGroupCombo.getItems().addAll(project.getJobGroups());
     	}
     }
 
@@ -149,7 +264,7 @@ public class QuotesTab extends AbstractValidationScene {
     	Project project = getCurrentProject();
     	        
     	if (validate()) {
-    	    //project.setCompleted(completed);
+    	    project.setCompleted(completedCheckBox.isSelected());
     	    project.setClientFirstName(firstName.getText());
     	    project.setClientLastName(lastName.getText());
     	    project.setFirstLineAddress(firstLineAddress.getText());
@@ -160,6 +275,19 @@ public class QuotesTab extends AbstractValidationScene {
     	    project.setEmail(email.getText());
     	    project.setProjectDescription(projectDescription.getText());
     	    project.setProjectNote(projectNote.getText());
+    	    
+    	    ///Go through job groups
+    	    for (TreeItem<Job> groupItem : table.getRoot().getChildren()) {
+    	        Job jobGroup = groupItem.getValue();
+    	        Vector<Job> jobs = new Vector<Job>();
+    	        
+    	        //Go through jobs in this group
+    	        for (TreeItem<Job> jobItem : groupItem.getChildren()) {
+    	            jobs.add(jobItem.getValue());
+    	        }
+
+	            project.updateJobGroup(jobGroup.getTitle(), jobs);  	        
+    	    }
     	    
             if (project.isDummy()) {
             	project.setDummy(false);
