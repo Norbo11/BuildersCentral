@@ -124,7 +124,7 @@ public class Notification extends AbstractModel {
     }
 
     @Override
-	public void save() {
+	public void update() {
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET employeeId=?, typeId=?, associatedId=?, timestamp=?, seen=? WHERE id=?", 
         getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), getSeen(), getId());
 	}

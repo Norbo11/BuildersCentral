@@ -16,8 +16,7 @@ public class JobGroup extends AbstractModel {
     
     private IntegerProperty projectId = new SimpleIntegerProperty(0);
     private StringProperty groupName = new SimpleStringProperty("");
-    
-    private Vector<Job> jobs;
+    private Vector<Job> jobs = new Vector<Job>();
     
 	/* Getters and setters */
     
@@ -25,11 +24,10 @@ public class JobGroup extends AbstractModel {
         super();
     }
     
-    public JobGroup(String groupName, Vector<Job> jobs) {
+    public JobGroup(String groupName) {
         super();
         
         setGroupName(groupName);
-        setJobs(jobs);
     }
 
     public int getProjectId() {
@@ -58,10 +56,6 @@ public class JobGroup extends AbstractModel {
 	
 	/* Instance methods */	
 
-	public Vector<Job> loadJobs() {
-		return Job.loadJobsForJobGroup(this);
-	}
-	 
 	/* Overrides */
     
     @Override
@@ -73,17 +67,23 @@ public class JobGroup extends AbstractModel {
     }
     
     @Override
-    public void save() {                
+    public void update() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "projectId=?,groupName=? "
         + "WHERE id = ?", getProjectId(), getGroupName(), getId());
-    }
+        
+        for (Job job : getJobs()) {
+        	job.save();
+		}	
+	}
     
     @Override
     public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "projectId")) setProjectId(result.getInt("projectId"));
         if (containsColumn(columns, "groupName")) setGroupName(result.getString("groupName"));
+        
+        setJobs(Job.loadJobsForJobGroup(this));
     }
     
 	@Override

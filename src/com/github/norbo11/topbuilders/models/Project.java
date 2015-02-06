@@ -15,6 +15,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 
 public class Project extends AbstractModel {
     public static final String DB_TABLE_NAME = "projects";    
+    private static Vector<Project> projects;
     
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
@@ -30,8 +31,8 @@ public class Project extends AbstractModel {
     private StringProperty email = new SimpleStringProperty("");
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
+    private Vector<JobGroup> jobGroups = new Vector<JobGroup>();
     
-    private Vector<JobGroup> jobGroups;
     
     public Project() {
     	super();
@@ -44,13 +45,21 @@ public class Project extends AbstractModel {
 	}
 
     /* Getters and setters */
-
-	public boolean isQuoteRequested() {
-		return quoteRequested.get();
-	}
+    
+	public Vector<JobGroup> getJobGroups() {
+        return jobGroups;
+    }
+	
+	public void setJobGroups(Vector<JobGroup> jobGroups) {
+        this.jobGroups = jobGroups;
+    }
 
 	public void setQuoteRequested(boolean quoteRequested) {
 		this.quoteRequested.set(quoteRequested);
+	}
+
+	public boolean isQuoteRequested() {
+		return quoteRequested.get();
 	}
 
 	public boolean isCompleted() {
@@ -140,19 +149,11 @@ public class Project extends AbstractModel {
 	public void setProjectNote(String projectNote) {
 		this.projectNote.set(projectNote);
 	}
-    
-	public Vector<JobGroup> getJobGroups() {
-        return jobGroups;
-    }
 	
 	/* Instance methods */
 	
 	public String getClientFullName() {
 		return getClientFirstName() + " " + getClientLastName();
-	}
-	
-	public void loadJobGroups() {
-	    jobGroups = JobGroup.loadJobGroupsForProject(this);
 	}
 	
 	/* Override methods */
@@ -166,10 +167,14 @@ public class Project extends AbstractModel {
     }
     
     @Override
-    public void save() {                
+    public void update() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "quoteRequested=?,completed=?,clientFirstName=?,clientLastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,contactNumber=?,email=?,projectDescription=?,projectNote=? "
         + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());
+        
+        for (JobGroup jobGroup : jobGroups) {
+        	jobGroup.save();
+        }
     }
     
     @Override
@@ -187,6 +192,8 @@ public class Project extends AbstractModel {
         if (containsColumn(columns, "email")) setEmail(result.getString("email"));
         if (containsColumn(columns, "projectDescription")) setProjectDescription(result.getString("projectDescription"));
         if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
+        
+        setJobGroups(JobGroup.loadJobGroupsForProject(this));
     }
 
 	@Override
@@ -203,8 +210,16 @@ public class Project extends AbstractModel {
     
 	/* Standard static methods */
 	
-	public static Vector<Project> getAllProjects() {
-		return loadList(loadAllModels(DB_TABLE_NAME));
+	public static void setProjects(Vector<Project> projects) {
+		Project.projects = projects;
+	}
+	
+	public static Vector<Project> getProjects() {
+		return projects;
+	}
+	
+	public static void loadProjects() {
+		setProjects(loadList(loadAllModels(DB_TABLE_NAME)));
 	}
 	
 	public static Vector<Project> loadList(ResultSet result) {
@@ -213,16 +228,22 @@ public class Project extends AbstractModel {
 
     public void updateJobGroup(String title, Vector<Job> jobs) {
         Vector<JobGroup> jobGroups = getJobGroups();
+        JobGroup groupToUpdate = null;
         
         for (JobGroup group : jobGroups) {
             if (group.getGroupName().equals(title)) {
-                group.addJobs(jobs);
-                return;
+            	groupToUpdate = group;
+                break;
             }
         }
         
         //If no matching job group was found, create one
-        JobGroup jobGroup = new JobGroup(title, jobs);
-        jobGroups.add(jobGroup);
+        if (groupToUpdate == null) {
+        	groupToUpdate = new JobGroup(title);
+        	groupToUpdate.add();
+        }
+        
+        groupToUpdate.setJobs(jobs);
+        groupToUpdate.save();
     }
 }

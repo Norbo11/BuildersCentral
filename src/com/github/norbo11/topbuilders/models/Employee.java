@@ -246,7 +246,7 @@ public class Employee extends AbstractModel {
     }
     
     @Override
-    public void save() {                
+    public void update() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "username=?,password=?,email=?,firstName=?,lastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,defaultWage=?,userTypeId=?,activationCode=? "
         + "WHERE id = ?", getUsername(), getPassword(), getEmail(), getFirstName(), getLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getDefaultWage(), getUserTypeId(), getActivationCode(), getId());

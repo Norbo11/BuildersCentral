@@ -39,21 +39,10 @@
     </root>
   </TreeTableView>
   
-  <BorderPane>
-    <left>
-      <HBox spacing="40">
-        <ComboBox fx:id="jobGroupCombo" />
-        <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJobRow" />
-      </HBox>
-    </left>
-    
-    <right>
-      <HBox spacing="40">
-        <CheckBox fx:id="completedCheckBox" />
-        <Label text="%quotes.completed" />
-      </HBox>
-    </right>
-  </BorderPane>
+  <HBox spacing="40">
+    <ComboBox fx:id="jobGroupCombo" />
+    <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJobRow" />
+  </HBox>
 
   <HBox alignment="center" spacing="20">
     <GridPane hgap="10" vgap="10" alignment="top_center">  

@@ -16,6 +16,7 @@ import com.github.norbo11.topbuilders.util.TabHelper;
 public abstract class AbstractModel {
     private IntegerProperty id;
     private boolean dummy;
+    private boolean newModel;
     
     public AbstractModel() {
         this(0);
@@ -26,12 +27,20 @@ public abstract class AbstractModel {
     }
     
     /* Getters and setters */
-
+    
     public int getId() {
         return id.get();
     }
     
-    public void setId(int id) {
+    public boolean isNewModel() {
+		return newModel;
+	}
+
+	public void setNewModel(boolean newModel) {
+		this.newModel = newModel;
+	}
+
+	public void setId(int id) {
         this.id.set(id);
     }
         
@@ -47,7 +56,16 @@ public abstract class AbstractModel {
     
     public abstract int add();
     
-    public abstract void save();
+    public abstract void update();
+    
+    public void save() {
+    	if (newModel) {
+    		add();
+    		newModel = false;
+    	} else {
+    		update();
+    	}
+    }
         
     //Sets all of the properties for this model as obtained by the ResultSet - will only load the specified columns
     public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;

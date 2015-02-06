@@ -21,6 +21,7 @@ public class Job extends AbstractModel {
     private StringProperty description = new SimpleStringProperty("");
     private DoubleProperty labourPrice = new SimpleDoubleProperty(0);
     private DoubleProperty materialPrice = new SimpleDoubleProperty(0);
+    private Vector<RequiredMaterial> requiredMaterials = new Vector<RequiredMaterial>();
     
     public Job() {
     	super();
@@ -34,6 +35,14 @@ public class Job extends AbstractModel {
     }
     
 	/* Getters and setters */
+    
+	public Vector<RequiredMaterial> getRequiredMaterials() {
+		return requiredMaterials;
+	}
+
+	public void setRequiredMaterials(Vector<RequiredMaterial> requiredMaterials) {
+		this.requiredMaterials = requiredMaterials;
+	}
     
     public int getJobGroupId() {
 		return jobGroupId.get();
@@ -77,10 +86,6 @@ public class Job extends AbstractModel {
 
 	/* Instance methods */	
 
-	public Vector<RequiredMaterial> getRequiredMaterials() {
-		return RequiredMaterial.loadRequiredMaterialsForJob(this);
-	}
-	 
 	/* Overrides */
     
 	@Override
@@ -92,10 +97,14 @@ public class Job extends AbstractModel {
     }
     
     @Override
-    public void save() {                
+    public void update() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "jobGroupId=?,title=?,description=?,labourPrice=?,materialPrice=? "
         + "WHERE id = ?", getJobGroupId(), getTitle(), getDescription(), getLabourPrice(), getMaterialPrice(), getId());
+        
+        for (RequiredMaterial requiredMaterial : requiredMaterials) {
+        	requiredMaterial.save();
+        }
     }
     
     @Override
@@ -106,7 +115,8 @@ public class Job extends AbstractModel {
         if (containsColumn(columns, "description")) setDescription(result.getString("description"));
         if (containsColumn(columns, "labourPrice")) setLabourPrice(result.getDouble("labourPrice"));
         if (containsColumn(columns, "materialPrice")) setMaterialPrice(result.getDouble("materialPrice"));
-
+        
+        setRequiredMaterials(RequiredMaterial.loadRequiredMaterialsForJob(this));
     }
     
 	@Override
@@ -121,7 +131,7 @@ public class Job extends AbstractModel {
 
 	/* Static methods */
 	
-	public static Vector<Job> loadJobsForJobGroup(JobGroup jobGroup) {
+	public static Vector<Job> loadJobsForJobGroup(JobGroup jobGroup) {		
 		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobGroupId", jobGroup.getId()));
 	}
 	
@@ -130,4 +140,5 @@ public class Job extends AbstractModel {
 	public static Vector<Job> loadList(ResultSet result) {
 		return loadList(result, Job.class);
 	}
+
 }

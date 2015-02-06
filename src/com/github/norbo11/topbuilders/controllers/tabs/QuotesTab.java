@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -43,7 +42,6 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private GridPane jobsGrid;
     @FXML private ComboBox<Project> projectPicker;
     @FXML private ComboBox<JobGroup> jobGroupCombo;
-    @FXML private CheckBox completedCheckBox;
     
     @FXML private TextArea projectDescription, projectNote;
     @FXML private TextField firstName, lastName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode;
@@ -185,6 +183,9 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML
 	public void initialize() {
+    	Project.loadProjects();
+		update();
+    	
         titleCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         descriptionCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         
@@ -194,17 +195,26 @@ public class QuotesTab extends AbstractValidationScene {
     	
     	materialsCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
     	labourCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
-    	
-		update();
-		addJobRow(null);
 	}
     
     @FXML
-    public void addJobRow(ActionEvent e) {     
+    public void addJobRow(ActionEvent e) {   
+    	JobGroup selectedGroup = jobGroupCombo.getSelectionModel().getSelectedItem();
+    	
+    	//Iterate through all job groups (which will all be dummy Job models)
     	for (TreeItem<Job> item : table.getRoot().getChildren()) {
     	    Job job = item.getValue();
-    	    if (job.isDummy() && job.getTitle().equals(jobGroupCombo.getSelectionModel().getSelectedItem().getGroupName())) {
-    	        item.getChildren().add(new JobTreeItem(new Job()));
+    	    
+    	    //As soon as you find the dummy model with the name of the selected group (stored in the title field), add a new job to its children and return
+    	    if (job.getTitle().equals(selectedGroup.getGroupName())) {
+    	    	
+    	    	Job newJob = new Job();
+    	    	newJob.setTitle(Resources.getResource("jobs.title"));
+    	    	newJob.setDescription(Resources.getResource("jobs.description"));
+    	    	newJob.setNewModel(true);
+    	    	newJob.setJobGroupId(selectedGroup.getId());
+    	    	
+    	    	item.getChildren().add(new JobTreeItem(newJob));
     	        return;
     	    }
     	}
@@ -228,6 +238,7 @@ public class QuotesTab extends AbstractValidationScene {
         	postcode.setText(project.getPostcode());
         	
         	table.getRoot().getChildren().clear();
+        
         	for (JobGroup group : project.getJobGroups()) {
         	    JobTreeItem groupRoot = new JobTreeItem(new Job(group.getGroupName()));
         		groupRoot.setExpanded(true);
@@ -241,6 +252,7 @@ public class QuotesTab extends AbstractValidationScene {
         	
         	jobGroupCombo.getItems().clear();
         	jobGroupCombo.getItems().addAll(project.getJobGroups());
+        	jobGroupCombo.getSelectionModel().select(0);
     	}
     }
 
@@ -263,8 +275,7 @@ public class QuotesTab extends AbstractValidationScene {
     public void saveProject(ActionEvent e) {
     	Project project = getCurrentProject();
     	        
-    	if (validate()) {
-    	    project.setCompleted(completedCheckBox.isSelected());
+    	if (validate()) {    		
     	    project.setClientFirstName(firstName.getText());
     	    project.setClientLastName(lastName.getText());
     	    project.setFirstLineAddress(firstLineAddress.getText());
@@ -289,11 +300,11 @@ public class QuotesTab extends AbstractValidationScene {
 	            project.updateJobGroup(jobGroup.getTitle(), jobs);  	        
     	    }
     	    
-            if (project.isDummy()) {
-            	project.setDummy(false);
+            if (project.isNewModel()) {
+            	project.setNewModel(false);
             	project.add();
             } else project.save();
-            
+                        
             Project current = getCurrentProject();
             TabHelper.updateAllTabs();
             projectPicker.getSelectionModel().select(current);
@@ -317,9 +328,9 @@ public class QuotesTab extends AbstractValidationScene {
     
     @Override
     public void update() {
-        Vector<Project> projectList = Project.getAllProjects();
+        Vector<Project> projectList = Project.getProjects();
         Project newProject = new Project(Resources.getResource("quotes.newProject"));
-        newProject.setDummy(true);
+        newProject.setNewModel(true);
         projectList.add(newProject);
         
         projectPicker.getItems().clear();

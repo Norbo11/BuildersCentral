@@ -15,7 +15,7 @@ public class QuoteRequest extends AbstractModel {
     }
 	
 	@Override
-	public void save() {
+	public void update() {
 		// TODO Auto-generated method stub
 		
 	}

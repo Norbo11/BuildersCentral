@@ -95,7 +95,7 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
     }
     
     @Override
-    public void save() {                
+    public void update() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "name=?,quantityInStock=?,quantityTypeId=? "
         + "WHERE id = ?", getName(), getQuantityInStock(), getQuantityTypeId(), getId());

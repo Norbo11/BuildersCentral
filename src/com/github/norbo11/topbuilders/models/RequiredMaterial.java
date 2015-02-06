@@ -17,9 +17,17 @@ public class RequiredMaterial extends AbstractModel {
     private IntegerProperty stockedMaterialId = new SimpleIntegerProperty(0);
     private IntegerProperty jobId = new SimpleIntegerProperty(0);
     private DoubleProperty quantityRequired = new SimpleDoubleProperty(0);
-
+    private StockedMaterial stockedMaterial;
     
 	/* Getters and setters */
+    
+	public StockedMaterial getStockedMaterial() {
+		return stockedMaterial;
+	}
+
+	public void setStockedMaterial(StockedMaterial stockedMaterial) {
+		this.stockedMaterial = stockedMaterial;
+	}
     
 	public int getStockedMaterialId() {
 		return stockedMaterialId.get();
@@ -47,10 +55,6 @@ public class RequiredMaterial extends AbstractModel {
     
 	/* Instance methods */	
 
-	public StockedMaterial getStockedMaterial() {
-		return StockedMaterial.loadStockedMaterialForRequiredMaterial(this);
-	}
-	
 	public static Vector<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
 		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
 	}
@@ -66,10 +70,10 @@ public class RequiredMaterial extends AbstractModel {
     }
     
     @Override
-    public void save() {                
+    public void update() {                
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "stockedMaterialId=?,jobId=?,quantityRequired=? "
-        + "WHERE id = ?", getStockedMaterialId(), getJobId(), getId());
+        + "WHERE id = ?", getStockedMaterialId(), getJobId(), getQuantityRequired(), getId());
     }
     
     @Override
@@ -78,6 +82,8 @@ public class RequiredMaterial extends AbstractModel {
         if (containsColumn(columns, "stockedMaterialId")) setStockedMaterialId(result.getInt("stockedMaterialId"));
         if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
         if (containsColumn(columns, "quantityRequired")) setQuantityRequired(result.getDouble("quantityRequired"));
+        
+		setStockedMaterial(StockedMaterial.loadStockedMaterialForRequiredMaterial(this));
     }
     
 	@Override
