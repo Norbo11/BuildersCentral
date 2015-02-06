@@ -12,13 +12,15 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
-import com.github.norbo11.topbuilders.util.DeleteModelButtonCellFactory;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.StageHelper;
+import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactory;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StageUtil;
+import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class MessagesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";    
@@ -54,7 +56,7 @@ public class MessagesTab extends AbstractController {
 		dateCol.setCellFactory(column -> new DateCell());
 		timeCol.setCellFactory(column -> new TimeCell());
 
-		DeleteModelButtonCellFactory.assignCellFactory(xCol);
+		DeleteModelButtonCellFactory.assignCellFactory(xCol, this);
 		
 	    table.setRowFactory(value -> {
 	        TableRow<Message> row = new TableRow<Message>();
@@ -71,8 +73,10 @@ public class MessagesTab extends AbstractController {
 
     @FXML
 	public void newMessage(ActionEvent event) {
-	    Stage stage = StageHelper.createDialogStage(Resources.getResource("messages.new"));
-	    SceneHelper.changeScene(stage, NewMessageScene.FXML_FILENAME);
+	    Stage stage = StageUtil.createDialogStage(Resources.getResource("messages.new"));
+	    AbstractScene scene = SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
+	    NewMessageScene controller =  (NewMessageScene) scene.getController();
+	    controller.setParent(this);
 	}
     
     @FXML
@@ -83,9 +87,9 @@ public class MessagesTab extends AbstractController {
     
     /* Instance methods */
     
-    @Override
     public void update() {
         table.getItems().clear();
         table.getItems().addAll(Employee.getCurrentEmployee().getMessages());
+        TabUtil.updateMainTab();
     }
 }

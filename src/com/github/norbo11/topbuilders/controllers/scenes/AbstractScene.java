@@ -16,7 +16,6 @@ public class AbstractScene extends Scene {
     
     public AbstractScene(LoadedFXML fxml) {
     	super(fxml.getRoot());
-    	
     	controller = (AbstractController) fxml.getController();
     	
     	loadStylesheet();

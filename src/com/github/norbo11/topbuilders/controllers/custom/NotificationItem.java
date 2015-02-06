@@ -9,9 +9,9 @@ import javafx.scene.input.MouseEvent;
 import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
-import com.github.norbo11.topbuilders.util.FXMLHelper;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.helpers.FXMLUtil;
 
 public class NotificationItem extends TitledPane {
     public static final String FXML_FILENAME = "NotificationItem.fxml";
@@ -28,7 +28,7 @@ public class NotificationItem extends TitledPane {
         this.notification = notification;
         this.associatedModel = notification.getAssociatedModel();
 
-        FXMLHelper.loadFxml(FXML_FILENAME, this, this);
+        FXMLUtil.loadFxml(FXML_FILENAME, this, this);
     }
 
     @FXML

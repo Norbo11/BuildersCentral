@@ -22,27 +22,39 @@ public class Job extends AbstractModel {
     private DoubleProperty labourPrice = new SimpleDoubleProperty(0);
     private DoubleProperty materialPrice = new SimpleDoubleProperty(0);
     private Vector<RequiredMaterial> requiredMaterials = new Vector<RequiredMaterial>();
+    private JobGroup jobGroupDummy;
     
-    public Job() {
-    	super();
+    /* Properties */
+
+    public IntegerProperty jobGroupIdProperty() {
+        return jobGroupId;
     }
-    
-    public Job(String title) {
-    	super();
-    	
-    	setTitle(title);
-    	setDummy(true);
+
+    public StringProperty titleProperty() {
+        return title;
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public DoubleProperty labourPriceProperty() {
+        return labourPrice;
+    }
+
+    public DoubleProperty materialPriceProperty() {
+        return materialPrice;
     }
     
 	/* Getters and setters */
     
-	public Vector<RequiredMaterial> getRequiredMaterials() {
-		return requiredMaterials;
-	}
+    public JobGroup getJobGroupDummy() {
+        return jobGroupDummy;
+    }
 
-	public void setRequiredMaterials(Vector<RequiredMaterial> requiredMaterials) {
-		this.requiredMaterials = requiredMaterials;
-	}
+    public void setJobGroupDummy(JobGroup jobGroupDummy) {
+        this.jobGroupDummy = jobGroupDummy;
+    }
     
     public int getJobGroupId() {
 		return jobGroupId.get();
@@ -87,7 +99,16 @@ public class Job extends AbstractModel {
 	/* Instance methods */	
 
 	/* Overrides */
-    
+	
+	@Override
+    public Vector<RequiredMaterial> getChildren() {
+        return requiredMaterials;
+    }
+	
+    public void setChildren(Vector<RequiredMaterial> requiredMaterials) {
+        this.requiredMaterials = requiredMaterials;
+    }
+	
 	@Override
     public int add() {
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
@@ -97,18 +118,21 @@ public class Job extends AbstractModel {
     }
     
     @Override
-    public void update() {                
+    public void update() {   
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "jobGroupId=?,title=?,description=?,labourPrice=?,materialPrice=? "
         + "WHERE id = ?", getJobGroupId(), getTitle(), getDescription(), getLabourPrice(), getMaterialPrice(), getId());
-        
+    }
+    
+    @Override
+    public void updateChildren() {
         for (RequiredMaterial requiredMaterial : requiredMaterials) {
-        	requiredMaterial.save();
+            requiredMaterial.save();
         }
     }
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "jobGroupId")) setJobGroupId(result.getInt("jobGroupId"));
         if (containsColumn(columns, "title")) setTitle(result.getString("title"));
@@ -116,7 +140,8 @@ public class Job extends AbstractModel {
         if (containsColumn(columns, "labourPrice")) setLabourPrice(result.getDouble("labourPrice"));
         if (containsColumn(columns, "materialPrice")) setMaterialPrice(result.getDouble("materialPrice"));
         
-        setRequiredMaterials(RequiredMaterial.loadRequiredMaterialsForJob(this));
+        setParent(parent);
+        setChildren(RequiredMaterial.loadRequiredMaterialsForJob(this));
     }
     
 	@Override
@@ -132,13 +157,12 @@ public class Job extends AbstractModel {
 	/* Static methods */
 	
 	public static Vector<Job> loadJobsForJobGroup(JobGroup jobGroup) {		
-		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobGroupId", jobGroup.getId()));
+		return loadList(jobGroup, loadAllModelsWhere(DB_TABLE_NAME, "jobGroupId", jobGroup.getId()));
 	}
 	
 	/* Standard static methods */
 	
-	public static Vector<Job> loadList(ResultSet result) {
-		return loadList(result, Job.class);
+	public static Vector<Job> loadList(AbstractModel parent, ResultSet result) {
+		return loadList(parent, result, Job.class);
 	}
-
 }

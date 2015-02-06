@@ -77,7 +77,7 @@ public class Assignment extends AbstractModel {
 
 
 	@Override
-	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
 	    if (containsColumn(columns, "id")) setId(result.getInt("id"));
 	    if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
 	    if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
@@ -116,6 +116,6 @@ public class Assignment extends AbstractModel {
     }
 
 	public static Vector<Assignment> loadList(ResultSet result) {
-		return loadList(result, Assignment.class);
+		return loadList(null, result, Assignment.class);
 	}
 }

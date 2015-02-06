@@ -1,9 +1,9 @@
-package com.github.norbo11.topbuilders.util;
+package com.github.norbo11.topbuilders.util.helpers;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class StageHelper {
+public class StageUtil {
 
 	public static Stage createDialogStage(String title) {
 		Stage stage = new Stage();

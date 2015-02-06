@@ -9,14 +9,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
-import com.github.norbo11.topbuilders.util.StringHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 
 public abstract class AbstractModel {
     private IntegerProperty id;
     private boolean dummy;
     private boolean newModel;
+    private AbstractModel parent;
     
     public AbstractModel() {
         this(0);
@@ -26,10 +26,24 @@ public abstract class AbstractModel {
         this.id = new SimpleIntegerProperty(id);
     }
     
+    /* Properties */
+    
+    public IntegerProperty idProperty() {
+        return id;
+    }
+    
     /* Getters and setters */
     
     public int getId() {
         return id.get();
+    }
+    
+    public AbstractModel getParent() {
+        return parent;
+    }
+
+    public void setParent(AbstractModel parent) {
+        this.parent = parent;
     }
     
     public boolean isNewModel() {
@@ -58,28 +72,58 @@ public abstract class AbstractModel {
     
     public abstract void update();
     
+    public void updateChildren() {
+        
+    }
+    
+    public Vector<? extends AbstractModel> getChildren() {
+        return null;
+    }
+    
     public void save() {
     	if (newModel) {
-    		add();
+    		setId(add());
     		newModel = false;
     	} else {
     		update();
     	}
+    	updateChildren();
     }
         
     //Sets all of the properties for this model as obtained by the ResultSet - will only load the specified columns
-    public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;
+    public abstract void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException;
+    
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+        loadFromResult(null, result, columns);
+    }
     
     public abstract String getDbTableName();
         
     /* Instance methods */
     
     public void delete() {
-        Database.executeUpdate("DELETE FROM " + getDbTableName() + " WHERE id = ?", getId());
-        Notification.deleteCorrespondingNotification(this);
-        TabHelper.updateAllTabs();
+        //TODO: Could move this functionality to another class, like AbstractChildClass or something
+        AbstractModel parent = getParent();
+        
+        if (parent != null) {
+            Vector<? extends AbstractModel> children = parent.getChildren();
+            Vector<AbstractModel> toRemove = new Vector<AbstractModel>();
+            
+            Log.info(children);
+            for (AbstractModel child : children) {
+                if (child.getId() == getId()) {
+                     toRemove.add(child);
+                }   
+            }
+            
+            Log.info(toRemove);
+            children.removeAll(toRemove);
+            
+            Database.executeUpdate("DELETE FROM " + getDbTableName() + " WHERE id = ?", getId());
+            Notification.deleteCorrespondingNotification(this);
+        }
     }
-    
+
     //This is called by loadFromResult - if no columns were specified, then an empty array will be passed here, for which we check and return true (because that
     //means all columns were requested
     public boolean containsColumn(String[] columns, String needle) {
@@ -94,7 +138,7 @@ public abstract class AbstractModel {
 
     //Load specified columns
     public void loadFromId(int id, String... columns) {
-        String columnString = columns.length > 0 ? StringHelper.join(columns, ",") : "*";
+        String columnString = columns.length > 0 ? StringUtil.join(columns, ",") : "*";
         ResultSet result = Database.executeQuery("SELECT " + columnString + " FROM " + getDbTableName() + " WHERE id = ?", id);
         
         try {
@@ -144,13 +188,13 @@ public abstract class AbstractModel {
         return Database.executeQuery(query, param);
     }
     
-	protected static <T extends AbstractModel> Vector<T> loadList(ResultSet result, Class<T> clazz) {
+	protected static <T extends AbstractModel> Vector<T> loadList(AbstractModel parent, ResultSet result, Class<T> clazz) {
 		Vector<T> models = new Vector<T>();
         		
         try {
 			while (result.next()) {
 				T model = clazz.newInstance();
-				model.loadFromResult(result);
+				model.loadFromResult(parent, result);
 				models.add(model);
 			}
 		} catch (SQLException | InstantiationException | IllegalAccessException e) {
@@ -158,4 +202,11 @@ public abstract class AbstractModel {
 		}
         return models;
 	}
+	
+	protected static <T extends AbstractModel> T loadOne(AbstractModel parent, ResultSet result, Class<T> clazz) {
+        Vector<T> models = loadList(parent, result, clazz);
+        
+        if (models.size() != 0) return models.get(0);
+        else return null;
+    }
 }

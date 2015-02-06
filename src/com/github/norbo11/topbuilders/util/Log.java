@@ -1,5 +1,7 @@
 package com.github.norbo11.topbuilders.util;
 
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+
 
 public class Log {
 
@@ -9,7 +11,7 @@ public class Log {
     }
 
     public static void error(String string) {
-        SceneHelper.showInfoDialog("Error!", string);
+        SceneUtil.showInfoDialog("Error!", string);
     }
     
     public static void error(String string, Exception e) {

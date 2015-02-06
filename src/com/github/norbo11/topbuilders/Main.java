@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class Main extends Application {
    private static Stage mainStage = null;
@@ -29,7 +29,7 @@ public class Main extends Application {
         stage.setTitle(Constants.APPLICATION_NAME);
         stage.setMaximized(true);
         
-        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
+        SceneUtil.changeMainScene(LoginScene.FXML_FILENAME);
         if (Constants.DEBUG_MODE) Employee.loginTestAccount();
 	}
 	

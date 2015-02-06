@@ -19,6 +19,20 @@ public class RequiredMaterial extends AbstractModel {
     private DoubleProperty quantityRequired = new SimpleDoubleProperty(0);
     private StockedMaterial stockedMaterial;
     
+    /* Properties */
+    
+    public IntegerProperty stockedMaterialIdProperty() {
+        return stockedMaterialId;
+    }
+
+    public IntegerProperty jobIdProperty() {
+        return jobId;
+    }
+
+    public DoubleProperty quantityRequiredProperty() {
+        return quantityRequired;
+    }
+    
 	/* Getters and setters */
     
 	public StockedMaterial getStockedMaterial() {
@@ -77,7 +91,7 @@ public class RequiredMaterial extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "stockedMaterialId")) setStockedMaterialId(result.getInt("stockedMaterialId"));
         if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
@@ -101,6 +115,6 @@ public class RequiredMaterial extends AbstractModel {
 	/* Standard static methods */
 	
 	public static Vector<RequiredMaterial> loadList(ResultSet result) {
-		return loadList(result, RequiredMaterial.class);
+		return loadList(null, result, RequiredMaterial.class);
 	}
 }

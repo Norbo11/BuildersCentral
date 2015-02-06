@@ -1,6 +1,6 @@
-package com.github.norbo11.topbuilders.util;
+package com.github.norbo11.topbuilders.util.helpers;
 
-public class StringHelper {
+public class StringUtil {
     public static String join(String[] strings, String seperator) {
         String joined = "";
         

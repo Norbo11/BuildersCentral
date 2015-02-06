@@ -32,28 +32,59 @@ public class Project extends AbstractModel {
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
     private Vector<JobGroup> jobGroups = new Vector<JobGroup>();
-    
-    
-    public Project() {
-    	super();
+
+    /* Properties */
+
+    public BooleanProperty quoteRequestedProperty() {
+        return quoteRequested;
     }
-    
-    public Project(String firstLineAddress) {
-    	super();
-    	
-    	setFirstLineAddress(firstLineAddress);
-	}
+
+    public BooleanProperty completedProperty() {
+        return completed;
+    }
+
+    public StringProperty clientFirstNameProperty() {
+        return clientFirstName;
+    }
+
+    public StringProperty clientLastNameProperty() {
+        return clientLastName;
+    }
+
+    public StringProperty firstLineAddressProperty() {
+        return firstLineAddress;
+    }
+
+    public StringProperty secondLineAddressProperty() {
+        return secondLineAddress;
+    }
+
+    public StringProperty cityProperty() {
+        return city;
+    }
+
+    public StringProperty postcodeProperty() {
+        return postcode;
+    }
+
+    public StringProperty contactNumberProperty() {
+        return contactNumber;
+    }
+
+    public StringProperty emailProperty() {
+        return email;
+    }
+
+    public StringProperty projectDescriptionProperty() {
+        return projectDescription;
+    }
+
+    public StringProperty projectNoteProperty() {
+        return projectNote;
+    }
 
     /* Getters and setters */
     
-	public Vector<JobGroup> getJobGroups() {
-        return jobGroups;
-    }
-	
-	public void setJobGroups(Vector<JobGroup> jobGroups) {
-        this.jobGroups = jobGroups;
-    }
-
 	public void setQuoteRequested(boolean quoteRequested) {
 		this.quoteRequested.set(quoteRequested);
 	}
@@ -158,6 +189,15 @@ public class Project extends AbstractModel {
 	
 	/* Override methods */
 	
+	@Override
+    public Vector<JobGroup> getChildren() {
+        return jobGroups;
+    }
+    
+    public void setChildren(Vector<JobGroup> jobGroups) {
+        this.jobGroups = jobGroups;
+    }
+	
     @Override
     public int add() {
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
@@ -167,18 +207,21 @@ public class Project extends AbstractModel {
     }
     
     @Override
-    public void update() {                
+    public void update() {
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "quoteRequested=?,completed=?,clientFirstName=?,clientLastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,contactNumber=?,email=?,projectDescription=?,projectNote=? "
-        + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());
-        
+        + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());        
+    }
+    
+    @Override
+    public void updateChildren() {
         for (JobGroup jobGroup : jobGroups) {
-        	jobGroup.save();
+            jobGroup.save();
         }
     }
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {  
+    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {  
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
         if (containsColumn(columns, "completed")) setCompleted(result.getBoolean("completed"));
@@ -193,7 +236,7 @@ public class Project extends AbstractModel {
         if (containsColumn(columns, "projectDescription")) setProjectDescription(result.getString("projectDescription"));
         if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
         
-        setJobGroups(JobGroup.loadJobGroupsForProject(this));
+        setChildren(JobGroup.loadJobGroupsForProject(this));
     }
 
 	@Override
@@ -223,27 +266,7 @@ public class Project extends AbstractModel {
 	}
 	
 	public static Vector<Project> loadList(ResultSet result) {
-		return loadList(result, Project.class);
+		return loadList(null, result, Project.class);
 	}
 
-    public void updateJobGroup(String title, Vector<Job> jobs) {
-        Vector<JobGroup> jobGroups = getJobGroups();
-        JobGroup groupToUpdate = null;
-        
-        for (JobGroup group : jobGroups) {
-            if (group.getGroupName().equals(title)) {
-            	groupToUpdate = group;
-                break;
-            }
-        }
-        
-        //If no matching job group was found, create one
-        if (groupToUpdate == null) {
-        	groupToUpdate = new JobGroup(title);
-        	groupToUpdate.add();
-        }
-        
-        groupToUpdate.setJobs(jobs);
-        groupToUpdate.save();
-    }
 }

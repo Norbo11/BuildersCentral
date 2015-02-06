@@ -10,14 +10,22 @@
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.QuotesTab">
   <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
   
-  <HBox spacing="20" alignment="TOP_CENTER">
-    <Label text="Select quote to edit" />
-    <ComboBox fx:id="projectPicker" onAction="#updateFields" prefWidth="300" />
-  </HBox>
+  <BorderPane>
+    <left>
+      <Button fx:id="deleteProjectButton" text="%quotes.delete" prefWidth="190" prefHeight="40" onAction="#deleteProject" />
+    </left>
   
-  <TreeTableView fx:id="table" showRoot="false" editable="true">
+    <center>
+      <Label text="Select quote to edit" />
+      <ComboBox fx:id="projectPicker" onAction="#updateFields" prefWidth="300" />
+    </center>
+  </BorderPane>
+  
+  <TreeTableView fx:id="table" showRoot="false" editable="true" styleClass="unselectable">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
+      <TreeTableColumn fx:id="deleteJobCol" text="X" minWidth="50" editable="true" />
+    
       <TreeTableColumn fx:id="titleCol" text="%jobs.title" editable="true">
         <cellValueFactory><TreeItemPropertyValueFactory property="title" /></cellValueFactory>
       </TreeTableColumn>
@@ -26,23 +34,32 @@
         <cellValueFactory><TreeItemPropertyValueFactory property="description" /></cellValueFactory>
       </TreeTableColumn>
       
-      <TreeTableColumn fx:id="materialsCol" text="%jobs.materials" />
+      <TreeTableColumn fx:id="materialsCol" text="%jobs.materials">
+        <maxWidth><Double fx:constant="MAX_VALUE" /></maxWidth>
+      </TreeTableColumn>
       
-      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" prefWidth="200" editable="true" />
+      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" minWidth="140" editable="true" />
       
-      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" prefWidth="200" editable="true" />
+      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" minWidth="140" editable="true" />
       
-      <TreeTableColumn fx:id="totalCostCol" text="%jobs.totalCost" prefWidth="200" />
+      <TreeTableColumn fx:id="totalCostCol" text="%jobs.totalCost" minWidth="140" />
     </columns>
     <root>
       <TreeItem value="Job Groups" expanded="true" />
     </root>
   </TreeTableView>
   
-  <HBox spacing="40">
-    <ComboBox fx:id="jobGroupCombo" />
-    <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJobRow" />
-  </HBox>
+  <VBox spacing="20">
+    <HBox spacing="40">
+      <ComboBox fx:id="jobGroupCombo" prefWidth="230" />
+      <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJob" />
+    </HBox>
+    
+    <HBox spacing="40">
+      <TextField fx:id="newGroupField" prefWidth="230" />
+      <Button text="%quotes.addGroup" prefWidth="190" prefHeight="40" onAction="#addGroup" />
+    </HBox>
+  </VBox>
 
   <HBox alignment="center" spacing="20">
     <GridPane hgap="10" vgap="10" alignment="top_center">  

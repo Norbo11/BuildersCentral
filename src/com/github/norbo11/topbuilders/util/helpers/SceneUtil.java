@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.util;
+package com.github.norbo11.topbuilders.util.helpers;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,8 +13,9 @@ import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
+import com.github.norbo11.topbuilders.util.Resources;
 
-public class SceneHelper {
+public class SceneUtil {
 	
     private static boolean fullscreen = false;
     
@@ -38,7 +39,7 @@ public class SceneHelper {
     }
     
     public static AbstractScene changeScene(Stage stage, String filename) {
-        return changeScene(stage, new AbstractScene(FXMLHelper.loadFxml(filename)));
+        return changeScene(stage, new AbstractScene(FXMLUtil.loadFxml(filename)));
 	}
 	
 	//Change the contents of the main window
@@ -60,7 +61,7 @@ public class SceneHelper {
         
         button.setOnAction(e -> { 
             runnable.run();
-            SceneHelper.closeScene((Node) e.getSource());
+            SceneUtil.closeScene((Node) e.getSource());
         });
         
         showDialog(title, info, button);
@@ -70,12 +71,12 @@ public class SceneHelper {
         Button ok = new Button(Resources.getResource("general.ok"));
         ok.setOnAction(e -> { 
             runnable.run();
-            SceneHelper.closeScene((Node) e.getSource());
+            SceneUtil.closeScene((Node) e.getSource());
         });
         
         Button cancel = new Button(Resources.getResource("general.cancel"));
         cancel.setOnAction(e -> { 
-            SceneHelper.closeScene((Node) e.getSource());
+            SceneUtil.closeScene((Node) e.getSource());
         });
         
         showDialog(title, info, ok, cancel);
@@ -83,7 +84,7 @@ public class SceneHelper {
     
     private static void showDialog(String title, String info, Button... buttons) {
         VBox vbox = createDialogVBox(info, buttons);
-        Stage stage = StageHelper.createDialogStage(title);
+        Stage stage = StageUtil.createDialogStage(title);
         changeScene(stage, vbox);
     }
     

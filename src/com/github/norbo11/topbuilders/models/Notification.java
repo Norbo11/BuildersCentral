@@ -14,9 +14,8 @@ import javafx.beans.property.SimpleLongProperty;
 
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Log;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 public class Notification extends AbstractModel {
     public static final String DB_TABLE_NAME = "notifications";
@@ -26,21 +25,6 @@ public class Notification extends AbstractModel {
     private IntegerProperty associatedId = new SimpleIntegerProperty(0);
     private LongProperty timestamp = new SimpleLongProperty(0);
     private BooleanProperty seen = new SimpleBooleanProperty(false);
-    
-    public Notification() {
-        super();
-    }
-    
-    public Notification(int employeeId, NotificationType type, int associatedId, long timestamp, boolean seen) {
-        super();
-        
-        setEmployeeId(employeeId);
-        setTypeId(type.getId());
-        setAssociatedId(associatedId);
-        setTimestamp(timestamp);
-        setSeen(seen);
-        setId(add());
-    }
     
     /* Getters and setters */
     
@@ -130,7 +114,7 @@ public class Notification extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
         if (containsColumn(columns, "typeId")) setTypeId(result.getInt("typeId"));
@@ -148,7 +132,7 @@ public class Notification extends AbstractModel {
 
 	//Override
 	public static Vector<Notification> loadList(ResultSet result) {
-        return loadList(result, Notification.class);
+        return loadList(null, result, Notification.class);
     }
 
 	public static Vector<Notification> loadNotificationsForEmployee(Employee employee) {
@@ -170,6 +154,6 @@ public class Notification extends AbstractModel {
             Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_QUOTE_REQUEST.getId(), model.getId());
         }
         
-        TabHelper.updateAllTabs();
+        //TabHelper.updateAllTabs();
     }
 }

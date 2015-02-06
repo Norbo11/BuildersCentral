@@ -6,7 +6,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 import com.github.norbo11.topbuilders.util.LoadedFXML;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class AbstractTab extends Tab {
 
@@ -15,7 +15,7 @@ public class AbstractTab extends Tab {
 		this.controller = (AbstractController) fxml.getController();
 		this.parentTabPane = parentTabPane;
 		this.fxmlFilename = fxml.getFxmlFilename();
-		setOnClosed(e -> TabHelper.removeTab(controller));
+		setOnClosed(e -> TabUtil.removeTab(controller));
 	}
 	
 	private String fxmlFilename;

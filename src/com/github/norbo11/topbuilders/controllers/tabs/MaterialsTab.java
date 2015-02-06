@@ -23,7 +23,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
-import com.github.norbo11.topbuilders.util.DeleteModelButtonCellFactory;
+import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactory;
 public class MaterialsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MaterialsTab.fxml";
     
@@ -142,7 +142,10 @@ public class MaterialsTab extends AbstractController {
     
     @FXML
 	public void initialize() {			
-        DeleteModelButtonCellFactory.assignCellFactory(xColumn);
+        StockedMaterial.loadStockedMaterials();
+        update();
+        
+        DeleteModelButtonCellFactory.assignCellFactory(xColumn, this);
 		
 		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		nameColumn.setOnEditCommit(editEvent -> {
@@ -160,7 +163,6 @@ public class MaterialsTab extends AbstractController {
 
 		requiredColumn.setCellValueFactory(new RequiredCellValueFactory());
 		balanceColumn.setCellValueFactory(new BalanceCellValueFactory());
-	    update();
 	}
     
     @FXML
@@ -177,10 +179,12 @@ public class MaterialsTab extends AbstractController {
     }
     
     /* Instance methods */
-
+    
+    /* Override methods */
+    
     @Override
     public void update() {
         table.getItems().clear();
-        table.getItems().addAll(StockedMaterial.getAllStockedMaterials());
+        table.getItems().addAll(StockedMaterial.getStockedMaterials());
     }
 }

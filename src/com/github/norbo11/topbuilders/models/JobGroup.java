@@ -18,17 +18,19 @@ public class JobGroup extends AbstractModel {
     private StringProperty groupName = new SimpleStringProperty("");
     private Vector<Job> jobs = new Vector<Job>();
     
+
+    /* Properties */
+
+    public IntegerProperty projectIdProperty() {
+        return projectId;
+    }
+
+    public StringProperty groupNameProperty() {
+        return groupName;
+    }
+    
 	/* Getters and setters */
-    
-    public JobGroup() {
-        super();
-    }
-    
-    public JobGroup(String groupName) {
-        super();
         
-        setGroupName(groupName);
-    }
 
     public int getProjectId() {
 		return projectId.get();
@@ -45,21 +47,22 @@ public class JobGroup extends AbstractModel {
 	public void setGroupName(String groupName) {
 		this.groupName.set(groupName);
 	}
-    
-	public Vector<Job> getJobs() {
-	    return jobs;
-	}
-	
-	public void setJobs(Vector<Job> jobs) {
-	    this.jobs = jobs;
-	}
 	
 	/* Instance methods */	
 
 	/* Overrides */
     
+	@Override
+    public Vector<Job> getChildren() {
+        return jobs;
+    }
+	
+	public void setChildren(Vector<Job> jobs) {
+        this.jobs = jobs;
+    }
+	
     @Override
-    public int add() {
+    public int add() {  
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
         + " (projectId,groupName) "
         + "VALUES (?,?)"
@@ -67,23 +70,36 @@ public class JobGroup extends AbstractModel {
     }
     
     @Override
-    public void update() {                
+    public void update() {       
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "projectId=?,groupName=? "
         + "WHERE id = ?", getProjectId(), getGroupName(), getId());
-        
-        for (Job job : getJobs()) {
-        	job.save();
-		}	
 	}
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+    public void updateChildren() {
+        for (Job job : getChildren()) {
+            job.save();
+        }   
+    }
+    
+    @Override
+    public void delete() {
+        super.delete();
+        
+        for (Job job : jobs) {
+            job.delete();
+        }
+    }
+    
+    @Override
+    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "projectId")) setProjectId(result.getInt("projectId"));
         if (containsColumn(columns, "groupName")) setGroupName(result.getString("groupName"));
         
-        setJobs(Job.loadJobsForJobGroup(this));
+        setParent(parent);
+        setChildren(Job.loadJobsForJobGroup(this));
     }
     
 	@Override
@@ -99,12 +115,12 @@ public class JobGroup extends AbstractModel {
 	/* Static methods */
 	
 	public static Vector<JobGroup> loadJobGroupsForProject(Project project) {
-		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()));
+		return loadList(project, loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()));
 	}
 	
 	/* Standard static methods */
 	
-	public static Vector<JobGroup> loadList(ResultSet result) {
-		return loadList(result, JobGroup.class);
+	public static Vector<JobGroup> loadList(AbstractModel parent, ResultSet result) {
+		return loadList(parent, result, JobGroup.class);
 	}
 }

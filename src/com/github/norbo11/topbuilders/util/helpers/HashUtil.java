@@ -1,7 +1,9 @@
-package com.github.norbo11.topbuilders.util;
+package com.github.norbo11.topbuilders.util.helpers;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import com.github.norbo11.topbuilders.util.Log;
 
 public class HashUtil {
     private static String convertByteArrayToHexString(byte[] arrayBytes) {

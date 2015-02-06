@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 
 public abstract class AbstractController {
     private Scene scene = null;
-    
+
     public void update() {
         
     }

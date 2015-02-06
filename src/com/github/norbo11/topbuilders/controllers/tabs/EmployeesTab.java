@@ -19,10 +19,10 @@ import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
-import com.github.norbo11.topbuilders.util.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.StageHelper;
+import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
 public class EmployeesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/EmployeesTab.fxml";
@@ -93,15 +93,15 @@ public class EmployeesTab extends AbstractController {
     public void deleteEmployee(ActionEvent event) {
         Employee employee = table.getSelectionModel().getSelectedItem().getValue();
         if (!employee.isDummy()) {
-            SceneHelper.showConfirmationDialog(Resources.getResource("general.confirm"), Resources.getResource("employees.delete.confirm", employee.getFullName()), () -> employee.delete());
+            SceneUtil.showConfirmationDialog(Resources.getResource("general.confirm"), Resources.getResource("employees.delete.confirm", employee.getFullName()), () -> employee.delete());
         }
     }
     
     @FXML
     public void addEmployee(ActionEvent event) {
         //Create new window
-        Stage stage = StageHelper.createDialogStage(Resources.getResource("employees.add"));
-        AbstractScene scene = SceneHelper.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME);
+        Stage stage = StageUtil.createDialogStage(Resources.getResource("employees.add"));
+        AbstractScene scene = SceneUtil.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME);
         
         //Display details
         ModifyEmployeeScene controller = (ModifyEmployeeScene) scene.getController();
@@ -115,8 +115,8 @@ public class EmployeesTab extends AbstractController {
         
         if (!employee.isDummy()) {
             //Create new window
-            Stage stage = StageHelper.createDialogStage(employee.getFullName());
-            AbstractScene scene = SceneHelper.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME);
+            Stage stage = StageUtil.createDialogStage(employee.getFullName());
+            AbstractScene scene = SceneUtil.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME);
             
             //Display details
             ModifyEmployeeScene controller = (ModifyEmployeeScene) scene.getController();
@@ -125,7 +125,6 @@ public class EmployeesTab extends AbstractController {
         }
     }
     
-    @Override
     public void update() {
         superusers.getChildren().clear();
         managers.getChildren().clear();

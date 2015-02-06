@@ -8,13 +8,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class NewMessageScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/NewMessageScene.fxml";
@@ -22,6 +22,7 @@ public class NewMessageScene extends AbstractController {
     @FXML private ComboBox<Employee> toCombo;
     @FXML private TextField titleField;
     @FXML private HTMLEditor contentEditor;
+    private MessagesTab parent;
     
     @FXML
     public void sendMessage(ActionEvent event) {
@@ -31,16 +32,30 @@ public class NewMessageScene extends AbstractController {
         String content = contentEditor.getHtmlText().replace("contenteditable=\"true\"", "");
         long timestamp = DateTimeUtil.getCurrentTimestamp();
                 
-        Message message = new Message(fromId, toId, title, content, timestamp);
-        new Notification(toId, NotificationType.NEW_MESSAGE, message.getId(), timestamp, false);
+        Message message = new Message();
+        message.setNewModel(true);
+        message.setSenderId(fromId);
+        message.setRecipientId(toId);
+        message.setTitle(title);
+        message.setContent(content);
+        message.setTimestamp(timestamp);
+        message.save();
+        
+        Notification notification = new Notification();
+        notification.setNewModel(true);
+        notification.setEmployeeId(toId);
+        notification.setTypeId(NotificationType.NEW_MESSAGE.getId());
+        notification.setAssociatedId(message.getId());
+        notification.setTimestamp(timestamp);
+        notification.save();
         
         discard(event);
-        TabHelper.updateAllTabs();
+        parent.update();
     }
     
     @FXML
     public void discard(ActionEvent event) {
-        SceneHelper.closeScene((Node) event.getSource());
+        SceneUtil.closeScene((Node) event.getSource());
     }
     
     @FXML
@@ -51,9 +66,8 @@ public class NewMessageScene extends AbstractController {
         
         toCombo.getSelectionModel().select(0);
     }
-
-    @Override
-    public void update() {
-
+    
+    public void setParent(MessagesTab parent) {
+        this.parent = parent;
     }
 }

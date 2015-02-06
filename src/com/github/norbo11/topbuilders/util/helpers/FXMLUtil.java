@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.util;
+package com.github.norbo11.topbuilders.util.helpers;
 
 import java.io.IOException;
 
@@ -6,8 +6,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import com.github.norbo11.topbuilders.Main;
+import com.github.norbo11.topbuilders.util.LoadedFXML;
+import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.Resources;
 
-public class FXMLHelper {
+public class FXMLUtil {
     public static LoadedFXML loadFxml(String filename) {
         return loadFxml(filename, null, null);
     }

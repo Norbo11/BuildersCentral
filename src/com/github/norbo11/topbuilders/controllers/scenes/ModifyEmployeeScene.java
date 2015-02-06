@@ -11,11 +11,10 @@ import javafx.scene.layout.VBox;
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.enums.UserType;
-import com.github.norbo11.topbuilders.util.HashUtil;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
 import com.github.norbo11.topbuilders.util.Validation;
+import com.github.norbo11.topbuilders.util.helpers.HashUtil;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class ModifyEmployeeScene extends AbstractValidationScene {
     public static final String FXML_FILENAME = "scenes/ModifyEmployeeScene.fxml";
@@ -43,7 +42,7 @@ public class ModifyEmployeeScene extends AbstractValidationScene {
     
     @FXML
     public void close(ActionEvent event) {
-        SceneHelper.closeScene((Node) event.getSource());
+        SceneUtil.closeScene((Node) event.getSource());
     }
     
     @FXML
@@ -65,19 +64,18 @@ public class ModifyEmployeeScene extends AbstractValidationScene {
 	            activationCode.setText(code);
 	            
 	            String info = Resources.getResource("employees.activationCodeInfo", code);
-	            SceneHelper.showInfoDialog(Resources.getResource("general.info"), info, () -> SceneHelper.closeScene((Node) event.getSource()));
+	            SceneUtil.showInfoDialog(Resources.getResource("general.info"), info, () -> SceneUtil.closeScene((Node) event.getSource()));
 	        }
 	        employee.setActivationCode(activationCode.getText());
 	        
 	        if (isNew) employee.add();
 	        else employee.save();
 	        
-	        TabHelper.updateAllTabs();
-	        SceneHelper.closeScene((Node) event.getSource());
+	        update();
+	        SceneUtil.closeScene((Node) event.getSource());
     	}
     }
 
-    @Override
     public void update() {
         username.setText(employee.getUsername());
         email.setText(employee.getEmail());

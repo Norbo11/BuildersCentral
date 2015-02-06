@@ -9,8 +9,8 @@ import javafx.scene.web.WebView;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.models.Message;
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
-import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 
 public class DisplayMessageScene extends AbstractController {
@@ -61,7 +61,7 @@ public class DisplayMessageScene extends AbstractController {
     
     @FXML
     public void close(ActionEvent event) {
-        SceneHelper.closeScene((Node) event.getSource());
+        SceneUtil.closeScene((Node) event.getSource());
     }
 
     public void update() {

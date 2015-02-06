@@ -7,8 +7,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import com.github.norbo11.topbuilders.models.Employee;
-import com.github.norbo11.topbuilders.util.HashUtil;
-import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.helpers.HashUtil;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class RegisterScene extends AbstractValidationScene {
 	public static final String FXML_FILENAME = "scenes/RegisterScene.fxml";
@@ -54,7 +54,7 @@ public class RegisterScene extends AbstractValidationScene {
     
     @FXML
     public void back(ActionEvent event) {
-        SceneHelper.changeMainScene(LoginScene.FXML_FILENAME);
+        SceneUtil.changeMainScene(LoginScene.FXML_FILENAME);
     }
 
     @Override

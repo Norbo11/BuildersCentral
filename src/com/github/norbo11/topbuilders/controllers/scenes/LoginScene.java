@@ -10,7 +10,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
-import com.github.norbo11.topbuilders.util.SceneHelper;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class LoginScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/LoginScene.fxml";
@@ -37,7 +37,7 @@ public class LoginScene extends AbstractController {
     
     @FXML
     public void register(ActionEvent event) {
-    	SceneHelper.changeMainScene(RegisterScene.FXML_FILENAME);
+    	SceneUtil.changeMainScene(RegisterScene.FXML_FILENAME);
     }
     
     @FXML
@@ -48,9 +48,4 @@ public class LoginScene extends AbstractController {
 	public static String getAbsoluteFxmlFilename() {
 		return "/com/github/norbo11/topbuilders/scenes/fxml/" + FXML_FILENAME;
 	}
-
-    @Override
-    public void update() {
-
-    }
 }

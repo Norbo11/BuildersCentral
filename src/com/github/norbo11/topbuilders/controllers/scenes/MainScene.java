@@ -17,9 +17,9 @@ import com.github.norbo11.topbuilders.controllers.tabs.EmployeeHomeTab;
 import com.github.norbo11.topbuilders.controllers.tabs.ManagerHomeTab;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.enums.UserType;
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class MainScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/MainScene.fxml";
@@ -44,9 +44,9 @@ public class MainScene extends AbstractController {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.playFromStart();
         
-        TabHelper.setTabPane(tabPane);
+        TabUtil.setTabPane(tabPane);
         
         String scene = Employee.getCurrentEmployee().getUserType().isAtLeast(UserType.MANAGER) ? ManagerHomeTab.FXML_FILENAME : EmployeeHomeTab.FXML_FILENAME;
-        TabHelper.createAndSwitchTab(Resources.getResource("home"), scene).setClosable(false);
+        TabUtil.createAndSwitchTab(Resources.getResource("home"), scene).setClosable(false);
     }
 }

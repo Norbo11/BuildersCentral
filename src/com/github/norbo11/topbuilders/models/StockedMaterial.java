@@ -21,7 +21,8 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
 	private IntegerProperty quantityTypeId = new SimpleIntegerProperty(0);
-
+    private static Vector<StockedMaterial> stockedMaterials;
+	
 	public StockedMaterial() {
 	    super();
 	}
@@ -102,7 +103,7 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
     }
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {      
+    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {      
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "name")) setName(result.getString("name"));
         if (containsColumn(columns, "quantityInStock")) setQuantityInStock(result.getDouble("quantityInStock"));
@@ -118,16 +119,20 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	/* Static methods */
 
 	public static StockedMaterial loadStockedMaterialForRequiredMaterial(RequiredMaterial requiredMaterial) {
-		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "id", requiredMaterial.getId())).get(0);
+	    return loadOne(null, loadAllModelsWhere(DB_TABLE_NAME, "id", requiredMaterial.getStockedMaterialId()), StockedMaterial.class);
 	}
 	
 	/* Standard static methods */
 	
-	public static Vector<StockedMaterial> getAllStockedMaterials() {
-		return loadList(loadAllModels(DB_TABLE_NAME));
+	public static void loadStockedMaterials() {
+		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
+	}
+	
+	public static Vector<StockedMaterial> getStockedMaterials() {
+	    return stockedMaterials;
 	}
 	
 	public static Vector<StockedMaterial> loadList(ResultSet result) {
-		return loadList(result, StockedMaterial.class);
+		return loadList(null, result, StockedMaterial.class);
 	}
 }

@@ -16,7 +16,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.EmployeeSettings;
 import com.github.norbo11.topbuilders.util.Log;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class SettingsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/SettingsTab.fxml";
@@ -70,11 +70,11 @@ public class SettingsTab extends AbstractController {
 		settings.setLocaleId(languagesCombo.getSelectionModel().getSelectedItem().getLanguage());
 		settings.setFullscreen(fullscreenCheckbox.isSelected());
 		
-		TabHelper.closeCurrentTab();
+		TabUtil.closeCurrentTab();
 		Main.getMainStage().setFullScreen(settings.isFullscreen());
 	}
 	
 	@FXML public void cancel(ActionEvent event) {
-		TabHelper.closeCurrentTab();
+		TabUtil.closeCurrentTab();
 	}
 }

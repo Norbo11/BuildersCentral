@@ -16,9 +16,9 @@ import javafx.stage.Stage;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.DateTimeUtil;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.StageHelper;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -31,21 +31,6 @@ public class Message extends AbstractModel {
   
     /* Getters and setters */
     
-    public Message() {
-        super();
-    }
-    
-    public Message(int senderId, int recipientId, String title, String content, long timestamp) {
-        super();
-        
-        setSenderId(senderId);
-        setRecipientId(recipientId);
-        setTitle(title);
-        setContent(content);
-        setTimestamp(timestamp);
-        setId(add());
-    }
-
     public String getTitle() {
         return title.get();
     }
@@ -119,7 +104,7 @@ public class Message extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
+	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "senderId")) setSenderId(result.getInt("senderId"));
         if (containsColumn(columns, "recipientId")) setRecipientId(result.getInt("recipientId"));
@@ -137,8 +122,8 @@ public class Message extends AbstractModel {
 
     public static void displayMessage(Message message) {
         //Create new window
-        Stage stage = StageHelper.createDialogStage(message.getTitle());
-        AbstractScene scene = SceneHelper.changeScene(stage, DisplayMessageScene.FXML_FILENAME);
+        Stage stage = StageUtil.createDialogStage(message.getTitle());
+        AbstractScene scene = SceneUtil.changeScene(stage, DisplayMessageScene.FXML_FILENAME);
         
         //Display details
         DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
@@ -151,6 +136,6 @@ public class Message extends AbstractModel {
     }
     
     public static Vector<Message> loadList(ResultSet result) {
-		return loadList(result, Message.class);
+		return loadList(null, result, Message.class);
 	}
 }

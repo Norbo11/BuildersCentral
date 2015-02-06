@@ -16,11 +16,11 @@ import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.HashUtil;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.StringHelper;
+import com.github.norbo11.topbuilders.util.helpers.HashUtil;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
@@ -220,7 +220,7 @@ public class Employee extends AbstractModel {
     }
     
     public String getAddress() {
-        return StringHelper.formatAddress(getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode());
+        return StringUtil.formatAddress(getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode());
     }
     
     public void removeActivationCode() {
@@ -231,8 +231,8 @@ public class Employee extends AbstractModel {
     public void login() {
         Employee.setCurrentEmployee(this);
         Resources.setCurrentBundle(this);
-        SceneHelper.setFullscreen(getSettings().isFullscreen());
-        SceneHelper.changeMainScene(MainScene.FXML_FILENAME);
+        SceneUtil.setFullscreen(getSettings().isFullscreen());
+        SceneUtil.changeMainScene(MainScene.FXML_FILENAME);
     }
 	
 	/* Overrides */
@@ -253,7 +253,7 @@ public class Employee extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
+    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "username")) setUsername(result.getString("username"));
         if (containsColumn(columns, "password")) setPassword(result.getString("password"));
@@ -305,7 +305,7 @@ public class Employee extends AbstractModel {
 	public static void loginTestAccount() {
 		try {
 		    login("test", "abc123");
-	        SceneHelper.changeMainScene(MainScene.FXML_FILENAME);
+	        SceneUtil.changeMainScene(MainScene.FXML_FILENAME);
 		} catch (UsernameException | PasswordException e) {
 			e.printStackTrace();
 		}
@@ -345,6 +345,6 @@ public class Employee extends AbstractModel {
 	}
 	
 	public static Vector<Employee> loadList(ResultSet result) {
-		return loadList(result, Employee.class);
+		return loadList(null, result, Employee.class);
 	}
 }

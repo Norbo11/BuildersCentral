@@ -14,8 +14,8 @@ import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.SceneHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class ManagerHomeTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/ManagerHomeTab.fxml";
@@ -26,13 +26,13 @@ public class ManagerHomeTab extends AbstractController {
     public void buttonAction(ActionEvent event) {
         switch (((Button) event.getSource()).getId()) {
         case "myAssignments": break;
-        case "messages": TabHelper.createAndSwitchTab(Resources.getResource("home.messages"), MessagesTab.FXML_FILENAME); break;
-        case "settings": TabHelper.createAndSwitchTab(Resources.getResource("home.settings"), SettingsTab.FXML_FILENAME); break;
-        case "logout": SceneHelper.changeMainScene(LoginScene.FXML_FILENAME); break;
-        case "employees": TabHelper.createAndSwitchTab(Resources.getResource("home.employees"), EmployeesTab.FXML_FILENAME); break;
-        case "quotes": TabHelper.createAndSwitchTab(Resources.getResource("home.quotes"), QuotesTab.FXML_FILENAME); break;
+        case "messages": TabUtil.createAndSwitchTab(Resources.getResource("home.messages"), MessagesTab.FXML_FILENAME); break;
+        case "settings": TabUtil.createAndSwitchTab(Resources.getResource("home.settings"), SettingsTab.FXML_FILENAME); break;
+        case "logout": SceneUtil.changeMainScene(LoginScene.FXML_FILENAME); break;
+        case "employees": TabUtil.createAndSwitchTab(Resources.getResource("home.employees"), EmployeesTab.FXML_FILENAME); break;
+        case "quotes": TabUtil.createAndSwitchTab(Resources.getResource("home.quotes"), QuotesTab.FXML_FILENAME); break;
         case "requests": break;
-        case "materials": TabHelper.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME); break;
+        case "materials": TabUtil.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME); break;
         case "manageAssignments": break;
         }
     }
@@ -41,8 +41,7 @@ public class ManagerHomeTab extends AbstractController {
    public void initialize() {    
        update();
    }
-
-   @Override
+   
    public void update() {
        ObservableList<Node> notifications = getNotificationsList().getChildren();
        notifications.clear();

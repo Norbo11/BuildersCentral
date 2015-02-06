@@ -29,11 +29,12 @@ import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
-import com.github.norbo11.topbuilders.util.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.Resources;
-import com.github.norbo11.topbuilders.util.StringHelper;
-import com.github.norbo11.topbuilders.util.TabHelper;
 import com.github.norbo11.topbuilders.util.Validation;
+import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
+import com.github.norbo11.topbuilders.util.factories.TextAreaTreeTableCell;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 public class QuotesTab extends AbstractValidationScene {
 
@@ -42,6 +43,8 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private GridPane jobsGrid;
     @FXML private ComboBox<Project> projectPicker;
     @FXML private ComboBox<JobGroup> jobGroupCombo;
+    @FXML private Button deleteProjectButton;
+    @FXML private TextField newGroupField;
     
     @FXML private TextArea projectDescription, projectNote;
     @FXML private TextField firstName, lastName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode;
@@ -49,12 +52,13 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private VBox errorsList;
     @FXML private Label errorsLabel;
     @FXML private TreeTableView<Job> table;
-    @FXML private TreeTableColumn<Job, Job> materialsCol; 
+    @FXML private TreeTableColumn<Job, Job> materialsCol, deleteJobCol; 
     @FXML private TreeTableColumn<Job, String> titleCol, descriptionCol;
     @FXML private TreeTableColumn<Job, Double> materialsCostCol, labourCostCol, totalCostCol;
-        
+            
     /* Factories */
-    
+   
+    //Class which cancels the expanding events of tree items
     private class JobTreeItem extends TreeItem<Job> {
         private EventHandler<TreeModificationEvent<Job>> cancelExpandHandler = new EventHandler<TreeModificationEvent<Job>>() {
             @Override
@@ -72,10 +76,22 @@ public class QuotesTab extends AbstractValidationScene {
         }
     }
     
+    //Class which removes the expansion arrow of tree items
+    private class JobTableRow extends HeadingTreeTableRow<Job> {        
+        @Override
+        protected void updateItem(Job job, boolean empty) {
+            super.updateItem(job, empty);
+            
+            setDisclosureNode(null);
+        }
+    }
+    
+    //Class which handles the displaying of materials in the material column
     private class MaterialsCell extends TreeTableCell<Job, Job> {
     	GridPane grid;
     	int lastRow = 0;
     	Button newMaterialButton;
+    	Job job;
     	//boolean toggled = false;
     	    	
     	public MaterialsCell() {
@@ -96,7 +112,13 @@ public class QuotesTab extends AbstractValidationScene {
             newMaterialButton.setMaxWidth(Double.MAX_VALUE);
             newMaterialButton.setOnAction(e -> {
                 removeButton(); 
-                addMaterialRow("", 0, ""); 
+                
+                RequiredMaterial newMaterial = new RequiredMaterial();
+                newMaterial.setNewModel(true);
+                newMaterial.jobIdProperty().bind(job.idProperty());
+                job.getChildren().add(newMaterial);
+                
+                addMaterialRow(newMaterial); 
                 addButton();
              });
             
@@ -124,19 +146,26 @@ public class QuotesTab extends AbstractValidationScene {
             //toggled = false;
         }
 
-        private void addMaterialRow(String materialName, double quantityRequired, String materialType) {
+        private void addMaterialRow(RequiredMaterial requiredMaterial) {
             Button deleteButton = new Button("X");
             
-    		TextField nameField = new TextField(materialName);
+    		TextField nameField = new TextField();
     		nameField.setMaxHeight(Double.MAX_VALUE);
     		
-            DoubleTextField quantityField = new DoubleTextField(quantityRequired);
+            DoubleTextField quantityField = new DoubleTextField(requiredMaterial.getQuantityRequired());
             quantityField.setMinWidth(50);
             quantityField.setPrefWidth(50);
             
-            Label typeLabel = new Label(materialType);
+            Label typeLabel = new Label();
             typeLabel.setMinWidth(30);
             typeLabel.setPrefWidth(30);
+            
+            StockedMaterial stockedMaterial = requiredMaterial.getStockedMaterial();
+            
+            if (stockedMaterial != null) {
+                nameField.setText(stockedMaterial.getName());
+                typeLabel.setText(stockedMaterial.getQuantityType().toString());
+            }
             
             grid.addRow(lastRow, deleteButton, nameField, quantityField, typeLabel);
             lastRow++;
@@ -156,11 +185,10 @@ public class QuotesTab extends AbstractValidationScene {
                     lastRow = 0;
                     grid.getChildren().clear();
                     
-                    Vector<RequiredMaterial> materials = job.getRequiredMaterials();
+                    this.job = job;
                     
-                    for (RequiredMaterial requiredMaterial : materials) {
-                        StockedMaterial stockedMaterial = requiredMaterial.getStockedMaterial();
-                    	addMaterialRow(stockedMaterial.getName(), requiredMaterial.getQuantityRequired(), stockedMaterial.getQuantityType().toString());
+                    for (RequiredMaterial requiredMaterial : job.getChildren()) {
+                    	addMaterialRow(requiredMaterial);
                     }
                     
                     addButton();
@@ -170,12 +198,32 @@ public class QuotesTab extends AbstractValidationScene {
         }
     }
     
-    private class JobTableRow extends HeadingTreeTableRow<Job> {        
+    //Class which handles the delete cells of tree items
+    private class DeleteModelButtonTreeCellFactory extends TreeTableCell<Job, Job> {
         @Override
         protected void updateItem(Job job, boolean empty) {
             super.updateItem(job, empty);
-            
-            setDisclosureNode(null);
+            if (empty) {
+                setText("");
+                setGraphic(null);
+            } else {
+                Button button = new Button("X");
+                button.setOnAction(e -> { 
+                    if (job.isDummy()) {
+                        JobGroup jobGroup = job.getJobGroupDummy();
+                        String title = Resources.getResource("general.confirm");
+                        String info = Resources.getResource("quotes.confirmJobGroupDelete", jobGroup.getGroupName());
+                        SceneUtil.showConfirmationDialog(title, info, () -> { 
+                            jobGroup.delete();
+                        });
+                    } else {
+                        job.delete();
+                    }
+                    
+                    updateJobGroups();
+                });
+                setGraphic(button); //setGraphic allows me to set an actual node instead of text for these cell contents
+            }
         }
     }
     
@@ -183,41 +231,69 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML
 	public void initialize() {
-    	Project.loadProjects();
 		update();
+		
+        deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
+        deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	
         titleCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
-        descriptionCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+        titleCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
+        
+        descriptionCol.setCellFactory(param -> new TextAreaTreeTableCell<Job>());
+        descriptionCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
         
     	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	materialsCol.setCellFactory(column -> new MaterialsCell());
-    	table.setRowFactory(row -> new JobTableRow());
     	
     	materialsCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
     	labourCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
+    	
+        table.setRowFactory(row -> new JobTableRow());
+
 	}
     
     @FXML
-    public void addJobRow(ActionEvent e) {   
+    public void settings(ActionEvent e) {
+        
+    }
+
+    @FXML
+    public void viewMap(ActionEvent e) {
+        GoogleMaps.openMap(StringUtil.formatAddress(firstLineAddress.getText(), secondLineAddress.getText(), city.getText(), postcode.getText()));
+    }
+    
+    @FXML
+    public void export(ActionEvent e) {
+        
+    }
+    
+    @FXML
+    public void addGroup(ActionEvent e) {   
+        Project project = getCurrentProject();
+        
+        //Make a new job group and add it to the project
+        JobGroup newGroup = new JobGroup();
+        newGroup.setNewModel(true);
+        newGroup.projectIdProperty().bind(project.idProperty());
+        newGroup.setGroupName(newGroupField.getText());
+        
+        project.getChildren().add(newGroup);
+        updateJobGroups();
+    }
+    
+    @FXML
+    public void addJob(ActionEvent e) {   
     	JobGroup selectedGroup = jobGroupCombo.getSelectionModel().getSelectedItem();
     	
-    	//Iterate through all job groups (which will all be dummy Job models)
-    	for (TreeItem<Job> item : table.getRoot().getChildren()) {
-    	    Job job = item.getValue();
-    	    
-    	    //As soon as you find the dummy model with the name of the selected group (stored in the title field), add a new job to its children and return
-    	    if (job.getTitle().equals(selectedGroup.getGroupName())) {
-    	    	
-    	    	Job newJob = new Job();
-    	    	newJob.setTitle(Resources.getResource("jobs.title"));
-    	    	newJob.setDescription(Resources.getResource("jobs.description"));
-    	    	newJob.setNewModel(true);
-    	    	newJob.setJobGroupId(selectedGroup.getId());
-    	    	
-    	    	item.getChildren().add(new JobTreeItem(newJob));
-    	        return;
-    	    }
-    	}
+    	//Make a new job and add it to the job group
+    	Job newJob = new Job();
+        newJob.setNewModel(true);
+        newJob.jobGroupIdProperty().bind(selectedGroup.idProperty());
+        newJob.setTitle(Resources.getResource("jobs.title"));
+        newJob.setDescription(Resources.getResource("jobs.description"));
+        
+        selectedGroup.getChildren().add(newJob);
+        updateJobGroups();
     }
     
     //Called whenever the the user picks a project using the ComboBox
@@ -226,49 +302,23 @@ public class QuotesTab extends AbstractValidationScene {
     	Project project = getCurrentProject();
     	
     	if (project != null) {
-        	projectDescription.setText(project.getProjectDescription());
-        	projectNote.setText(project.getProjectNote());
-        	firstName.setText(project.getClientFirstName());
-        	lastName.setText(project.getClientLastName());
-        	email.setText(project.getEmail());
-        	contactNumber.setText(project.getContactNumber());
-        	firstLineAddress.setText(project.getFirstLineAddress());
-        	secondLineAddress.setText(project.getSecondLineAddress());
-        	city.setText(project.getCity());
-        	postcode.setText(project.getPostcode());
-        	
-        	table.getRoot().getChildren().clear();
-        
-        	for (JobGroup group : project.getJobGroups()) {
-        	    JobTreeItem groupRoot = new JobTreeItem(new Job(group.getGroupName()));
-        		groupRoot.setExpanded(true);
-        		
-        		for (Job job : group.getJobs()) {
-        			groupRoot.getChildren().add(new JobTreeItem(job));
-        		}
-        		
-        		table.getRoot().getChildren().add(groupRoot);
-        	}
-        	
-        	jobGroupCombo.getItems().clear();
-        	jobGroupCombo.getItems().addAll(project.getJobGroups());
+        	projectDescription.textProperty().bindBidirectional(project.projectDescriptionProperty());
+        	projectNote.textProperty().bindBidirectional(project.projectNoteProperty());
+        	firstName.textProperty().bindBidirectional(project.clientFirstNameProperty());
+        	lastName.textProperty().bindBidirectional(project.clientLastNameProperty());
+        	email.textProperty().bindBidirectional(project.emailProperty());
+        	contactNumber.textProperty().bindBidirectional(project.contactNumberProperty());
+        	firstLineAddress.textProperty().bindBidirectional(project.firstLineAddressProperty());
+        	secondLineAddress.textProperty().bindBidirectional(project.secondLineAddressProperty());
+        	city.textProperty().bindBidirectional(project.cityProperty());
+        	postcode.textProperty().bindBidirectional(project.postcodeProperty());
+        	        	
+        	updateJobGroups();
         	jobGroupCombo.getSelectionModel().select(0);
+        	
+        	if (project.isNewModel()) deleteProjectButton.setVisible(false);
+        	else deleteProjectButton.setVisible(true);
     	}
-    }
-
-    @FXML
-    public void settings(ActionEvent e) {
-    	
-    }
-
-    @FXML
-    public void viewMap(ActionEvent e) {
-    	GoogleMaps.openMap(StringHelper.formatAddress(firstLineAddress.getText(), secondLineAddress.getText(), city.getText(), postcode.getText()));
-    }
-    
-    @FXML
-    public void export(ActionEvent e) {
-    	
     }
     
     @FXML
@@ -276,42 +326,43 @@ public class QuotesTab extends AbstractValidationScene {
     	Project project = getCurrentProject();
     	        
     	if (validate()) {    		
-    	    project.setClientFirstName(firstName.getText());
-    	    project.setClientLastName(lastName.getText());
-    	    project.setFirstLineAddress(firstLineAddress.getText());
-    	    project.setSecondLineAddress(secondLineAddress.getText());
-    	    project.setCity(city.getText());
-    	    project.setPostcode(postcode.getText());
-    	    project.setContactNumber(contactNumber.getText());
-    	    project.setEmail(email.getText());
-    	    project.setProjectDescription(projectDescription.getText());
-    	    project.setProjectNote(projectNote.getText());
-    	    
-    	    ///Go through job groups
-    	    for (TreeItem<Job> groupItem : table.getRoot().getChildren()) {
-    	        Job jobGroup = groupItem.getValue();
-    	        Vector<Job> jobs = new Vector<Job>();
-    	        
-    	        //Go through jobs in this group
-    	        for (TreeItem<Job> jobItem : groupItem.getChildren()) {
-    	            jobs.add(jobItem.getValue());
-    	        }
-
-	            project.updateJobGroup(jobGroup.getTitle(), jobs);  	        
-    	    }
-    	    
-            if (project.isNewModel()) {
-            	project.setNewModel(false);
-            	project.add();
-            } else project.save();
-                        
-            Project current = getCurrentProject();
-            TabHelper.updateAllTabs();
-            projectPicker.getSelectionModel().select(current);
+            project.save();
     	}
     }
     
+    @FXML
+    public void deleteProject(ActionEvent e) {
+        getCurrentProject().delete();
+        update();
+    }
+    
     /* Instance methods */
+    
+    public void updateJobGroups() {
+        Project project = getCurrentProject();
+        table.getRoot().getChildren().clear();
+        
+        for (JobGroup group : project.getChildren()) {
+            Job jobDummy = new Job();
+            jobDummy.setDummy(true);
+            jobDummy.setJobGroupDummy(group);
+            jobDummy.setTitle(group.getGroupName());
+            
+            JobTreeItem groupRoot = new JobTreeItem(jobDummy);
+            groupRoot.setExpanded(true);
+            
+            for (Job job : group.getChildren()) {
+                groupRoot.getChildren().add(new JobTreeItem(job));
+            }
+            
+            table.getRoot().getChildren().add(groupRoot);
+        }
+        
+        JobGroup selectedGroup = jobGroupCombo.getValue();
+        jobGroupCombo.getItems().clear();
+        jobGroupCombo.getItems().addAll(project.getChildren());
+        jobGroupCombo.getSelectionModel().select(selectedGroup);
+    }
     
     public boolean validate() {
         /* Email */
@@ -326,19 +377,21 @@ public class QuotesTab extends AbstractValidationScene {
     
     /* Override methods */
     
-    @Override
     public void update() {
-        Vector<Project> projectList = Project.getProjects();
-        Project newProject = new Project(Resources.getResource("quotes.newProject"));
-        newProject.setNewModel(true);
-        projectList.add(newProject);
-        
+        Project.loadProjects();
+        Vector<Project> projects = Project.getProjects();
         projectPicker.getItems().clear();
-        projectPicker.getItems().addAll(projectList);
+        
+        Project newProject = new Project();
+        newProject.setNewModel(true);
+        newProject.setFirstLineAddress(Resources.getResource("quotes.newProject"));
+        projects.add(newProject);
+        
+        projectPicker.getItems().addAll(projects);
         projectPicker.getSelectionModel().select(newProject);
     }
-
-	@Override
+    
+    @Override
 	public VBox getErrorsList() {
 		return errorsList;
 	}
