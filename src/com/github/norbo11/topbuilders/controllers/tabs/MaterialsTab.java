@@ -143,9 +143,9 @@ public class MaterialsTab extends AbstractController {
     @FXML
 	public void initialize() {			
         StockedMaterial.loadStockedMaterials();
-        update();
+        updateAll();
         
-        DeleteModelButtonCellFactory.assignCellFactory(xColumn, this);
+        DeleteModelButtonCellFactory.assignCellFactory(xColumn, () -> updateAll());
 		
 		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		nameColumn.setOnEditCommit(editEvent -> {
@@ -182,9 +182,8 @@ public class MaterialsTab extends AbstractController {
     
     /* Override methods */
     
-    @Override
-    public void update() {
+    public void updateAll() {
         table.getItems().clear();
-        table.getItems().addAll(StockedMaterial.getStockedMaterials());
+        table.getItems().addAll(StockedMaterial.loadStockedMaterials());
     }
 }

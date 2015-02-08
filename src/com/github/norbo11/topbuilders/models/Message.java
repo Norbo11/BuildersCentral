@@ -128,7 +128,7 @@ public class Message extends AbstractModel {
         //Display details
         DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
         controller.setMessage(message);
-        controller.update();
+        controller.updateAll();
     }
     
     public static Vector<Message> loadMessagesForEmployee(Employee employee) {

@@ -56,7 +56,7 @@ public class MessagesTab extends AbstractController {
 		dateCol.setCellFactory(column -> new DateCell());
 		timeCol.setCellFactory(column -> new TimeCell());
 
-		DeleteModelButtonCellFactory.assignCellFactory(xCol, this);
+		DeleteModelButtonCellFactory.assignCellFactory(xCol, () -> updateAll());
 		
 	    table.setRowFactory(value -> {
 	        TableRow<Message> row = new TableRow<Message>();
@@ -68,7 +68,7 @@ public class MessagesTab extends AbstractController {
 	        return row;
 	    });
 	    
-	    update();
+	    updateAll();
 	}
 
     @FXML
@@ -87,7 +87,7 @@ public class MessagesTab extends AbstractController {
     
     /* Instance methods */
     
-    public void update() {
+    public void updateAll() {
         table.getItems().clear();
         table.getItems().addAll(Employee.getCurrentEmployee().getMessages());
         TabUtil.updateMainTab();

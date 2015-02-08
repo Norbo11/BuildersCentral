@@ -77,22 +77,6 @@ public class JobGroup extends AbstractModel {
 	}
     
     @Override
-    public void updateChildren() {
-        for (Job job : getChildren()) {
-            job.save();
-        }   
-    }
-    
-    @Override
-    public void delete() {
-        super.delete();
-        
-        for (Job job : jobs) {
-            job.delete();
-        }
-    }
-    
-    @Override
     public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "projectId")) setProjectId(result.getInt("projectId"));

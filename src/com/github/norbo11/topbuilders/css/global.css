@@ -104,6 +104,10 @@
   -fx-table-cell-border-color: transparent;
 }*/
 
+.tree-table-row-cell:odd:filled {
+  -fx-background: -fx-control-inner-background-alt;
+}
+
 /* Notifications */
 
 #notificationsPane .title, #notificationsList.empty {

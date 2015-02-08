@@ -72,24 +72,10 @@ public abstract class AbstractModel {
     
     public abstract void update();
     
-    public void updateChildren() {
-        
-    }
-    
     public Vector<? extends AbstractModel> getChildren() {
-        return null;
+        return new Vector<AbstractModel>();
     }
     
-    public void save() {
-    	if (newModel) {
-    		setId(add());
-    		newModel = false;
-    	} else {
-    		update();
-    	}
-    	updateChildren();
-    }
-        
     //Sets all of the properties for this model as obtained by the ResultSet - will only load the specified columns
     public abstract void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException;
     
@@ -101,29 +87,40 @@ public abstract class AbstractModel {
         
     /* Instance methods */
     
-    public void delete() {
-        //TODO: Could move this functionality to another class, like AbstractChildClass or something
-        AbstractModel parent = getParent();
+    public void save() {
+        //Add or update the model accordingly
+        if (newModel) {
+            setId(add());
+            newModel = false;
+        } else {
+            update();
+        }
         
-        if (parent != null) {
-            Vector<? extends AbstractModel> children = parent.getChildren();
-            Vector<AbstractModel> toRemove = new Vector<AbstractModel>();
-            
-            Log.info(children);
-            for (AbstractModel child : children) {
-                if (child.getId() == getId()) {
-                     toRemove.add(child);
-                }   
-            }
-            
-            Log.info(toRemove);
-            children.removeAll(toRemove);
-            
+        //Save all children - this needs to happen AFTER the above, so that the ID of this model is set correctly before it's children are inserted (so they may have this model's ID as a foreign key)
+        for (AbstractModel child : getChildren()) {
+            child.save();
+        }
+    }
+
+    public void delete() {
+        //Delete children
+        for (AbstractModel child : getChildren()) {
+            child.delete();
+        }
+        
+        //Delete model if it isn't new
+        if (!newModel) {
             Database.executeUpdate("DELETE FROM " + getDbTableName() + " WHERE id = ?", getId());
             Notification.deleteCorrespondingNotification(this);
         }
     }
-
+    
+    public void deleteFromParent() {
+        if (parent != null) {
+            getParent().getChildren().remove(this);
+        }
+    }
+    
     //This is called by loadFromResult - if no columns were specified, then an empty array will be passed here, for which we check and return true (because that
     //means all columns were requested
     public boolean containsColumn(String[] columns, String needle) {
@@ -150,17 +147,7 @@ public abstract class AbstractModel {
         }
     }
     
-    /* Overrides */
-    
-	@Override
-    public boolean equals(Object o) {
-        if (o instanceof AbstractModel) {
-            AbstractModel e = (AbstractModel) o;
-            return getId() == e.getId();
-        }
-        
-        return false;
-    }
+    /* Static methods */
 	
     protected static ResultSet loadAllModels(final String DB_TABLE_NAME) {
     	return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME);
@@ -171,7 +158,7 @@ public abstract class AbstractModel {
     }
     
     protected static ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String field, Object param) {
-        return Database.executeQuery("SELECT * FROM " + DB_TABLE_NAME + " WHERE " + field + " = ?", param);
+        return loadAllModelsWhere(DB_TABLE_NAME, new String[] { field }, new Object[] { param });
     }
     
     protected static ResultSet loadAllModelsWhere(final String DB_TABLE_NAME, String[] field, Object[] param) {

@@ -39,10 +39,10 @@ public class ManagerHomeTab extends AbstractController {
     
    @FXML
    public void initialize() {    
-       update();
+       updateAll();
    }
    
-   public void update() {
+   public void updateAll() {
        ObservableList<Node> notifications = getNotificationsList().getChildren();
        notifications.clear();
         

@@ -64,7 +64,7 @@ public class DisplayMessageScene extends AbstractController {
         SceneUtil.closeScene((Node) event.getSource());
     }
 
-    public void update() {
+    public void updateAll() {
         title.setText(message.getTitle());
         date.setText(DateTimeUtil.formatDateAndTime(message.getDate()));
         from.setText(message.getSender().getFullName());

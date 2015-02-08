@@ -125,13 +125,6 @@ public class Job extends AbstractModel {
     }
     
     @Override
-    public void updateChildren() {
-        for (RequiredMaterial requiredMaterial : requiredMaterials) {
-            requiredMaterial.save();
-        }
-    }
-    
-    @Override
     public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "jobGroupId")) setJobGroupId(result.getInt("jobGroupId"));

@@ -50,7 +50,7 @@ public class NewMessageScene extends AbstractController {
         notification.save();
         
         discard(event);
-        parent.update();
+        parent.updateAll();
     }
     
     @FXML

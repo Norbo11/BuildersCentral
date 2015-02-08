@@ -21,7 +21,6 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
 	private IntegerProperty quantityTypeId = new SimpleIntegerProperty(0);
-    private static Vector<StockedMaterial> stockedMaterials;
 	
 	public StockedMaterial() {
 	    super();
@@ -110,7 +109,6 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
         if (containsColumn(columns, "quantityTypeId")) setQuantityTypeId(result.getInt("quantityTypeId"));
     }
 
-
 	@Override
 	public String getDbTableName() {
 	    return DB_TABLE_NAME;
@@ -124,12 +122,8 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	
 	/* Standard static methods */
 	
-	public static void loadStockedMaterials() {
-		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
-	}
-	
-	public static Vector<StockedMaterial> getStockedMaterials() {
-	    return stockedMaterials;
+	public static Vector<StockedMaterial> loadStockedMaterials() {
+		return loadList(loadAllModels(DB_TABLE_NAME));
 	}
 	
 	public static Vector<StockedMaterial> loadList(ResultSet result) {

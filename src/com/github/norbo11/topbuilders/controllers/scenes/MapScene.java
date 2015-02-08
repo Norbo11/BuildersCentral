@@ -33,7 +33,7 @@ public class MapScene extends AbstractController {
         });
     }
 
-    public void update() {
+    public void updateAll() {
         String content = 
         "<html dir=\"ltr\">" +
             "<head></head>" +

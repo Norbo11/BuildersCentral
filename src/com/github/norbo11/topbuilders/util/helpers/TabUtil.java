@@ -50,6 +50,6 @@ public class TabUtil {
     }
 
     public static void updateMainTab() {
-        mainTab.update();
+        mainTab.updateAll();
     }
 }

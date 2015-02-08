@@ -16,7 +16,7 @@ public class GoogleMaps {
         AbstractScene scene = SceneUtil.changeScene(stage, MapScene.FXML_FILENAME);
         MapScene controller = (MapScene) scene.getController();
         controller.setQuery(query);
-        controller.update();
+        controller.updateAll();
     }
     
 }

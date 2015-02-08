@@ -86,7 +86,7 @@ public class EmployeesTab extends AbstractController {
         addressCol.setCellFactory(column -> new EmployeeAddressCell());
         table.setRowFactory(new EmployeesRowFactory());
                 
-    	update(); 
+    	updateAll(); 
 	}
 
     @FXML
@@ -106,7 +106,7 @@ public class EmployeesTab extends AbstractController {
         //Display details
         ModifyEmployeeScene controller = (ModifyEmployeeScene) scene.getController();
         controller.setEmployee(new Employee(), true);
-        controller.update();
+        controller.updateAll();
     }
     
     @FXML
@@ -121,11 +121,11 @@ public class EmployeesTab extends AbstractController {
             //Display details
             ModifyEmployeeScene controller = (ModifyEmployeeScene) scene.getController();
             controller.setEmployee(employee, false);
-            controller.update();
+            controller.updateAll();
         }
     }
     
-    public void update() {
+    public void updateAll() {
         superusers.getChildren().clear();
         managers.getChildren().clear();
         employees.getChildren().clear();

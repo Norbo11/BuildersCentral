@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -45,6 +46,7 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private ComboBox<JobGroup> jobGroupCombo;
     @FXML private Button deleteProjectButton;
     @FXML private TextField newGroupField;
+    @FXML private Button newGroupButton;
     
     @FXML private TextArea projectDescription, projectNote;
     @FXML private TextField firstName, lastName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode;
@@ -55,8 +57,9 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private TreeTableColumn<Job, Job> materialsCol, deleteJobCol; 
     @FXML private TreeTableColumn<Job, String> titleCol, descriptionCol;
     @FXML private TreeTableColumn<Job, Double> materialsCostCol, labourCostCol, totalCostCol;
-            
-    /* Factories */
+    private Vector<Project> projects;        
+    
+    /* Factories, cells and rows */
    
     //Class which cancels the expanding events of tree items
     private class JobTreeItem extends TreeItem<Job> {
@@ -82,7 +85,7 @@ public class QuotesTab extends AbstractValidationScene {
         protected void updateItem(Job job, boolean empty) {
             super.updateItem(job, empty);
             
-            setDisclosureNode(null);
+            setDisclosureNode(null); //Responsible for the "arrow" node
         }
     }
     
@@ -97,30 +100,34 @@ public class QuotesTab extends AbstractValidationScene {
     	public MaterialsCell() {
     	    super();
     	    
-    	    grid = new GridPane();
+    	    /* Initialize components which never change */
+    	    newMaterialButton = new Button(Resources.getResource("quotes.newMaterial"));
+            newMaterialButton.setMaxWidth(Double.MAX_VALUE);
+            newMaterialButton.setOnAction(e -> {
+                removeButton(); //Remove the New Material button temporarily, so that a new material row can be added in its place
+                
+                /* Make a new required material, add it to the job*/
+                RequiredMaterial newMaterial = new RequiredMaterial();
+                newMaterial.setNewModel(true);
+                newMaterial.jobIdProperty().bind(job.idProperty());
+                newMaterial.setParent(job);
+                job.getChildren().add(newMaterial);
+                
+                TextField field = addMaterialRow(newMaterial); 
+                field.requestFocus();
+                addButton(); //Re-add the New Material button
+             });
+            
+            grid = new GridPane();
             grid.setVgap(5);
             grid.setHgap(5);
             grid.setMaxWidth(Double.MAX_VALUE);
             
-            //Set the second column to always grow
+            /* Below code ensures that the New Material button is always as wide as the whole cell */
             ColumnConstraints constraint = new ColumnConstraints();
-            constraint.setFillWidth(true);
+            constraint.setFillWidth(true); 
             constraint.setHgrow(Priority.ALWAYS);
             grid.getColumnConstraints().addAll(new ColumnConstraints(), constraint);
-    	    
-    	    newMaterialButton = new Button(Resources.getResource("quotes.newMaterial"));
-            newMaterialButton.setMaxWidth(Double.MAX_VALUE);
-            newMaterialButton.setOnAction(e -> {
-                removeButton(); 
-                
-                RequiredMaterial newMaterial = new RequiredMaterial();
-                newMaterial.setNewModel(true);
-                newMaterial.jobIdProperty().bind(job.idProperty());
-                job.getChildren().add(newMaterial);
-                
-                addMaterialRow(newMaterial); 
-                addButton();
-             });
             
             GridPane.setColumnSpan(newMaterialButton, 4);
             GridPane.setHgrow(newMaterialButton, Priority.ALWAYS);
@@ -146,8 +153,13 @@ public class QuotesTab extends AbstractValidationScene {
             //toggled = false;
         }
 
-        private void addMaterialRow(RequiredMaterial requiredMaterial) {
+        private TextField addMaterialRow(RequiredMaterial requiredMaterial) {
             Button deleteButton = new Button("X");
+            deleteButton.setOnAction(e -> {
+                requiredMaterial.delete();
+                requiredMaterial.deleteFromParent();
+                updateJobGroups();
+            });
             
     		TextField nameField = new TextField();
     		nameField.setMaxHeight(Double.MAX_VALUE);
@@ -169,6 +181,7 @@ public class QuotesTab extends AbstractValidationScene {
             
             grid.addRow(lastRow, deleteButton, nameField, quantityField, typeLabel);
             lastRow++;
+            return nameField;
     	}
     	
         @Override
@@ -182,16 +195,18 @@ public class QuotesTab extends AbstractValidationScene {
                 if (!job.isDummy()) {
                     /*setOnMouseExited(e -> toggleButton());
                     setOnMouseEntered(e -> toggleButton());*/
+                    
+                    /* Initialize */
                     lastRow = 0;
                     grid.getChildren().clear();
-                    
                     this.job = job;
                     
+                    /* Add material row entries for all required materials for this job */
                     for (RequiredMaterial requiredMaterial : job.getChildren()) {
                     	addMaterialRow(requiredMaterial);
                     }
                     
-                    addButton();
+                    addButton(); //Comment this, and uncomment all other lines, to add show-on-hover functionality to the New Material button
                     setGraphic(grid);
                 }
             }
@@ -209,30 +224,31 @@ public class QuotesTab extends AbstractValidationScene {
             } else {
                 Button button = new Button("X");
                 button.setOnAction(e -> { 
+                    //If this is a job group sell
                     if (job.isDummy()) {
                         JobGroup jobGroup = job.getJobGroupDummy();
                         String title = Resources.getResource("general.confirm");
                         String info = Resources.getResource("quotes.confirmJobGroupDelete", jobGroup.getGroupName());
                         SceneUtil.showConfirmationDialog(title, info, () -> { 
                             jobGroup.delete();
+                            jobGroup.deleteFromParent();
+                            updateJobGroups();
                         });
                     } else {
                         job.delete();
-                    }
-                    
-                    updateJobGroups();
+                        job.deleteFromParent();
+                        updateJobGroups();
+                    }                    
                 });
                 setGraphic(button); //setGraphic allows me to set an actual node instead of text for these cell contents
             }
         }
     }
     
-    /* FXML Methods */
+    /* Initialization */
     
     @FXML
-	public void initialize() {
-		update();
-		
+	public void initialize() {        
         deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
         deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	
@@ -249,8 +265,51 @@ public class QuotesTab extends AbstractValidationScene {
     	labourCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
     	
         table.setRowFactory(row -> new JobTableRow());
-
+        
+        //Called whenever the the user picks a project using the ComboBox
+        projectPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue != null) {
+                projectDescription.textProperty().unbindBidirectional(oldValue.projectDescriptionProperty());
+                projectNote.textProperty().unbindBidirectional(oldValue.projectNoteProperty());
+                firstName.textProperty().unbindBidirectional(oldValue.clientFirstNameProperty());
+                lastName.textProperty().unbindBidirectional(oldValue.clientLastNameProperty());
+                email.textProperty().unbindBidirectional(oldValue.emailProperty());
+                contactNumber.textProperty().unbindBidirectional(oldValue.contactNumberProperty());
+                firstLineAddress.textProperty().unbindBidirectional(oldValue.firstLineAddressProperty());
+                secondLineAddress.textProperty().unbindBidirectional(oldValue.secondLineAddressProperty());
+                city.textProperty().unbindBidirectional(oldValue.cityProperty());
+                postcode.textProperty().unbindBidirectional(oldValue.postcodeProperty());
+            }
+            
+            if (newValue != null) {
+                projectDescription.textProperty().bindBidirectional(newValue.projectDescriptionProperty());
+                projectNote.textProperty().bindBidirectional(newValue.projectNoteProperty());
+                firstName.textProperty().bindBidirectional(newValue.clientFirstNameProperty());
+                lastName.textProperty().bindBidirectional(newValue.clientLastNameProperty());
+                email.textProperty().bindBidirectional(newValue.emailProperty());
+                contactNumber.textProperty().bindBidirectional(newValue.contactNumberProperty());
+                firstLineAddress.textProperty().bindBidirectional(newValue.firstLineAddressProperty());
+                secondLineAddress.textProperty().bindBidirectional(newValue.secondLineAddressProperty());
+                city.textProperty().bindBidirectional(newValue.cityProperty());
+                postcode.textProperty().bindBidirectional(newValue.postcodeProperty());            
+                
+                updateJobGroups();
+                jobGroupCombo.getSelectionModel().selectFirst();
+                
+                if (newValue.isNewModel()) deleteProjectButton.setVisible(false);
+                else deleteProjectButton.setVisible(true);
+            }
+        });
+        
+        newGroupField.setOnAction(e -> newGroupButton.fire());
+        
+        projects = Project.loadAllProjects();
+        addNewProjectOption();
+        updateAll();
+        projectPicker.getSelectionModel().selectLast();
 	}
+    
+    /* Action methods */ 
     
     @FXML
     public void settings(ActionEvent e) {
@@ -269,12 +328,13 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML
     public void addGroup(ActionEvent e) {   
-        Project project = getCurrentProject();
+        Project project = getSelectedProject();
         
         //Make a new job group and add it to the project
         JobGroup newGroup = new JobGroup();
         newGroup.setNewModel(true);
         newGroup.projectIdProperty().bind(project.idProperty());
+        newGroup.setParent(project);
         newGroup.setGroupName(newGroupField.getText());
         
         project.getChildren().add(newGroup);
@@ -285,110 +345,122 @@ public class QuotesTab extends AbstractValidationScene {
     public void addJob(ActionEvent e) {   
     	JobGroup selectedGroup = jobGroupCombo.getSelectionModel().getSelectedItem();
     	
-    	//Make a new job and add it to the job group
-    	Job newJob = new Job();
-        newJob.setNewModel(true);
-        newJob.jobGroupIdProperty().bind(selectedGroup.idProperty());
-        newJob.setTitle(Resources.getResource("jobs.title"));
-        newJob.setDescription(Resources.getResource("jobs.description"));
-        
-        selectedGroup.getChildren().add(newJob);
-        updateJobGroups();
-    }
-    
-    //Called whenever the the user picks a project using the ComboBox
-    @FXML
-    public void updateFields(ActionEvent e) {
-    	Project project = getCurrentProject();
-    	
-    	if (project != null) {
-        	projectDescription.textProperty().bindBidirectional(project.projectDescriptionProperty());
-        	projectNote.textProperty().bindBidirectional(project.projectNoteProperty());
-        	firstName.textProperty().bindBidirectional(project.clientFirstNameProperty());
-        	lastName.textProperty().bindBidirectional(project.clientLastNameProperty());
-        	email.textProperty().bindBidirectional(project.emailProperty());
-        	contactNumber.textProperty().bindBidirectional(project.contactNumberProperty());
-        	firstLineAddress.textProperty().bindBidirectional(project.firstLineAddressProperty());
-        	secondLineAddress.textProperty().bindBidirectional(project.secondLineAddressProperty());
-        	city.textProperty().bindBidirectional(project.cityProperty());
-        	postcode.textProperty().bindBidirectional(project.postcodeProperty());
-        	        	
-        	updateJobGroups();
-        	jobGroupCombo.getSelectionModel().select(0);
-        	
-        	if (project.isNewModel()) deleteProjectButton.setVisible(false);
-        	else deleteProjectButton.setVisible(true);
+    	if (selectedGroup != null) {
+        	//Make a new job and add it to the job group
+        	Job newJob = new Job();
+            newJob.setNewModel(true);
+            newJob.jobGroupIdProperty().bind(selectedGroup.idProperty());
+            newJob.setParent(selectedGroup);
+            newJob.setTitle(Resources.getResource("jobs.title"));
+            newJob.setDescription(Resources.getResource("jobs.description"));
+            
+            selectedGroup.getChildren().add(newJob);
+            updateJobGroups();
     	}
     }
     
     @FXML
-    public void saveProject(ActionEvent e) {
-    	Project project = getCurrentProject();
-    	        
-    	if (validate()) {    		
+    public void saveProject(ActionEvent e) {    	        
+    	if (validate()) {   
+    	    Project project = getSelectedProject();
+    	    
+    	    //If this project is new, ensure that another New Project option is added to the project picker
+    	    if (project.isNewModel()) {
+    	        addNewProjectOption();
+    	    }
+    	    
             project.save();
+            updateAll();
     	}
     }
     
     @FXML
     public void deleteProject(ActionEvent e) {
-        getCurrentProject().delete();
-        update();
+        Project project = getSelectedProject();
+        
+        /* Create a confirmation dialog which will delete the project and remove it from the list */
+        String title = Resources.getResource("general.confirm");
+        String info = Resources.getResource("quotes.confirmProjectDelete", project.getFirstLineAddress());
+        SceneUtil.showConfirmationDialog(title, info, () -> { 
+            project.delete();
+            projects.remove(project);
+            updateAll();
+        });
     }
     
-    /* Instance methods */
+    /* Non-FXML methods */
+    
+    public void updateAll() {        
+        updateProjectPicker();
+        updateJobGroups();
+    }
     
     public void updateJobGroups() {
-        Project project = getCurrentProject();
-        table.getRoot().getChildren().clear();
+        Project project = getSelectedProject();
         
-        for (JobGroup group : project.getChildren()) {
-            Job jobDummy = new Job();
-            jobDummy.setDummy(true);
-            jobDummy.setJobGroupDummy(group);
-            jobDummy.setTitle(group.getGroupName());
+        if (project != null) {
+            table.getRoot().getChildren().clear();
             
-            JobTreeItem groupRoot = new JobTreeItem(jobDummy);
-            groupRoot.setExpanded(true);
-            
-            for (Job job : group.getChildren()) {
-                groupRoot.getChildren().add(new JobTreeItem(job));
+            //Go through each job group in the project
+            for (JobGroup group : project.getChildren()) {
+                
+                /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
+                 * as JavaFX does not support more than one data type in a TreeTableView */
+                
+                Job jobDummy = new Job();
+                jobDummy.setDummy(true);
+                jobDummy.setJobGroupDummy(group);
+                jobDummy.setTitle(group.getGroupName());
+                
+                //Create the actual TreeItem
+                JobTreeItem groupRoot = new JobTreeItem(jobDummy);
+                groupRoot.setExpanded(true);
+                
+                //Go through each job inside the ACTUAL job group object and add them to the above tree item
+                for (Job job : group.getChildren()) {
+                    groupRoot.getChildren().add(new JobTreeItem(job));
+                }
+                
+                table.getRoot().getChildren().add(groupRoot);
             }
             
-            table.getRoot().getChildren().add(groupRoot);
+            /* Update the job group combo box, retaining the previously selected item */
+            SelectionModel<JobGroup> selectionModel = jobGroupCombo.getSelectionModel();
+            JobGroup previousSelection = selectionModel.getSelectedItem();
+            jobGroupCombo.getItems().clear();
+            jobGroupCombo.getItems().addAll(project.getChildren());
+            if (jobGroupCombo.getItems().contains(previousSelection)) selectionModel.select(previousSelection);
         }
-        
-        JobGroup selectedGroup = jobGroupCombo.getValue();
-        jobGroupCombo.getItems().clear();
-        jobGroupCombo.getItems().addAll(project.getChildren());
-        jobGroupCombo.getSelectionModel().select(selectedGroup);
     }
+    
+    //Update the project combo box, retaining the previously selected item
+    public void updateProjectPicker() {
+        int index = projectPicker.getSelectionModel().getSelectedIndex();
+        projectPicker.getItems().clear();
+        projectPicker.getItems().addAll(projects);
+        projectPicker.getSelectionModel().select(index);
+    }
+    
+    //Add a New Project option to the project picker
+    private void addNewProjectOption() {
+        Project newProject = new Project();
+        newProject.setNewModel(true);
+        newProject.setFirstLineAddress(Resources.getResource("quotes.newProject"));
+        projects.add(newProject);
+    }
+    
+    //Convenience method
+    public Project getSelectedProject() {
+        return projectPicker.getSelectionModel().getSelectedItem();
+    }
+    
+    /* Overriden validation methods */
     
     public boolean validate() {
         /* Email */
         if (email.getText().length() > 0 && !Validation.checkEmailFormat(email.getText())) addErrorFromResource("validation.invalidEmail");
 
         return displayErrors();
-    }
-    
-    public Project getCurrentProject() {
-		return projectPicker.getSelectionModel().getSelectedItem();
-    }
-    
-    /* Override methods */
-    
-    public void update() {
-        Project.loadProjects();
-        Vector<Project> projects = Project.getProjects();
-        projectPicker.getItems().clear();
-        
-        Project newProject = new Project();
-        newProject.setNewModel(true);
-        newProject.setFirstLineAddress(Resources.getResource("quotes.newProject"));
-        projects.add(newProject);
-        
-        projectPicker.getItems().addAll(projects);
-        projectPicker.getSelectionModel().select(newProject);
     }
     
     @Override

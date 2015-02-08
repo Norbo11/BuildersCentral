@@ -43,5 +43,4 @@ public abstract class AbstractValidationScene extends AbstractController {
     
     public abstract VBox getErrorsList();
     public abstract Label getErrorsLabel();
-    
 }

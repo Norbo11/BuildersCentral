@@ -71,12 +71,12 @@ public class ModifyEmployeeScene extends AbstractValidationScene {
 	        if (isNew) employee.add();
 	        else employee.save();
 	        
-	        update();
+	        updateAll();
 	        SceneUtil.closeScene((Node) event.getSource());
     	}
     }
 
-    public void update() {
+    public void updateAll() {
         username.setText(employee.getUsername());
         email.setText(employee.getEmail());
         firstName.setText(employee.getFirstName());

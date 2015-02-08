@@ -14,9 +14,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 
 
 public class Project extends AbstractModel {
-    public static final String DB_TABLE_NAME = "projects";    
-    private static Vector<Project> projects;
-    
+    public static final String DB_TABLE_NAME = "projects";        
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
     private StringProperty clientFirstName = new SimpleStringProperty("");
@@ -214,13 +212,6 @@ public class Project extends AbstractModel {
     }
     
     @Override
-    public void updateChildren() {
-        for (JobGroup jobGroup : jobGroups) {
-            jobGroup.save();
-        }
-    }
-    
-    @Override
     public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {  
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
@@ -253,20 +244,11 @@ public class Project extends AbstractModel {
     
 	/* Standard static methods */
 	
-	public static void setProjects(Vector<Project> projects) {
-		Project.projects = projects;
-	}
-	
-	public static Vector<Project> getProjects() {
-		return projects;
-	}
-	
-	public static void loadProjects() {
-		setProjects(loadList(loadAllModels(DB_TABLE_NAME)));
-	}
-	
 	public static Vector<Project> loadList(ResultSet result) {
 		return loadList(null, result, Project.class);
 	}
 
+    public static Vector<Project> loadAllProjects() {
+        return loadList(loadAllModels(DB_TABLE_NAME));
+    }
 }
