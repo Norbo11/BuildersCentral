@@ -4,10 +4,30 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 
-class EditingCell<T> extends TableCell<T, String> {
+public class TextFieldCell<T, S> extends TableCell<T, S> {
     private TextField textField;
+	private StringConverter<S> converter;
 
+	public TextFieldCell(StringConverter<S> converter) {
+		this.converter = converter;
+	}
+	
+	public TextFieldCell() {
+		converter = new StringConverter<S>() {
+			@Override
+			public String toString(S object) {
+				return object.toString();
+			}
+
+			@Override
+			public S fromString(String string) {
+				return null;
+			}
+		};
+	}
+	
     @Override
     public void startEdit() {
         if (!isEmpty()) {
@@ -23,12 +43,12 @@ class EditingCell<T> extends TableCell<T, String> {
     public void cancelEdit() {
         super.cancelEdit();
 
-        setText((String) getItem());
+        setText(getString());
         setGraphic(null);
     }
 
     @Override
-    public void updateItem(String item, boolean empty) {
+    public void updateItem(S item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty) {
@@ -56,13 +76,13 @@ class EditingCell<T> extends TableCell<T, String> {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 //If it lost focus then commit
                 if (!newValue) {
-                    commitEdit(textField.getText());
+                    commitEdit(converter.fromString(textField.getText()));
                 }
             }
         });
     }
 
     private String getString() {
-        return getItem() == null ? "" : getItem().toString();
+        return getItem() == null ? "" : converter.toString(getItem());
     }
 }

@@ -1,9 +1,11 @@
 package com.github.norbo11.topbuilders.util.factories;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeTableCell;
 
-public class TextAreaTreeTableCell<T> extends TreeTableCell<T, String> {
+public class TextAreaTreeCell<T> extends TreeTableCell<T, String> {
         
     private TextArea textArea;
 
@@ -54,8 +56,14 @@ public class TextAreaTreeTableCell<T> extends TreeTableCell<T, String> {
         textArea = new TextArea(getString());
         textArea.setPrefHeight(100);
         textArea.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-        textArea.onKeyPressedProperty().addListener((observable, oldValue, newValue) -> {
-            commitEdit(textArea.getText());
+        textArea.focusedProperty().addListener(new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                //If it lost focus then commit
+                if (!newValue) {
+                    commitEdit(textArea.getText());
+                }
+            }
         });
     }
      

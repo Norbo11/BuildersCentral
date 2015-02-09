@@ -15,7 +15,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -33,7 +32,9 @@ import com.github.norbo11.topbuilders.util.GoogleMaps;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
-import com.github.norbo11.topbuilders.util.factories.TextAreaTreeTableCell;
+import com.github.norbo11.topbuilders.util.factories.StringStringConverter;
+import com.github.norbo11.topbuilders.util.factories.TextAreaTreeCell;
+import com.github.norbo11.topbuilders.util.factories.TextFieldTreeCell;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
@@ -248,23 +249,30 @@ public class QuotesTab extends AbstractValidationScene {
     /* Initialization */
     
     @FXML
-	public void initialize() {        
-        deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
-        deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
-    	
-        titleCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
-        titleCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
-        
-        descriptionCol.setCellFactory(param -> new TextAreaTreeTableCell<Job>());
-        descriptionCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
-        
-    	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
-    	materialsCol.setCellFactory(column -> new MaterialsCell());
-    	
-    	materialsCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
-    	labourCostCol.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn(new DoubleStringConverter()));
-    	
+	public void initialize() {    
+    	/* Cell factories */
         table.setRowFactory(row -> new JobTableRow());
+    	
+        deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
+        titleCol.setCellFactory(param -> new TextFieldTreeCell<>(new StringStringConverter()));
+        descriptionCol.setCellFactory(param -> new TextAreaTreeCell<Job>());
+    	materialsCol.setCellFactory(column -> new MaterialsCell());
+    	materialsCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Double>(new DoubleStringConverter()));
+    	labourCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Double>(new DoubleStringConverter()));
+
+        /* Cell value factories */
+        deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
+    	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
+
+        /* Edit handlers */
+        titleCol.setOnEditCommit(e -> e.getRowValue().getValue().setTitle(e.getNewValue()));
+        descriptionCol.setOnEditCommit(e -> e.getRowValue().getValue().setDescription(e.getNewValue()));
+        materialsCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setMaterialPrice(e.getNewValue()));
+        labourCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setLabourPrice(e.getNewValue()));
+        
+        /* Layout properties */
+        titleCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
+        descriptionCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
         
         //Called whenever the the user picks a project using the ComboBox
         projectPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -306,6 +314,7 @@ public class QuotesTab extends AbstractValidationScene {
         projects = Project.loadAllProjects();
         addNewProjectOption();
         updateAll();
+        
         projectPicker.getSelectionModel().selectLast();
 	}
     
