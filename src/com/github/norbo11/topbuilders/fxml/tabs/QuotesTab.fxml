@@ -38,9 +38,13 @@
         <maxWidth><Double fx:constant="MAX_VALUE" /></maxWidth>
       </TreeTableColumn>
       
-      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" minWidth="140" editable="true" />
+      <TreeTableColumn fx:id="materialsCostCol" text="%jobs.materialsCost" minWidth="140" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="materialPrice" /></cellValueFactory>
+      </TreeTableColumn>
       
-      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" minWidth="140" editable="true" />
+      <TreeTableColumn fx:id="labourCostCol" text="%jobs.labourCost" minWidth="140" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="labourPrice" /></cellValueFactory>
+      </TreeTableColumn>
       
       <TreeTableColumn fx:id="totalCostCol" text="%jobs.totalCost" minWidth="140" />
     </columns>

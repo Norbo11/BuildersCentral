@@ -1,6 +1,7 @@
 package com.github.norbo11.topbuilders.controllers.custom;
 
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class DoubleTextField extends TextField {
@@ -22,7 +23,7 @@ public class DoubleTextField extends TextField {
             //Also, if the character isn't a dot but is anything but a number, cancel the event
             else if (!character.matches("\\d*")) {
                 e.consume();
-            }                
+            }    
         });    
     }
 

@@ -1,10 +1,12 @@
 package com.github.norbo11.topbuilders.util.factories;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
+
+import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
+import com.github.norbo11.topbuilders.util.Log;
 
 public class TextFieldCell<T, S> extends TableCell<T, S> {
     private TextField textField;
@@ -13,21 +15,7 @@ public class TextFieldCell<T, S> extends TableCell<T, S> {
 	public TextFieldCell(StringConverter<S> converter) {
 		this.converter = converter;
 	}
-	
-	public TextFieldCell() {
-		converter = new StringConverter<S>() {
-			@Override
-			public String toString(S object) {
-				return object.toString();
-			}
 
-			@Override
-			public S fromString(String string) {
-				return null;
-			}
-		};
-	}
-	
     @Override
     public void startEdit() {
         if (!isEmpty()) {
@@ -69,19 +57,20 @@ public class TextFieldCell<T, S> extends TableCell<T, S> {
     }
 
     private void createTextField() {
-        textField = new TextField(getString());
+        if (getItem() instanceof Double) textField = new DoubleTextField((Double) getItem());
+        else textField = new TextField(getString());
+        
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()* 2);
-        textField.focusedProperty().addListener(new ChangeListener<Boolean>(){
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                //If it lost focus then commit
-                if (!newValue) {
-                    commitEdit(converter.fromString(textField.getText()));
-                }
-            }
-        });
+        textField.setOnKeyPressed(e -> { if (e.getCode().equals(KeyCode.ENTER)) commit(); });
+        
+        //When focused changes to false
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> { if (!newValue) commit(); });
     }
 
+    private void commit() {
+    	commitEdit(converter.fromString(textField.getText()));
+    }
+    
     private String getString() {
         return getItem() == null ? "" : converter.toString(getItem());
     }

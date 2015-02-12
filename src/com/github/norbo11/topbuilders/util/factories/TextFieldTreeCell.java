@@ -1,12 +1,13 @@
 package com.github.norbo11.topbuilders.util.factories;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
 
+import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.util.Log;
+
 
 public class TextFieldTreeCell<T, S> extends TreeTableCell<T, S> {
     private TextField textField;
@@ -57,18 +58,14 @@ public class TextFieldTreeCell<T, S> extends TreeTableCell<T, S> {
     }
 
     private void createTextField() {
-        textField = new TextField(getString());
+        if (getItem() instanceof Double) textField = new DoubleTextField((Double) getItem());
+        else textField = new TextField(getString());
+        
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()* 2);
-        textField.setOnAction(e -> commit());
-        textField.focusedProperty().addListener(new ChangeListener<Boolean>(){
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                //If it lost focus then commit
-                if (!newValue) {
-                	commit();
-                }
-            }
-        });
+        textField.setOnKeyPressed(e -> { if (e.getCode().equals(KeyCode.ENTER)) commit(); });
+        
+        //When focused changes to false
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> { if (!newValue) commit(); });
     }
 
     private void commit() {
@@ -76,7 +73,6 @@ public class TextFieldTreeCell<T, S> extends TreeTableCell<T, S> {
     }
     
     private String getString() {
-    	Log.info(getItem());
         return getItem() == null ? "" : converter.toString(getItem());
     }
 }
