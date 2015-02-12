@@ -1,13 +1,14 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
 import java.util.Vector;
 
-import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -100,8 +101,7 @@ public class QuotesTab extends AbstractValidationScene {
     	int lastRow = 0;
     	Button newMaterialButton;
     	Job job;
-    	ListView<StockedMaterial> searchList;
-        ObservableList<StockedMaterial> searchEntries = FXCollections.observableArrayList();
+        ObservableList<String> searchEntries;
     	//boolean toggled = false;
     	    	
     	public MaterialsCell() {
@@ -135,11 +135,7 @@ public class QuotesTab extends AbstractValidationScene {
             constraint.setFillWidth(true); 
             constraint.setHgrow(Priority.ALWAYS);
             grid.getColumnConstraints().addAll(new ColumnConstraints(), constraint);
-            
-            ReadOnlyListWrapper<StockedMaterial> listWrapper = new ReadOnlyListWrapper<StockedMaterial>();
-            listWrapper.addAll(StockedMaterial.loadStockedMaterials());
-    	    searchList = new ListView<StockedMaterial>(listWrapper);
-            
+    	    
             GridPane.setColumnSpan(newMaterialButton, 4);
             GridPane.setHgrow(newMaterialButton, Priority.ALWAYS);
     	}
@@ -164,13 +160,16 @@ public class QuotesTab extends AbstractValidationScene {
             //toggled = false;
         }
         
-        private void searchMaterials(String oldVal, String newVal) {
-        	// If the number of characters in the text box is less than last time
-            // it must be because the user pressed delete
-            if ( oldVal != null && (newVal.length() < oldVal.length()) ) {
-                // Restore the lists original set of entries
-                // and start from the beginning
-                searchList.setItems( searchEntries );
+        private void searchMaterials(ListView<String> searchList, String oldVal, String newVal) {
+        	if (newVal.equals("")) {
+        		hideNode(searchList);
+        		return;
+        	}
+        	
+        	//If the number of characters in the text box is less than last time it must be because the user pressed delete
+            if (oldVal != null && (newVal.length() < oldVal.length())) {
+                //Restore the lists original set of entries and start from the beginning
+                searchList.setItems(searchEntries);
             }
              
             // Break out all of the parts of the search text
@@ -178,23 +177,32 @@ public class QuotesTab extends AbstractValidationScene {
             String[] parts = newVal.toUpperCase().split(" ");
          
             // Filter out the entries that don't contain the entered text
-            ObservableList<StockedMaterial> subentries = FXCollections.observableArrayList();
-            for ( StockedMaterial entry: searchList.getItems() ) {
+            ObservableList<String> subentries = FXCollections.observableArrayList();
+            for (String entry : searchList.getItems()) {
                 boolean match = true;
-                for ( String part : parts ) {
-                    // The entry needs to contain all portions of the
-                    // search string *but* in any order
-                    if ( ! entry.getName().contains(part) ) {
+                for (String part : parts) {
+                    // The entry needs to contain all portions of the search string *but* in any order
+                    if (!entry.toUpperCase().contains(part)) {
                         match = false;
                         break;
                     }
                 }
          
-                if ( match ) {
+                if (match) {
                     subentries.add(entry);
                 }
             }
             searchList.setItems(subentries);
+            
+        	showNode(searchList);
+        }
+        
+        private void showNode(Node node) {
+        	node.setVisible(true);
+        }
+        
+        private void hideNode(Node node) {
+        	node.setVisible(false);
         }
 
         private TextField addMaterialRow(RequiredMaterial requiredMaterial) {
@@ -205,10 +213,29 @@ public class QuotesTab extends AbstractValidationScene {
                 updateJobGroups();
             });
             
+
+            /* Material name area */
+    	    VBox nameVBox = new VBox();
+    	    
+    	    searchEntries = FXCollections.observableArrayList();
+    	    for (StockedMaterial material : StockedMaterial.loadStockedMaterials()) {
+    	    	searchEntries.add(material.getName() + " - " + material.getQuantityString() + " " + Resources.getResource("materials.inStock").toLowerCase());
+    	    }
+    	    
     		TextField nameField = new TextField();
-    		nameField.setMaxHeight(Double.MAX_VALUE);
-    		nameField.textProperty().addListener((obs, oldVal, newVal) -> searchMaterials(oldVal, newVal));
-    		    		
+    		nameField.setMaxWidth(Double.MAX_VALUE);
+    	    
+    	    ListView<String> searchList = new ListView<String>(searchEntries);
+    	    searchList.setManaged(false);
+    	    searchList.setLayoutX(nameField); //figure this out
+    	    searchList.setPrefHeight(searchEntries.size() * 26);
+    		hideNode(searchList);
+    		
+    		nameField.textProperty().addListener((obs, oldVal, newVal) -> searchMaterials(searchList, oldVal, newVal));    	    
+            nameVBox.getChildren().addAll(nameField, searchList);
+            
+            /* ------------------------- */
+            
             DoubleTextField quantityField = new DoubleTextField(requiredMaterial.getQuantityRequired());
             quantityField.setMinWidth(50);
             quantityField.setPrefWidth(50);
@@ -225,7 +252,8 @@ public class QuotesTab extends AbstractValidationScene {
                 quantityField.setText(stockedMaterial.getQuantityRequired().toString());
             }
             
-            grid.addRow(lastRow, deleteButton, nameField, quantityField, typeLabel);
+            grid.addRow(lastRow, deleteButton, nameVBox, quantityField, typeLabel);
+            
             lastRow++;
             return nameField;
     	}

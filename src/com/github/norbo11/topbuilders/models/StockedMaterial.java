@@ -129,4 +129,8 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	public static Vector<StockedMaterial> loadList(ResultSet result) {
 		return loadList(null, result, StockedMaterial.class);
 	}
+
+	public String getQuantityString() {
+		return getQuantityInStock() + "" + getQuantityType();
+	}
 }
