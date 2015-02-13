@@ -101,7 +101,7 @@ public class QuotesTab extends AbstractValidationScene {
     	int lastRow = 0;
     	Button newMaterialButton;
     	Job job;
-        ObservableList<String> searchEntries;
+        ObservableList<StockedMaterial> searchEntries;
     	//boolean toggled = false;
     	    	
     	public MaterialsCell() {
@@ -160,29 +160,23 @@ public class QuotesTab extends AbstractValidationScene {
             //toggled = false;
         }
         
-        private void searchMaterials(ListView<String> searchList, String oldVal, String newVal) {
-        	if (newVal.equals("")) {
-        		hideNode(searchList);
-        		return;
-        	}
-        	
+        private void searchMaterials(ListView<StockedMaterial> searchList, String oldVal, String newVal) {        	
         	//If the number of characters in the text box is less than last time it must be because the user pressed delete
-            if (oldVal != null && (newVal.length() < oldVal.length())) {
+            if (newVal.length() < oldVal.length()) {
                 //Restore the lists original set of entries and start from the beginning
                 searchList.setItems(searchEntries);
             }
              
-            // Break out all of the parts of the search text
-            // by splitting on white space
+            //Break out all of the parts of the search text by splitting on white space
             String[] parts = newVal.toUpperCase().split(" ");
          
-            // Filter out the entries that don't contain the entered text
-            ObservableList<String> subentries = FXCollections.observableArrayList();
-            for (String entry : searchList.getItems()) {
+            //Filter out the entries that don't contain the entered text
+            ObservableList<StockedMaterial> subentries = FXCollections.observableArrayList();
+            for (StockedMaterial entry : searchList.getItems()) {
                 boolean match = true;
                 for (String part : parts) {
-                    // The entry needs to contain all portions of the search string *but* in any order
-                    if (!entry.toUpperCase().contains(part)) {
+                    //The entry needs to contain all portions of the search string *but* in any order
+                    if (!entry.getName().toUpperCase().startsWith(part)) {
                         match = false;
                         break;
                     }
@@ -194,14 +188,18 @@ public class QuotesTab extends AbstractValidationScene {
             }
             searchList.setItems(subentries);
             
-        	showNode(searchList);
+        	if (newVal.equals("")) {
+        		hideNode(searchList);
+        	} else showNode(searchList);
         }
         
         private void showNode(Node node) {
+        	node.setManaged(true);
         	node.setVisible(true);
         }
         
         private void hideNode(Node node) {
+        	node.setManaged(false);
         	node.setVisible(false);
         }
 
@@ -213,32 +211,42 @@ public class QuotesTab extends AbstractValidationScene {
                 updateJobGroups();
             });
             
+            DoubleTextField quantityField = new DoubleTextField(requiredMaterial.getQuantityRequired());
+            quantityField.setMinWidth(50);
+            quantityField.setPrefWidth(50);
 
             /* Material name area */
     	    VBox nameVBox = new VBox();
     	    
-    	    searchEntries = FXCollections.observableArrayList();
-    	    for (StockedMaterial material : StockedMaterial.loadStockedMaterials()) {
-    	    	searchEntries.add(material.getName() + " - " + material.getQuantityString() + " " + Resources.getResource("materials.inStock").toLowerCase());
-    	    }
-    	    
-    		TextField nameField = new TextField();
+    	    TextField nameField = new TextField();
     		nameField.setMaxWidth(Double.MAX_VALUE);
     	    
-    	    ListView<String> searchList = new ListView<String>(searchEntries);
-    	    searchList.setManaged(false);
-    	    searchList.setLayoutX(nameField); //figure this out
-    	    searchList.setPrefHeight(searchEntries.size() * 26);
+    	    searchEntries = FXCollections.observableArrayList(StockedMaterial.loadStockedMaterials());
+    	    
+    	    ListView<StockedMaterial> searchList = new ListView<StockedMaterial>(searchEntries);
+    	    searchList.setMaxHeight(200);
+    	    searchList.getItems().addListener(new ListChangeListener<StockedMaterial>() {
+    	    	//TODO This isnt being called
+				@Override
+				public void onChanged(Change<? extends StockedMaterial> c) {
+    		        searchList.setPrefHeight(searchList.getItems().size() * 26 + 2);					
+				}
+		    });
+    	    searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+    	    	if (newValue != null) {
+			        nameField.setText(newValue.getName());
+			        quantityField.setText(newValue.getQuantityInStock() + "");
+			        hideNode(searchList);
+    	    	}
+            });
+    		
+    	    
     		hideNode(searchList);
     		
     		nameField.textProperty().addListener((obs, oldVal, newVal) -> searchMaterials(searchList, oldVal, newVal));    	    
             nameVBox.getChildren().addAll(nameField, searchList);
             
             /* ------------------------- */
-            
-            DoubleTextField quantityField = new DoubleTextField(requiredMaterial.getQuantityRequired());
-            quantityField.setMinWidth(50);
-            quantityField.setPrefWidth(50);
             
             Label typeLabel = new Label();
             typeLabel.setMinWidth(30);

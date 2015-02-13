@@ -174,8 +174,6 @@ public class MaterialsTab extends AbstractController {
     public void addMaterial() {
     	StockedMaterial material = new StockedMaterial("New Material", 0, QuantityType.METERS);
     	table.getItems().add(material);
-    	//TODO this doesnt work
-    	table.edit(9, nameColumn);
     }
     
     /* Instance methods */

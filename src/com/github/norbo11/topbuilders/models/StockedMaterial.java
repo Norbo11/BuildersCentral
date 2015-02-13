@@ -13,6 +13,7 @@ import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.Resources;
 
 public class StockedMaterial extends AbstractModel {
 
@@ -83,7 +84,7 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	    //TODO implement properly
 		return 5d;
 	}
-    
+	
     /* Override methods */
 
     @Override
@@ -112,6 +113,11 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	@Override
 	public String getDbTableName() {
 	    return DB_TABLE_NAME;
+	}
+
+	@Override
+	public String toString() {
+		return getName() + " - " + getQuantityString() + " " + Resources.getResource("materials.inStock").toLowerCase();
 	}
 	
 	/* Static methods */
