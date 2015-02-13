@@ -31,6 +31,7 @@
   </TableView>
   
   <HBox spacing="100" alignment="center">
+    <Button text="%materials.save" prefWidth="190" prefHeight="40" onAction="#saveMaterials" />
     <Button text="%materials.generateReport" prefWidth="190" prefHeight="40" onAction="#generateReport" />
     <Button fx:id="addMaterial" text="%materials.add" prefWidth="190" prefHeight="40" onAction="#addMaterial" />
   </HBox>

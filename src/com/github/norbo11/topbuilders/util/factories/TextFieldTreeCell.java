@@ -6,7 +6,6 @@ import javafx.scene.input.KeyCode;
 import javafx.util.StringConverter;
 
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
-import com.github.norbo11.topbuilders.util.Log;
 
 
 public class TextFieldTreeCell<T, S> extends TreeTableCell<T, S> {

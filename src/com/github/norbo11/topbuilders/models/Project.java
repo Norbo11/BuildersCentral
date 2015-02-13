@@ -15,6 +15,8 @@ import com.github.norbo11.topbuilders.util.Resources;
 
 public class Project extends AbstractModel {
     public static final String DB_TABLE_NAME = "projects";        
+    private static Vector<Project> projects = new Vector<Project>();
+    
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
     private StringProperty clientFirstName = new SimpleStringProperty("");
@@ -30,7 +32,7 @@ public class Project extends AbstractModel {
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
     private Vector<JobGroup> jobGroups = new Vector<JobGroup>();
-
+    
     /* Properties */
 
     public BooleanProperty quoteRequestedProperty() {
@@ -248,7 +250,11 @@ public class Project extends AbstractModel {
 		return loadList(null, result, Project.class);
 	}
 
-    public static Vector<Project> loadAllProjects() {
-        return loadList(loadAllModels(DB_TABLE_NAME));
+    public static void loadProjects() {
+        projects = loadList(loadAllModels(DB_TABLE_NAME));
+    }
+    
+    public static Vector<Project> getProjects() {
+        return projects;
     }
 }

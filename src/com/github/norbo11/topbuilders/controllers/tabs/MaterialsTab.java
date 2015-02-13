@@ -33,22 +33,12 @@ public class MaterialsTab extends AbstractController {
     @FXML private TableColumn<StockedMaterial, String> nameColumn;
     @FXML private TableColumn<StockedMaterial, Number> requiredColumn, balanceColumn;
     
-    
     private class RequiredCellValueFactory implements Callback<CellDataFeatures<StockedMaterial, Number>, ObservableValue<Number>> {
 		@Override
 		public ObservableValue<Number> call(CellDataFeatures<StockedMaterial, Number> param) {
 			// TODO Query DB to count the amount required for this material
 			return new ReadOnlyDoubleWrapper(5);
 		}
-    }
-    
-    private class BalanceCellValueFactory implements Callback<CellDataFeatures<StockedMaterial, Number>, ObservableValue<Number>> {
-        @Override
-        public ObservableValue<Number> call(CellDataFeatures<StockedMaterial, Number> param) {
-            StockedMaterial material = param.getValue();
-            DoubleBinding property = material.quantityInStockProperty().subtract(material.getQuantityRequired());
-            return property;
-        }
     }
     
     private class QuantityInStockCell extends TableCell<StockedMaterial, StockedMaterial> {
@@ -125,7 +115,6 @@ public class MaterialsTab extends AbstractController {
             StockedMaterial material = getItem();            
             material.setQuantityInStock(Double.valueOf(textField.getText()));
             material.setQuantityTypeId(comboBox.getSelectionModel().getSelectedItem().getId());
-            commitEdit(getItem());
         }
  
         private String getDisplayString() {
@@ -151,18 +140,17 @@ public class MaterialsTab extends AbstractController {
 		nameColumn.setOnEditCommit(editEvent -> {
 			StockedMaterial material = (StockedMaterial) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow());
 			material.setName(editEvent.getNewValue());
-			material.save();
         });
 		
 		quantityInStockColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<StockedMaterial>(param.getValue()));
 		quantityInStockColumn.setCellFactory(param -> new QuantityInStockCell());
-		quantityInStockColumn.setOnEditCommit(editEvent -> {
-			StockedMaterial material = (StockedMaterial) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow());
-			material.save();
-        });
-
+		
 		requiredColumn.setCellValueFactory(new RequiredCellValueFactory());
-		balanceColumn.setCellValueFactory(new BalanceCellValueFactory());
+		balanceColumn.setCellValueFactory(param -> {
+            StockedMaterial material = param.getValue();
+            DoubleBinding property = material.quantityInStockProperty().subtract(material.getQuantityRequired());
+            return property;
+        });
 	}
     
     @FXML
@@ -176,12 +164,19 @@ public class MaterialsTab extends AbstractController {
     	table.getItems().add(material);
     }
     
+    @FXML
+    public void saveMaterials() {
+    	for (StockedMaterial material : table.getItems()) {
+    		material.save();
+    	}
+    }
+    
     /* Instance methods */
     
     /* Override methods */
     
     public void updateAll() {
         table.getItems().clear();
-        table.getItems().addAll(StockedMaterial.loadStockedMaterials());
+        table.getItems().addAll(StockedMaterial.getStockedMaterials());
     }
 }

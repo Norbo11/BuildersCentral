@@ -1,18 +1,11 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
-import java.util.Vector;
-
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -20,23 +13,20 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.DoubleStringConverter;
 
-import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractValidationScene;
 import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
-import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.Validation;
+import com.github.norbo11.topbuilders.util.factories.DoubleMoneyConverter;
 import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
+import com.github.norbo11.topbuilders.util.factories.MaterialsCell;
 import com.github.norbo11.topbuilders.util.factories.StringStringConverter;
 import com.github.norbo11.topbuilders.util.factories.TextAreaTreeCell;
 import com.github.norbo11.topbuilders.util.factories.TextFieldTreeCell;
@@ -62,8 +52,7 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private TreeTableView<Job> table;
     @FXML private TreeTableColumn<Job, Job> materialsCol, deleteJobCol; 
     @FXML private TreeTableColumn<Job, String> titleCol, descriptionCol;
-    @FXML private TreeTableColumn<Job, Double> materialsCostCol, labourCostCol, totalCostCol;
-    private Vector<Project> projects;        
+    @FXML private TreeTableColumn<Job, Number> materialsCostCol, labourCostCol, totalCostCol;
     
     /* Factories, cells and rows */
    
@@ -94,207 +83,7 @@ public class QuotesTab extends AbstractValidationScene {
             setDisclosureNode(null); //Responsible for the "arrow" node
         }
     }
-    
-    //Class which handles the displaying of materials in the material column
-    private class MaterialsCell extends TreeTableCell<Job, Job> {
-    	GridPane grid;
-    	int lastRow = 0;
-    	Button newMaterialButton;
-    	Job job;
-        ObservableList<StockedMaterial> searchEntries;
-    	//boolean toggled = false;
-    	    	
-    	public MaterialsCell() {
-    	    super();
-    	    
-    	    /* Initialize components which never change */
-    	    newMaterialButton = new Button(Resources.getResource("quotes.newMaterial"));
-            newMaterialButton.setMaxWidth(Double.MAX_VALUE);
-            newMaterialButton.setOnAction(e -> {
-                removeButton(); //Remove the New Material button temporarily, so that a new material row can be added in its place
-                
-                /* Make a new required material, add it to the job*/
-                RequiredMaterial newMaterial = new RequiredMaterial();
-                newMaterial.setNewModel(true);
-                newMaterial.jobIdProperty().bind(job.idProperty());
-                newMaterial.setParent(job);
-                job.getChildren().add(newMaterial);
-                
-                TextField field = addMaterialRow(newMaterial); 
-                field.requestFocus();
-                addButton(); //Re-add the New Material button
-             });
-            
-            grid = new GridPane();
-            grid.setVgap(5);
-            grid.setHgap(5);
-            grid.setMaxWidth(Double.MAX_VALUE);
-            
-            /* Below code ensures that the New Material button is always as wide as the whole cell */
-            ColumnConstraints constraint = new ColumnConstraints();
-            constraint.setFillWidth(true); 
-            constraint.setHgrow(Priority.ALWAYS);
-            grid.getColumnConstraints().addAll(new ColumnConstraints(), constraint);
-    	    
-            GridPane.setColumnSpan(newMaterialButton, 4);
-            GridPane.setHgrow(newMaterialButton, Priority.ALWAYS);
-    	}
-    	
-        /*private void toggleButton() {
-            if (!toggled) {
-                 addButton();
-             } else {
-                 removeButton();
-             }
-        }*/
-    	
-    	private void addButton() {
-    	    grid.addRow(lastRow, newMaterialButton);
-            lastRow++;
-            //toggled = true;
-        }
 
-        private void removeButton() {
-    	    grid.getChildren().remove(newMaterialButton);
-            lastRow--;
-            //toggled = false;
-        }
-        
-        private void searchMaterials(ListView<StockedMaterial> searchList, String oldVal, String newVal) {        	
-        	//If the number of characters in the text box is less than last time it must be because the user pressed delete
-            if (newVal.length() < oldVal.length()) {
-                //Restore the lists original set of entries and start from the beginning
-                searchList.setItems(searchEntries);
-            }
-             
-            //Break out all of the parts of the search text by splitting on white space
-            String[] parts = newVal.toUpperCase().split(" ");
-         
-            //Filter out the entries that don't contain the entered text
-            ObservableList<StockedMaterial> subentries = FXCollections.observableArrayList();
-            for (StockedMaterial entry : searchList.getItems()) {
-                boolean match = true;
-                for (String part : parts) {
-                    //The entry needs to contain all portions of the search string *but* in any order
-                    if (!entry.getName().toUpperCase().startsWith(part)) {
-                        match = false;
-                        break;
-                    }
-                }
-         
-                if (match) {
-                    subentries.add(entry);
-                }
-            }
-            searchList.setItems(subentries);
-            
-        	if (newVal.equals("")) {
-        		hideNode(searchList);
-        	} else showNode(searchList);
-        }
-        
-        private void showNode(Node node) {
-        	node.setManaged(true);
-        	node.setVisible(true);
-        }
-        
-        private void hideNode(Node node) {
-        	node.setManaged(false);
-        	node.setVisible(false);
-        }
-
-        private TextField addMaterialRow(RequiredMaterial requiredMaterial) {
-            Button deleteButton = new Button("X");
-            deleteButton.setOnAction(e -> {
-                requiredMaterial.delete();
-                requiredMaterial.deleteFromParent();
-                updateJobGroups();
-            });
-            
-            DoubleTextField quantityField = new DoubleTextField(requiredMaterial.getQuantityRequired());
-            quantityField.setMinWidth(50);
-            quantityField.setPrefWidth(50);
-
-            /* Material name area */
-    	    VBox nameVBox = new VBox();
-    	    
-    	    TextField nameField = new TextField();
-    		nameField.setMaxWidth(Double.MAX_VALUE);
-    	    
-    	    searchEntries = FXCollections.observableArrayList(StockedMaterial.loadStockedMaterials());
-    	    
-    	    ListView<StockedMaterial> searchList = new ListView<StockedMaterial>(searchEntries);
-    	    searchList.setMaxHeight(200);
-    	    searchList.getItems().addListener(new ListChangeListener<StockedMaterial>() {
-    	    	//TODO This isnt being called
-				@Override
-				public void onChanged(Change<? extends StockedMaterial> c) {
-    		        searchList.setPrefHeight(searchList.getItems().size() * 26 + 2);					
-				}
-		    });
-    	    searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-    	    	if (newValue != null) {
-			        nameField.setText(newValue.getName());
-			        quantityField.setText(newValue.getQuantityInStock() + "");
-			        hideNode(searchList);
-    	    	}
-            });
-    		
-    	    
-    		hideNode(searchList);
-    		
-    		nameField.textProperty().addListener((obs, oldVal, newVal) -> searchMaterials(searchList, oldVal, newVal));    	    
-            nameVBox.getChildren().addAll(nameField, searchList);
-            
-            /* ------------------------- */
-            
-            Label typeLabel = new Label();
-            typeLabel.setMinWidth(30);
-            typeLabel.setPrefWidth(30);
-            
-            StockedMaterial stockedMaterial = requiredMaterial.getStockedMaterial();
-            
-            if (stockedMaterial != null) {
-                nameField.setText(stockedMaterial.getName());
-                typeLabel.setText(stockedMaterial.getQuantityType().toString());
-                quantityField.setText(stockedMaterial.getQuantityRequired().toString());
-            }
-            
-            grid.addRow(lastRow, deleteButton, nameVBox, quantityField, typeLabel);
-            
-            lastRow++;
-            return nameField;
-    	}
-    	
-        @Override
-        protected void updateItem(Job job, boolean empty) {
-            super.updateItem(job, empty);
-            if (empty) {
-                setText("");
-                setGraphic(null);
-            }
-            else {            
-                if (!job.isDummy()) {
-                    /*setOnMouseExited(e -> toggleButton());
-                    setOnMouseEntered(e -> toggleButton());*/
-                    
-                    /* Initialize */
-                    lastRow = 0;
-                    grid.getChildren().clear();
-                    this.job = job;
-                    
-                    /* Add material row entries for all required materials for this job */
-                    for (RequiredMaterial requiredMaterial : job.getChildren()) {
-                    	addMaterialRow(requiredMaterial);
-                    }
-                    
-                    addButton(); //Comment this, and uncomment all other lines, to add show-on-hover functionality to the New Material button
-                    setGraphic(grid);
-                }
-            }
-        }
-    }
-    
     //Class which handles the delete cells of tree items
     private class DeleteModelButtonTreeCellFactory extends TreeTableCell<Job, Job> {
         @Override
@@ -335,21 +124,26 @@ public class QuotesTab extends AbstractValidationScene {
         table.setRowFactory(row -> new JobTableRow());
     	
         deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
-        titleCol.setCellFactory(param -> new TextFieldTreeCell<>(new StringStringConverter()));
+        titleCol.setCellFactory(param -> new TextFieldTreeCell<Job, String>(new StringStringConverter()));
         descriptionCol.setCellFactory(param -> new TextAreaTreeCell<Job>());
-    	materialsCol.setCellFactory(column -> new MaterialsCell());
-    	materialsCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Double>(new DoubleStringConverter()));
-    	labourCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Double>(new DoubleStringConverter()));
-
+    	materialsCol.setCellFactory(column -> new MaterialsCell(this));
+    	materialsCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
+    	labourCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
+    	totalCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
+    	
         /* Cell value factories */
         deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
+    	totalCostCol.setCellValueFactory(param -> { 
+    		Job job = param.getValue().getValue();
+    		return job.labourPriceProperty().add(job.materialPriceProperty());
+    	});
 
         /* Edit handlers */
         titleCol.setOnEditCommit(e -> e.getRowValue().getValue().setTitle(e.getNewValue()));
         descriptionCol.setOnEditCommit(e -> e.getRowValue().getValue().setDescription(e.getNewValue()));
-        materialsCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setMaterialPrice(e.getNewValue()));
-        labourCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setLabourPrice(e.getNewValue()));
+        materialsCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setMaterialPrice(e.getNewValue().doubleValue()));
+        labourCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setLabourPrice(e.getNewValue().doubleValue()));
         
         /* Layout properties */
         titleCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
@@ -392,7 +186,8 @@ public class QuotesTab extends AbstractValidationScene {
         
         newGroupField.setOnAction(e -> newGroupButton.fire());
         
-        projects = Project.loadAllProjects();
+        StockedMaterial.loadStockedMaterials();
+        Project.loadProjects();
         addNewProjectOption();
         updateAll();
         
@@ -473,7 +268,7 @@ public class QuotesTab extends AbstractValidationScene {
         String info = Resources.getResource("quotes.confirmProjectDelete", project.getFirstLineAddress());
         SceneUtil.showConfirmationDialog(title, info, () -> { 
             project.delete();
-            projects.remove(project);
+            Project.getProjects().remove(project);
             updateAll();
         });
     }
@@ -527,7 +322,7 @@ public class QuotesTab extends AbstractValidationScene {
     public void updateProjectPicker() {
         int index = projectPicker.getSelectionModel().getSelectedIndex();
         projectPicker.getItems().clear();
-        projectPicker.getItems().addAll(projects);
+        projectPicker.getItems().addAll(Project.getProjects());
         projectPicker.getSelectionModel().select(index);
     }
     
@@ -536,7 +331,7 @@ public class QuotesTab extends AbstractValidationScene {
         Project newProject = new Project();
         newProject.setNewModel(true);
         newProject.setFirstLineAddress(Resources.getResource("quotes.newProject"));
-        projects.add(newProject);
+        Project.getProjects().add(newProject);
     }
     
     //Convenience method

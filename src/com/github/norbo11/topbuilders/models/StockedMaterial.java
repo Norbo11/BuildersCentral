@@ -17,8 +17,9 @@ import com.github.norbo11.topbuilders.util.Resources;
 
 public class StockedMaterial extends AbstractModel {
 
-public static final String DB_TABLE_NAME = "stockedMaterials";
-	
+	public static final String DB_TABLE_NAME = "stockedMaterials";
+	private static Vector<StockedMaterial> stockedMaterials = new Vector<StockedMaterial>();
+
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
 	private IntegerProperty quantityTypeId = new SimpleIntegerProperty(0);
@@ -128,8 +129,12 @@ public static final String DB_TABLE_NAME = "stockedMaterials";
 	
 	/* Standard static methods */
 	
-	public static Vector<StockedMaterial> loadStockedMaterials() {
-		return loadList(loadAllModels(DB_TABLE_NAME));
+	public static Vector<StockedMaterial> getStockedMaterials() {
+		return stockedMaterials;
+	}
+	
+	public static void loadStockedMaterials() {
+		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
 	}
 	
 	public static Vector<StockedMaterial> loadList(ResultSet result) {
