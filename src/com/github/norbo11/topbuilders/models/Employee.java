@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -12,12 +12,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.controllers.scenes.MainScene;
+import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.Settings;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
@@ -40,6 +42,7 @@ public class Employee extends AbstractModel {
     private StringProperty activationCode = new SimpleStringProperty("");
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
+    private Settings<EmployeeSetting> settings;
     
     /* Properties */
     
@@ -197,18 +200,18 @@ public class Employee extends AbstractModel {
         this.defaultWage.set(defaultWage);
     }
     
+    public Settings<EmployeeSetting> getSettings() {
+        return settings;
+    }
+    
     /* Instance methods */
     
-    public  Vector<Notification> getNotifications() {
+    public  ArrayList<Notification> getNotifications() {
         return Notification.loadNotificationsForEmployee(this);
     }
     
-    public  Vector<Message> getMessages() {
+    public  ArrayList<Message> getMessages() {
         return Message.loadMessagesForEmployee(this);
-    }
-    
-    public EmployeeSettings getSettings() {
-        return EmployeeSettings.loadSettingsForEmployee(this);
     }
     
     public UserType getUserType() {
@@ -231,8 +234,12 @@ public class Employee extends AbstractModel {
     public void login() {
         Employee.setCurrentEmployee(this);
         Resources.setCurrentBundle(this);
-        SceneUtil.setFullscreen(getSettings().isFullscreen());
+        SceneUtil.setFullscreen(getSettings().getBoolean(EmployeeSettingType.FULLSCREEN));
         SceneUtil.changeMainScene(MainScene.FXML_FILENAME);
+    }
+    
+    private void loadSettings() {
+        settings = EmployeeSetting.loadSettingsForEmployee(this);
     }
 	
 	/* Overrides */
@@ -267,6 +274,8 @@ public class Employee extends AbstractModel {
         if (containsColumn(columns, "defaultWage")) setDefaultWage(result.getDouble("defaultWage"));
         if (containsColumn(columns, "activationCode")) setActivationCode(result.getString("activationCode"));
         if (containsColumn(columns, "userTypeId")) setUserTypeId(result.getInt("userTypeId"));
+        
+        loadSettings();
     }
     
 	@Override
@@ -330,7 +339,7 @@ public class Employee extends AbstractModel {
 	}
 	
 	public static Employee checkActivationCode(String code) {
-	    Vector<Employee> employees = loadList(loadAllModelsWhere(DB_TABLE_NAME, "activationCode", code));
+	    ArrayList<Employee> employees = loadList(loadAllModelsWhere(DB_TABLE_NAME, "activationCode", code));
 	    
 	    if (employees.size() == 1) {
 	        return employees.get(0);
@@ -340,11 +349,11 @@ public class Employee extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static Vector<Employee> getAllEmployees() {
+	public static ArrayList<Employee> getAllEmployees() {
 		return loadList(loadAllModels(DB_TABLE_NAME));
 	}
 	
-	public static Vector<Employee> loadList(ResultSet result) {
+	public static ArrayList<Employee> loadList(ResultSet result) {
 		return loadList(null, result, Employee.class);
 	}
 }

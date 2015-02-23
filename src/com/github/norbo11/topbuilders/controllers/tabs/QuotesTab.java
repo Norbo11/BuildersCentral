@@ -15,14 +15,20 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractValidationScene;
+import com.github.norbo11.topbuilders.controllers.scenes.QuoteSettingsScene;
 import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
+import com.github.norbo11.topbuilders.models.QuoteSetting;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
+import com.github.norbo11.topbuilders.models.enums.QuoteSettingType;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.Settings;
 import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.factories.DoubleMoneyConverter;
 import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
@@ -31,6 +37,7 @@ import com.github.norbo11.topbuilders.util.factories.StringStringConverter;
 import com.github.norbo11.topbuilders.util.factories.TextAreaTreeCell;
 import com.github.norbo11.topbuilders.util.factories.TextFieldTreeCell;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 public class QuotesTab extends AbstractValidationScene {
@@ -40,9 +47,8 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private GridPane jobsGrid;
     @FXML private ComboBox<Project> projectPicker;
     @FXML private ComboBox<JobGroup> jobGroupCombo;
-    @FXML private Button deleteProjectButton;
+    @FXML private Button deleteProjectButton, newGroupButton, settingsButton, jobGroupButton;
     @FXML private TextField newGroupField;
-    @FXML private Button newGroupButton;
     
     @FXML private TextArea projectDescription, projectNote;
     @FXML private TextField firstName, lastName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode;
@@ -150,39 +156,7 @@ public class QuotesTab extends AbstractValidationScene {
         descriptionCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));
         
         //Called whenever the the user picks a project using the ComboBox
-        projectPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue != null) {
-                projectDescription.textProperty().unbindBidirectional(oldValue.projectDescriptionProperty());
-                projectNote.textProperty().unbindBidirectional(oldValue.projectNoteProperty());
-                firstName.textProperty().unbindBidirectional(oldValue.clientFirstNameProperty());
-                lastName.textProperty().unbindBidirectional(oldValue.clientLastNameProperty());
-                email.textProperty().unbindBidirectional(oldValue.emailProperty());
-                contactNumber.textProperty().unbindBidirectional(oldValue.contactNumberProperty());
-                firstLineAddress.textProperty().unbindBidirectional(oldValue.firstLineAddressProperty());
-                secondLineAddress.textProperty().unbindBidirectional(oldValue.secondLineAddressProperty());
-                city.textProperty().unbindBidirectional(oldValue.cityProperty());
-                postcode.textProperty().unbindBidirectional(oldValue.postcodeProperty());
-            }
-            
-            if (newValue != null) {
-                projectDescription.textProperty().bindBidirectional(newValue.projectDescriptionProperty());
-                projectNote.textProperty().bindBidirectional(newValue.projectNoteProperty());
-                firstName.textProperty().bindBidirectional(newValue.clientFirstNameProperty());
-                lastName.textProperty().bindBidirectional(newValue.clientLastNameProperty());
-                email.textProperty().bindBidirectional(newValue.emailProperty());
-                contactNumber.textProperty().bindBidirectional(newValue.contactNumberProperty());
-                firstLineAddress.textProperty().bindBidirectional(newValue.firstLineAddressProperty());
-                secondLineAddress.textProperty().bindBidirectional(newValue.secondLineAddressProperty());
-                city.textProperty().bindBidirectional(newValue.cityProperty());
-                postcode.textProperty().bindBidirectional(newValue.postcodeProperty());            
-                
-                updateJobGroups();
-                jobGroupCombo.getSelectionModel().selectFirst();
-                
-                if (newValue.isNewModel()) deleteProjectButton.setVisible(false);
-                else deleteProjectButton.setVisible(true);
-            }
-        });
+        projectPicker.valueProperty().addListener((observable, oldValue, newValue) -> selectProject(oldValue, newValue));
         
         newGroupField.setOnAction(e -> newGroupButton.fire());
         
@@ -193,12 +167,19 @@ public class QuotesTab extends AbstractValidationScene {
         
         projectPicker.getSelectionModel().selectLast();
 	}
-    
+
     /* Action methods */ 
     
     @FXML
     public void settings(ActionEvent e) {
+        Stage stage = StageUtil.createDialogStage(Resources.getResource("quotes.settings"));
+        AbstractScene scene = SceneUtil.changeScene(stage, QuoteSettingsScene.FXML_FILENAME);
         
+        //Display details
+        QuoteSettingsScene controller = (QuoteSettingsScene) scene.getController();
+        controller.setSettings(getSelectedProject().getSettings());
+        controller.setQuotesTab(this);
+        controller.updateAll();
     }
 
     @FXML
@@ -275,46 +256,100 @@ public class QuotesTab extends AbstractValidationScene {
     
     /* Non-FXML methods */
     
-    public void updateAll() {        
+    public void updateAll() {  
         updateProjectPicker();
         updateJobGroups();
+        updateButtons();
+        updateColumns();
+        updateAddGroupControl();
+        updateAddJobControl();
     }
     
+    public void updateButtons() {
+        Project project = getSelectedProject();
+        
+        if (project != null) {
+            if (getSelectedProject().isNewModel()) {
+                settingsButton.setDisable(true);
+                deleteProjectButton.setDisable(true);
+            } else {
+                settingsButton.setDisable(false);
+                deleteProjectButton.setDisable(false);
+            }
+        }
+    }
+
     public void updateJobGroups() {
         Project project = getSelectedProject();
         
         if (project != null) {
             table.getRoot().getChildren().clear();
             
-            //Go through each job group in the project
-            for (JobGroup group : project.getChildren()) {
-                
-                /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
-                 * as JavaFX does not support more than one data type in a TreeTableView */
-                
-                Job jobDummy = new Job();
-                jobDummy.setDummy(true);
-                jobDummy.setJobGroupDummy(group);
-                jobDummy.setTitle(group.getGroupName());
-                
-                //Create the actual TreeItem
-                JobTreeItem groupRoot = new JobTreeItem(jobDummy);
-                groupRoot.setExpanded(true);
-                
-                //Go through each job inside the ACTUAL job group object and add them to the above tree item
-                for (Job job : group.getChildren()) {
-                    groupRoot.getChildren().add(new JobTreeItem(job));
+            if (project.getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
+                //Go through each job group in the project
+                for (JobGroup group : project.getChildren()) {
+                    
+                    /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
+                     * as JavaFX does not support more than one data type in a TreeTableView */
+                    
+                    Job jobDummy = new Job();
+                    jobDummy.setDummy(true);
+                    jobDummy.setJobGroupDummy(group);
+                    jobDummy.setTitle(group.getGroupName());
+                    
+                    //Create the actual TreeItem
+                    JobTreeItem groupRoot = new JobTreeItem(jobDummy);
+                    groupRoot.setExpanded(true);
+                    
+                    //Go through each job inside the ACTUAL job group object and add them to the above tree item
+                    for (Job job : group.getChildren()) {
+                        groupRoot.getChildren().add(new JobTreeItem(job));
+                    }
+                    
+                    table.getRoot().getChildren().add(groupRoot);
                 }
                 
-                table.getRoot().getChildren().add(groupRoot);
+                updateAddJobControl();
+            } else {
+                for (Job job : project.getAllJobs()) {
+                    table.getRoot().getChildren().add(new JobTreeItem(job));
+                }
             }
-            
-            /* Update the job group combo box, retaining the previously selected item */
-            SelectionModel<JobGroup> selectionModel = jobGroupCombo.getSelectionModel();
-            JobGroup previousSelection = selectionModel.getSelectedItem();
-            jobGroupCombo.getItems().clear();
-            jobGroupCombo.getItems().addAll(project.getChildren());
-            if (jobGroupCombo.getItems().contains(previousSelection)) selectionModel.select(previousSelection);
+        }
+    }
+    
+    public void updateAddJobControl() {
+        Project project = getSelectedProject();
+        
+        if (project != null) {
+            if (project.getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
+                /* Update the job group combo box, retaining the previously selected item */
+                SelectionModel<JobGroup> selectionModel = jobGroupCombo.getSelectionModel();
+                JobGroup previousSelection = selectionModel.getSelectedItem();
+                jobGroupCombo.getItems().clear();
+                jobGroupCombo.getItems().addAll(project.getChildren());
+                if (jobGroupCombo.getItems().contains(previousSelection)) selectionModel.select(previousSelection);
+                
+                jobGroupCombo.setDisable(false);
+                jobGroupButton.setDisable(false);
+            } else {
+                jobGroupCombo.setDisable(true);
+                jobGroupButton.setDisable(true);
+            }
+        }
+    }
+
+    public void updateAddGroupControl() {
+        Project project = getSelectedProject();
+        
+        if (project != null) {
+            if (project.getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
+                newGroupField.setDisable(false);
+                newGroupButton.setDisable(false);
+            } else {
+                newGroupField.setDisable(true);
+                newGroupButton.setDisable(true);
+            }
         }
     }
     
@@ -326,12 +361,56 @@ public class QuotesTab extends AbstractValidationScene {
         projectPicker.getSelectionModel().select(index);
     }
     
+    public void updateColumns() {
+        Project project = getSelectedProject();
+        
+        if (project != null) {
+            Settings<QuoteSetting> settings = project.getSettings();
+            
+            descriptionCol.setVisible(settings.getBoolean(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED));
+            materialsCol.setVisible(settings.getBoolean(QuoteSettingType.MATERIALS_ENABLED));
+            materialsCostCol.setVisible(settings.getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED));
+            labourCostCol.setVisible(settings.getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED));
+        }
+    }
+    
     //Add a New Project option to the project picker
-    private void addNewProjectOption() {
+    public void addNewProjectOption() {
         Project newProject = new Project();
         newProject.setNewModel(true);
         newProject.setFirstLineAddress(Resources.getResource("quotes.newProject"));
         Project.getProjects().add(newProject);
+    }
+    
+    public void selectProject(Project oldProject, Project newProject) {
+        if (oldProject != null) {
+            projectDescription.textProperty().unbindBidirectional(oldProject.projectDescriptionProperty());
+            projectNote.textProperty().unbindBidirectional(oldProject.projectNoteProperty());
+            firstName.textProperty().unbindBidirectional(oldProject.clientFirstNameProperty());
+            lastName.textProperty().unbindBidirectional(oldProject.clientLastNameProperty());
+            email.textProperty().unbindBidirectional(oldProject.emailProperty());
+            contactNumber.textProperty().unbindBidirectional(oldProject.contactNumberProperty());
+            firstLineAddress.textProperty().unbindBidirectional(oldProject.firstLineAddressProperty());
+            secondLineAddress.textProperty().unbindBidirectional(oldProject.secondLineAddressProperty());
+            city.textProperty().unbindBidirectional(oldProject.cityProperty());
+            postcode.textProperty().unbindBidirectional(oldProject.postcodeProperty());
+        }
+        
+        if (newProject != null) {
+            projectDescription.textProperty().bindBidirectional(newProject.projectDescriptionProperty());
+            projectNote.textProperty().bindBidirectional(newProject.projectNoteProperty());
+            firstName.textProperty().bindBidirectional(newProject.clientFirstNameProperty());
+            lastName.textProperty().bindBidirectional(newProject.clientLastNameProperty());
+            email.textProperty().bindBidirectional(newProject.emailProperty());
+            contactNumber.textProperty().bindBidirectional(newProject.contactNumberProperty());
+            firstLineAddress.textProperty().bindBidirectional(newProject.firstLineAddressProperty());
+            secondLineAddress.textProperty().bindBidirectional(newProject.secondLineAddressProperty());
+            city.textProperty().bindBidirectional(newProject.cityProperty());
+            postcode.textProperty().bindBidirectional(newProject.postcodeProperty());            
+            
+            jobGroupCombo.getSelectionModel().selectFirst();
+            updateAll();
+        }
     }
     
     //Convenience method

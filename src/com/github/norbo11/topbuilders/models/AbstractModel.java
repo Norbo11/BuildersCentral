@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -72,8 +72,8 @@ public abstract class AbstractModel {
     
     public abstract void update();
     
-    public Vector<? extends AbstractModel> getChildren() {
-        return new Vector<AbstractModel>();
+    public ArrayList<? extends AbstractModel> getChildren() {
+        return new ArrayList<AbstractModel>();
     }
     
     //Sets all of the properties for this model as obtained by the ResultSet - will only load the specified columns
@@ -175,8 +175,8 @@ public abstract class AbstractModel {
         return Database.executeQuery(query, param);
     }
     
-	protected static <T extends AbstractModel> Vector<T> loadList(AbstractModel parent, ResultSet result, Class<T> clazz) {
-		Vector<T> models = new Vector<T>();
+	protected static <T extends AbstractModel> ArrayList<T> loadList(AbstractModel parent, ResultSet result, Class<T> clazz) {
+		ArrayList<T> models = new ArrayList<T>();
         		
         try {
 			while (result.next()) {
@@ -191,7 +191,7 @@ public abstract class AbstractModel {
 	}
 	
 	protected static <T extends AbstractModel> T loadOne(AbstractModel parent, ResultSet result, Class<T> clazz) {
-        Vector<T> models = loadList(parent, result, clazz);
+        ArrayList<T> models = loadList(parent, result, clazz);
         
         if (models.size() != 0) return models.get(0);
         else return null;

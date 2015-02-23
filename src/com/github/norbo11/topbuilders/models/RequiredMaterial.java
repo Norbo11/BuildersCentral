@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -13,6 +13,7 @@ import com.github.norbo11.topbuilders.util.Database;
 
 public class RequiredMaterial extends AbstractModel {
     public static final String DB_TABLE_NAME = "requiredMaterials";
+    private static ArrayList<RequiredMaterial> requiredMaterials = new ArrayList<RequiredMaterial>();
     
     private IntegerProperty stockedMaterialId = new SimpleIntegerProperty(0);
     private IntegerProperty jobId = new SimpleIntegerProperty(0);
@@ -69,11 +70,19 @@ public class RequiredMaterial extends AbstractModel {
     
 	/* Instance methods */	
 
-	public static Vector<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
-		return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
+	public static ArrayList<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
+		return loadList(job, loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
 	}
 
 	/* Overrides */
+	
+	@Override
+	public void save() {
+	    if (stockedMaterial != null)
+	        setStockedMaterialId(stockedMaterial.getId());
+	    
+	    super.save();
+	}
 	
     @Override
     public int add() {
@@ -97,6 +106,7 @@ public class RequiredMaterial extends AbstractModel {
         if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
         if (containsColumn(columns, "quantityRequired")) setQuantityRequired(result.getDouble("quantityRequired"));
         
+        setParent(parent);
 		setStockedMaterial(StockedMaterial.loadStockedMaterialForRequiredMaterial(this));
     }
     
@@ -114,7 +124,16 @@ public class RequiredMaterial extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static Vector<RequiredMaterial> loadList(ResultSet result) {
-		return loadList(null, result, RequiredMaterial.class);
+	public static ArrayList<RequiredMaterial> loadList(Job job, ResultSet result) {
+		return loadList(job, result, RequiredMaterial.class);
 	}
+
+    public static ArrayList<RequiredMaterial> getRequiredMaterials() {
+        return requiredMaterials;
+    }
+    
+    public static ArrayList<RequiredMaterial> loadRequiredMaterials() {
+        requiredMaterials = loadList(null, loadAllModels(DB_TABLE_NAME));
+        return requiredMaterials;
+    }
 }

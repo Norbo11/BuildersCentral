@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -18,7 +18,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 public class StockedMaterial extends AbstractModel {
 
 	public static final String DB_TABLE_NAME = "stockedMaterials";
-	private static Vector<StockedMaterial> stockedMaterials = new Vector<StockedMaterial>();
+	private static ArrayList<StockedMaterial> stockedMaterials = new ArrayList<StockedMaterial>();
 
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
@@ -81,10 +81,19 @@ public class StockedMaterial extends AbstractModel {
         return QuantityType.getQuantityType(getQuantityTypeId());
     }
     
-	public Double getQuantityRequired() {
-	    //TODO implement properly
-		return 5d;
+	public Double getQuantityRequiredInProjects() {
+	    double required = 0;
+	    
+		for (RequiredMaterial material : RequiredMaterial.getRequiredMaterials()) {
+		    if (material.getStockedMaterialId() == getId()) required += material.getQuantityRequired();
+		}
+		
+		return required;
 	}
+	
+	public String getQuantityString() {
+        return getQuantityInStock() + "" + getQuantityType();
+    }
 	
     /* Override methods */
 
@@ -129,7 +138,7 @@ public class StockedMaterial extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static Vector<StockedMaterial> getStockedMaterials() {
+	public static ArrayList<StockedMaterial> getStockedMaterials() {
 		return stockedMaterials;
 	}
 	
@@ -137,11 +146,15 @@ public class StockedMaterial extends AbstractModel {
 		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
 	}
 	
-	public static Vector<StockedMaterial> loadList(ResultSet result) {
+	public static ArrayList<StockedMaterial> loadList(ResultSet result) {
 		return loadList(null, result, StockedMaterial.class);
 	}
 
-	public String getQuantityString() {
-		return getQuantityInStock() + "" + getQuantityType();
-	}
+    public static StockedMaterial getStockedMaterialByName(String name) {
+        for (StockedMaterial material : stockedMaterials) {
+            if (material.getName().equalsIgnoreCase(name)) return material;
+        }
+        
+        return null;
+    }
 }

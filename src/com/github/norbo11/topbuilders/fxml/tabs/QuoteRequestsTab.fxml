@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+<?import com.github.norbo11.topbuilders.models.Employee?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
+
+<VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.QuoteRequestsTab">
+  <padding><Insets top="60" bottom="60" right="130" left="130" /></padding>
+  
+  <HBox spacing="15" alignment="center">  
+    <ImageView fitWidth="100" preserveRatio="true" onMousePressed="#goLeft">
+        <image><Image url="/img/leftArrow.png" /></image>
+    </ImageView>
+    
+    <HBox spacing="10" HBox.hgrow="always" alignment="center">
+        <ImageView fx:id="projectImage" preserveRatio="true" fitWidth="600"/>
+        
+        <VBox spacing="10" HBox.hgrow="always">
+          <GridPane vgap="5" hgap="5">
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="clientName" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="contactNumber" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="email" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" text="%general.address" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="firstLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="secondLineAddress" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="city" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            
+            <Label GridPane.hgrow="always" wrapText="true" fx:id="postcode" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+            
+            <ScrollPane GridPane.hgrow="always" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                <Label wrapText="true" fx:id="projectDescription" />
+            </ScrollPane>
+          </GridPane>
+        
+          <HBox spacing="100" alignment="center">
+            <Button text="%requests.respond" prefWidth="190" prefHeight="40" onAction="#respond" />
+            <Button text="%map.view" prefWidth="190" prefHeight="40" onAction="#viewMap" />
+          </HBox>
+        </VBox>
+    </HBox>
+    
+    <ImageView fitWidth="100" preserveRatio="true" onMousePressed="#goRight">
+        <image><Image url="/img/rightArrow.png" /></image>
+    </ImageView>
+  </HBox>
+</VBox>

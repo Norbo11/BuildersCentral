@@ -75,6 +75,6 @@
   
   <HBox spacing="100" alignment="center">
     <Button text="%settings.apply" prefWidth="190" prefHeight="40" onAction="#saveSettings" />
-    <Button text="%settings.cancel" prefWidth="190" prefHeight="40" onAction="#cancel" />
+    <Button text="%general.cancel" prefWidth="190" prefHeight="40" onAction="#cancel" />
   </HBox>
 </VBox>

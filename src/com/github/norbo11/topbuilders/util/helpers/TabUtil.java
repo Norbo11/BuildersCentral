@@ -1,6 +1,6 @@
 package com.github.norbo11.topbuilders.util.helpers;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -11,7 +11,7 @@ import com.github.norbo11.topbuilders.controllers.tabs.ManagerHomeTab;
 
 public class TabUtil {
     private static TabPane tabPane;
-    private static Vector<AbstractController> tabs = new Vector<AbstractController>();
+    private static ArrayList<AbstractController> tabs = new ArrayList<AbstractController>();
     private static ManagerHomeTab mainTab;
 
 	public static AbstractTab createAndSwitchTab(String tabName, String fxmlFilename) {

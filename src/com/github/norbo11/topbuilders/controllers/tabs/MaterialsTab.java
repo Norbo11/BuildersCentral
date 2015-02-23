@@ -21,6 +21,7 @@ import javafx.util.converter.NumberStringConverter;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
+import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactory;
@@ -36,8 +37,7 @@ public class MaterialsTab extends AbstractController {
     private class RequiredCellValueFactory implements Callback<CellDataFeatures<StockedMaterial, Number>, ObservableValue<Number>> {
 		@Override
 		public ObservableValue<Number> call(CellDataFeatures<StockedMaterial, Number> param) {
-			// TODO Query DB to count the amount required for this material
-			return new ReadOnlyDoubleWrapper(5);
+			return new ReadOnlyDoubleWrapper(param.getValue().getQuantityRequiredInProjects());
 		}
     }
     
@@ -132,6 +132,9 @@ public class MaterialsTab extends AbstractController {
     @FXML
 	public void initialize() {			
         StockedMaterial.loadStockedMaterials();
+        
+        //For the purposes of calculating required amounts
+        RequiredMaterial.loadRequiredMaterials();
         updateAll();
         
         DeleteModelButtonCellFactory.assignCellFactory(xColumn, () -> updateAll());
@@ -146,9 +149,27 @@ public class MaterialsTab extends AbstractController {
 		quantityInStockColumn.setCellFactory(param -> new QuantityInStockCell());
 		
 		requiredColumn.setCellValueFactory(new RequiredCellValueFactory());
+		
+		balanceColumn.setCellFactory(param -> {
+		    TableCell<StockedMaterial, Number> cell = new TableCell<StockedMaterial, Number>() {
+		        @Override
+		        protected void updateItem(Number item, boolean empty) {
+		            super.updateItem(item, empty);
+		            if (!empty) {
+		                if (item.doubleValue() >= 0) setStyle("-fx-text-fill: green");
+		                else setStyle("-fx-text-fill: red");
+		                
+		                setText(item.doubleValue() + "");
+		            }
+		        }
+		    };
+		   		    
+		    return cell;
+		});
+		
 		balanceColumn.setCellValueFactory(param -> {
             StockedMaterial material = param.getValue();
-            DoubleBinding property = material.quantityInStockProperty().subtract(material.getQuantityRequired());
+            DoubleBinding property = material.quantityInStockProperty().subtract(material.getQuantityRequiredInProjects());
             return property;
         });
 	}
@@ -176,6 +197,8 @@ public class MaterialsTab extends AbstractController {
     /* Override methods */
     
     public void updateAll() {
+        StockedMaterial.loadStockedMaterials();
+        
         table.getItems().clear();
         table.getItems().addAll(StockedMaterial.getStockedMaterials());
     }

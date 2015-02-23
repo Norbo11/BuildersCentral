@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
 
 import com.github.norbo11.topbuilders.models.Employee;
+import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 
 public class Resources {
     public static final String PARAMETER_MARKER = "(?)";
@@ -53,7 +54,7 @@ public class Resources {
     }
 
     public static void setCurrentBundle(Employee employee) {
-        currentBundle = ResourceBundle.getBundle("lang.lang", employee.getSettings().getLocale(), ClassLoader.getSystemClassLoader());
+        currentBundle = ResourceBundle.getBundle("lang.lang", employee.getSettings().getLocale(EmployeeSettingType.LOCALE), ClassLoader.getSystemClassLoader());
     }
     
     public static void setResources(FXMLLoader loader) {

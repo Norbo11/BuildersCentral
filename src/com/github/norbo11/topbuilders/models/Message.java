@@ -3,7 +3,7 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -99,8 +99,9 @@ public class Message extends AbstractModel {
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		
+	    Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
+        + "senderId=?,recipientId=?,title=?,content=?,timestamp=? "
+        + "WHERE id = ?", getSenderId(), getRecipientId(), getTitle(), getContent(), getTimestamp(), getId());        
 	}
 
 	@Override
@@ -131,11 +132,11 @@ public class Message extends AbstractModel {
         controller.updateAll();
     }
     
-    public static Vector<Message> loadMessagesForEmployee(Employee employee) {
+    public static ArrayList<Message> loadMessagesForEmployee(Employee employee) {
         return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
     }
     
-    public static Vector<Message> loadList(ResultSet result) {
+    public static ArrayList<Message> loadList(ResultSet result) {
 		return loadList(null, result, Message.class);
 	}
 }

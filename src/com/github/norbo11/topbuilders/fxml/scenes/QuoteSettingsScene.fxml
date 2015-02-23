@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+
+<VBox spacing="20" alignment="top_left" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.QuoteSettingsScene">
+  <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
+    
+  <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
+    <padding><Insets top="10" bottom="10" /></padding>
+    
+    <Label text="%quotes.settings.groupsEnabled" GridPane.rowIndex="0" />
+    <CheckBox fx:id="groupsEnabled" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+    
+    <Label text="%quotes.settings.jobDescriptionsEnabled" GridPane.rowIndex="1" />
+    <CheckBox fx:id="jobDescriptionsEnabled" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    
+    <Label text="%quotes.settings.materialsEnabled" GridPane.rowIndex="2" />
+    <CheckBox fx:id="materialsEnabled" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    
+    <Label text="%quotes.settings.materialsPriceEnabled" GridPane.rowIndex="3" />
+    <CheckBox fx:id="materialsPriceEnabled" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+    
+    <Label text="%quotes.settings.labourPriceEnabled" GridPane.rowIndex="4" />
+    <CheckBox fx:id="labourPriceEnabled" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+  </GridPane>
+    
+  <HBox spacing="100" alignment="center">
+    <Button text="%settings.save" prefWidth="190" prefHeight="40" onAction="#save" />
+    <Button text="%general.discard" prefWidth="190" prefHeight="40" onAction="#discard" />
+  </HBox>
+</VBox>

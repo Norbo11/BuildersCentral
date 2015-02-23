@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -16,7 +16,7 @@ public class JobGroup extends AbstractModel {
     
     private IntegerProperty projectId = new SimpleIntegerProperty(0);
     private StringProperty groupName = new SimpleStringProperty("");
-    private Vector<Job> jobs = new Vector<Job>();
+    private ArrayList<Job> jobs = new ArrayList<Job>();
     
 
     /* Properties */
@@ -53,11 +53,11 @@ public class JobGroup extends AbstractModel {
 	/* Overrides */
     
 	@Override
-    public Vector<Job> getChildren() {
+    public ArrayList<Job> getChildren() {
         return jobs;
     }
 	
-	public void setChildren(Vector<Job> jobs) {
+	public void setChildren(ArrayList<Job> jobs) {
         this.jobs = jobs;
     }
 	
@@ -98,13 +98,13 @@ public class JobGroup extends AbstractModel {
 
 	/* Static methods */
 	
-	public static Vector<JobGroup> loadJobGroupsForProject(Project project) {
+	public static ArrayList<JobGroup> loadJobGroupsForProject(Project project) {
 		return loadList(project, loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()));
 	}
 	
 	/* Standard static methods */
 	
-	public static Vector<JobGroup> loadList(AbstractModel parent, ResultSet result) {
+	public static ArrayList<JobGroup> loadList(AbstractModel parent, ResultSet result) {
 		return loadList(parent, result, JobGroup.class);
 	}
 }

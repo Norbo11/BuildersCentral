@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -107,15 +107,15 @@ public class Assignment extends AbstractModel {
 	
 	/* Static methods */
 	
-	public static Vector<Assignment> loadAll() {
+	public static ArrayList<Assignment> loadAll() {
 		return loadList(loadAllModels(DB_TABLE_NAME));
 	}
 	
-	public static <T> Vector<Assignment> loadAllWhere(String field, T id) {
+	public static <T> ArrayList<Assignment> loadAllWhere(String field, T id) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, field, id));
     }
 
-	public static Vector<Assignment> loadList(ResultSet result) {
+	public static ArrayList<Assignment> loadList(ResultSet result) {
 		return loadList(null, result, Assignment.class);
 	}
 }

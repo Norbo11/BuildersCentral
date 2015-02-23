@@ -56,7 +56,7 @@
   <VBox spacing="20">
     <HBox spacing="40">
       <ComboBox fx:id="jobGroupCombo" prefWidth="230" />
-      <Button text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJob" />
+      <Button fx:id="jobGroupButton" text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJob" />
     </HBox>
     
     <HBox spacing="40">
@@ -100,7 +100,7 @@
       <Label wrapText="true" text="%general.address.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
       <TextField GridPane.hgrow="always" fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" />
       
-  
+
       <Label wrapText="true" fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="4" GridPane.columnIndex="0" />
       <VBox fx:id="errorsList" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="4" />
     </GridPane>
@@ -109,7 +109,7 @@
   <HBox spacing="100" alignment="center">
     <Button text="%quotes.save" prefWidth="190" prefHeight="40" onAction="#saveProject" />
     <Button text="%quotes.export" prefWidth="190" prefHeight="40" onAction="#export" />
-    <Button text="%quotes.viewMap" prefWidth="190" prefHeight="40" onAction="#viewMap" />
-    <Button text="%quotes.settings" prefWidth="190" prefHeight="40" onAction="#settings" />
+    <Button text="%map.view" prefWidth="190" prefHeight="40" onAction="#viewMap" />
+    <Button fx:id="settingsButton" text="%quotes.settings" prefWidth="190" prefHeight="40" onAction="#settings" />
   </HBox> 
 </VBox>

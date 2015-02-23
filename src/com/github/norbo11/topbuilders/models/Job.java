@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -21,7 +21,7 @@ public class Job extends AbstractModel {
     private StringProperty description = new SimpleStringProperty("");
     private DoubleProperty labourPrice = new SimpleDoubleProperty(0);
     private DoubleProperty materialPrice = new SimpleDoubleProperty(0);
-    private Vector<RequiredMaterial> requiredMaterials = new Vector<RequiredMaterial>();
+    private ArrayList<RequiredMaterial> requiredMaterials = new ArrayList<RequiredMaterial>();
     private JobGroup jobGroupDummy;
     
     /* Properties */
@@ -101,11 +101,11 @@ public class Job extends AbstractModel {
 	/* Overrides */
 	
 	@Override
-    public Vector<RequiredMaterial> getChildren() {
+    public ArrayList<RequiredMaterial> getChildren() {
         return requiredMaterials;
     }
 	
-    public void setChildren(Vector<RequiredMaterial> requiredMaterials) {
+    public void setChildren(ArrayList<RequiredMaterial> requiredMaterials) {
         this.requiredMaterials = requiredMaterials;
     }
 	
@@ -149,13 +149,13 @@ public class Job extends AbstractModel {
 
 	/* Static methods */
 	
-	public static Vector<Job> loadJobsForJobGroup(JobGroup jobGroup) {		
+	public static ArrayList<Job> loadJobsForJobGroup(JobGroup jobGroup) {		
 		return loadList(jobGroup, loadAllModelsWhere(DB_TABLE_NAME, "jobGroupId", jobGroup.getId()));
 	}
 	
 	/* Standard static methods */
 	
-	public static Vector<Job> loadList(AbstractModel parent, ResultSet result) {
+	public static ArrayList<Job> loadList(AbstractModel parent, ResultSet result) {
 		return loadList(parent, result, Job.class);
 	}
 }

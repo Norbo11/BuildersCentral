@@ -3,7 +3,7 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -131,11 +131,11 @@ public class Notification extends AbstractModel {
 	/* Static methods */
 
 	//Override
-	public static Vector<Notification> loadList(ResultSet result) {
+	public static ArrayList<Notification> loadList(ResultSet result) {
         return loadList(null, result, Notification.class);
     }
 
-	public static Vector<Notification> loadNotificationsForEmployee(Employee employee) {
+	public static ArrayList<Notification> loadNotificationsForEmployee(Employee employee) {
         return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "employeeId", employee.getId(), "timestamp", true));
 	}
 	

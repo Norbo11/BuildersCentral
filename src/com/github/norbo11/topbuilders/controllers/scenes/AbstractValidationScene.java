@@ -1,6 +1,6 @@
 package com.github.norbo11.topbuilders.controllers.scenes;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -11,7 +11,7 @@ import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.util.Resources;
 
 public abstract class AbstractValidationScene extends AbstractController {
-    private Vector<Label> errors = new Vector<Label>();
+    private ArrayList<Label> errors = new ArrayList<Label>();
     
     public void addErrorFromResource(String key) {
         addError(Resources.getResource(key));

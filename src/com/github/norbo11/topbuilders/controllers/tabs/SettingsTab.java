@@ -14,8 +14,10 @@ import com.github.norbo11.topbuilders.Constants;
 import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.models.Employee;
-import com.github.norbo11.topbuilders.models.EmployeeSettings;
+import com.github.norbo11.topbuilders.models.EmployeeSetting;
+import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 import com.github.norbo11.topbuilders.util.Log;
+import com.github.norbo11.topbuilders.util.Settings;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class SettingsTab extends AbstractController {
@@ -24,6 +26,7 @@ public class SettingsTab extends AbstractController {
     
     @FXML ComboBox<Locale> languagesCombo;
     @FXML CheckBox fullscreenCheckbox;
+    private Settings<EmployeeSetting> settings;
     
     //Custom ListCell class which used to override the default display method of cells in the languages combo box
     private class LocaleCell extends ListCell<Locale> {
@@ -60,18 +63,18 @@ public class SettingsTab extends AbstractController {
 		}
 		
 		//Adjust components to reflect current user settings
-		EmployeeSettings settings = Employee.getCurrentEmployee().getSettings();
-        languagesCombo.getSelectionModel().select(settings.getLocale());
-        fullscreenCheckbox.setSelected(settings.isFullscreen());
+		settings = Employee.getCurrentEmployee().getSettings();
+        languagesCombo.getSelectionModel().select(settings.getLocale(EmployeeSettingType.LOCALE));
+        fullscreenCheckbox.setSelected(settings.getBoolean(EmployeeSettingType.FULLSCREEN));
 	}
 	
 	@FXML public void saveSettings(ActionEvent event) {
-	    EmployeeSettings settings = Employee.getCurrentEmployee().getSettings();
-		settings.setLocaleId(languagesCombo.getSelectionModel().getSelectedItem().getLanguage());
-		settings.setFullscreen(fullscreenCheckbox.isSelected());
+		settings.set(EmployeeSettingType.LOCALE, languagesCombo.getSelectionModel().getSelectedItem().getLanguage());
+		settings.set(EmployeeSettingType.FULLSCREEN, fullscreenCheckbox.isSelected());
+		settings.save();
 		
 		TabUtil.closeCurrentTab();
-		Main.getMainStage().setFullScreen(settings.isFullscreen());
+		Main.getMainStage().setFullScreen(fullscreenCheckbox.isSelected());
 	}
 	
 	@FXML public void cancel(ActionEvent event) {

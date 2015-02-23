@@ -2,7 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,11 +11,12 @@ import javafx.beans.property.StringProperty;
 
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.Settings;
 
 
 public class Project extends AbstractModel {
     public static final String DB_TABLE_NAME = "projects";        
-    private static Vector<Project> projects = new Vector<Project>();
+    private static ArrayList<Project> projects = new ArrayList<Project>();
     
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
@@ -31,7 +32,9 @@ public class Project extends AbstractModel {
     private StringProperty email = new SimpleStringProperty("");
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
-    private Vector<JobGroup> jobGroups = new Vector<JobGroup>();
+    
+    private ArrayList<JobGroup> jobGroups = new ArrayList<JobGroup>();
+    private Settings<QuoteSetting> settings = new Settings<QuoteSetting>(this, QuoteSetting.class);
     
     /* Properties */
 
@@ -181,23 +184,41 @@ public class Project extends AbstractModel {
 		this.projectNote.set(projectNote);
 	}
 	
+	public void setChildren(ArrayList<JobGroup> jobGroups) {
+        this.jobGroups = jobGroups;
+    }
+	
+	public Settings<QuoteSetting> getSettings() {
+	    return settings;
+	}
+	
 	/* Instance methods */
 	
 	public String getClientFullName() {
 		return getClientFirstName() + " " + getClientLastName();
 	}
 	
+    private void loadSettings() {
+        settings = QuoteSetting.loadQuoteSettingsForProject(this);
+    }
+	
+    public ArrayList<Job> getAllJobs() {
+        ArrayList<Job> jobs = new ArrayList<Job>();
+        
+        for (JobGroup group : jobGroups) {
+            jobs.addAll(group.getChildren());
+        }
+        
+        return jobs;
+    }
+    
 	/* Override methods */
 	
 	@Override
-    public Vector<JobGroup> getChildren() {
+    public ArrayList<JobGroup> getChildren() {
         return jobGroups;
     }
     
-    public void setChildren(Vector<JobGroup> jobGroups) {
-        this.jobGroups = jobGroups;
-    }
-	
     @Override
     public int add() {
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
@@ -211,6 +232,13 @@ public class Project extends AbstractModel {
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "quoteRequested=?,completed=?,clientFirstName=?,clientLastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,contactNumber=?,email=?,projectDescription=?,projectNote=? "
         + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());        
+    }
+    
+    @Override
+    public void delete() {
+        super.delete();
+        
+        settings.delete();
     }
     
     @Override
@@ -230,6 +258,7 @@ public class Project extends AbstractModel {
         if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
         
         setChildren(JobGroup.loadJobGroupsForProject(this));
+        loadSettings();
     }
 
 	@Override
@@ -246,15 +275,16 @@ public class Project extends AbstractModel {
     
 	/* Standard static methods */
 	
-	public static Vector<Project> loadList(ResultSet result) {
+	public static ArrayList<Project> loadList(ResultSet result) {
 		return loadList(null, result, Project.class);
 	}
 
-    public static void loadProjects() {
+    public static ArrayList<Project> loadProjects() {
         projects = loadList(loadAllModels(DB_TABLE_NAME));
+        return projects;
     }
     
-    public static Vector<Project> getProjects() {
+    public static ArrayList<Project> getProjects() {
         return projects;
     }
 }

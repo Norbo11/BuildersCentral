@@ -81,7 +81,7 @@ public class EmployeesTab extends AbstractController {
     @FXML private TreeTableColumn<Employee, String> defaultWageCol, deleteCol, addressCol;
     
     @FXML
-	public void initialize() {	    
+	public void initialize() {	     
         defaultWageCol.setCellValueFactory(new EmployeeDefaultWageFactory());
         addressCol.setCellFactory(column -> new EmployeeAddressCell());
         table.setRowFactory(new EmployeesRowFactory());
