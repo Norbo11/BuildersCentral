@@ -6,7 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.AbstractTab;
 import com.github.norbo11.topbuilders.models.Project;
+import com.github.norbo11.topbuilders.util.GoogleMaps;
+import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.helpers.StringUtil;
+import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 public class QuoteRequestsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/QuoteRequestsTab.fxml";
     
@@ -24,12 +29,15 @@ public class QuoteRequestsTab extends AbstractController {
     
     @FXML
     public void respond() {
+    	AbstractTab tab = TabUtil.createAndSwitchTab(Resources.getResource("home.quotes"), QuotesTab.FXML_FILENAME);
+    	QuotesTab controller = (QuotesTab) tab.getController();
     	
+    	controller.selectProject(null, getSelectedProject());
     }
     
     @FXML
     public void viewMap() {
-        
+        GoogleMaps.openMap(StringUtil.formatAddress(firstLineAddress.getText(), secondLineAddress.getText(), city.getText(), postcode.getText()));
     }
     
     @FXML
@@ -101,5 +109,9 @@ public class QuoteRequestsTab extends AbstractController {
             postcode.setText(project.getPostcode());
             projectDescription.setText(project.getProjectDescription());
         }
+    }
+    
+    public Project getSelectedProject() {
+    	return Project.getProjects().get(currentSelection);
     }
 }

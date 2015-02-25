@@ -25,7 +25,7 @@ public class ManagerHomeTab extends AbstractController {
     @FXML 
     public void buttonAction(ActionEvent event) {
         switch (((Button) event.getSource()).getId()) {
-        case "myAssignments": break;
+        case "myAssignments": TabUtil.createAndSwitchTab(Resources.getResource("home.myAssignments"), MyAssignmentsTab.FXML_FILENAME); break;
         case "messages": TabUtil.createAndSwitchTab(Resources.getResource("home.messages"), MessagesTab.FXML_FILENAME); break;
         case "settings": TabUtil.createAndSwitchTab(Resources.getResource("home.settings"), SettingsTab.FXML_FILENAME); break;
         case "logout": SceneUtil.changeMainScene(LoginScene.FXML_FILENAME); break;
@@ -33,7 +33,7 @@ public class ManagerHomeTab extends AbstractController {
         case "quotes": TabUtil.createAndSwitchTab(Resources.getResource("home.quotes"), QuotesTab.FXML_FILENAME); break;
         case "requests": TabUtil.createAndSwitchTab(Resources.getResource("home.requests"), QuoteRequestsTab.FXML_FILENAME); break;
         case "materials": TabUtil.createAndSwitchTab(Resources.getResource("home.materials"), MaterialsTab.FXML_FILENAME); break;
-        case "manageAssignments": break;
+        case "manageAssignments": TabUtil.createAndSwitchTab(Resources.getResource("home.manageAssignments"), ManageAssignmentsTab.FXML_FILENAME); 
         }
     }
     

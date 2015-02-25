@@ -1,0 +1,15 @@
+TODO:
+
+-Splash screen
+-My assignments
+-Manage assignments
+-Some bugs with viewing a project quote from quote requests
+-Quote request image display
+-E-Mail function
+-Password and e-mail change
+-Forgotten password
+-Assignment and quote request notifications
+-Message replying, forwarding, and sent messages (need to stop deleting message rows and just mark them as deleted)
+-CSS
+-Employee reports
+-Export to excel

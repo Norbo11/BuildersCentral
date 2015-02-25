@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+<?import com.github.norbo11.topbuilders.models.Employee?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
+
+<VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.MyAssignmentsTab">
+  <padding><Insets top="60" bottom="60" right="20" left="20" /></padding>
+  
+  
+</VBox>

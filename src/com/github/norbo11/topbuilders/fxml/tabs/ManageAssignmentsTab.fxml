@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+<?import com.github.norbo11.topbuilders.Constants?>
+<?import com.github.norbo11.topbuilders.models.Employee?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
+
+<VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.ManageAssignmentsTab">
+  <padding><Insets top="60" bottom="60" right="20" left="20" /></padding>
+  
+  <HBox spacing="10">
+    <TitledPane HBox.hgrow="always" text="%manageAssignments.projects">
+      <ListView fx:id="projectList" />
+    </TitledPane>
+    
+    <TitledPane HBox.hgrow="always" text="%manageAssignments.jobs">
+      <TreeView fx:id="jobList" />
+    </TitledPane>
+    
+    <TitledPane HBox.hgrow="always" text="%manageAssignments.employees">
+      <ListView fx:id="employeeList" />
+    </TitledPane>
+  </HBox>
+  
+  <HBox spacing="30">
+    <padding><Insets right="60" left="60" /></padding>
+  
+    <TitledPane maxHeight="Infinity" HBox.hgrow="always" text="%assignments.details">
+      <GridPane hgap="10" vgap="10" alignment="top_center">      
+        <Label wrapText="true" text="%assignments.startDate" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="startDate" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        
+        <Label wrapText="true" text="%assignments.endDate" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="endDate" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        
+        <Label wrapText="true" text="%assignments.hourlyWage" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="hourlyWage" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+      </GridPane>
+    </TitledPane>
+    
+    <TitledPane HBox.hgrow="always" text="%manageAssignments.search">
+      <VBox>
+        <HBox>
+          <Label wrapText="true" text="%manageAssignments.employeeName" />
+          <TextField HBox.hgrow="always" fx:id="employeeName" />
+        </HBox>
+        <TableView fx:id="assignmentTable">
+        
+        </TableView>
+      </VBox>
+    </TitledPane>
+  </HBox>
+</VBox>
