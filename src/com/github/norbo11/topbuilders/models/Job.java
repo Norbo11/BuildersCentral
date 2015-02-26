@@ -23,6 +23,7 @@ public class Job extends AbstractModel {
     private DoubleProperty materialPrice = new SimpleDoubleProperty(0);
     private ArrayList<RequiredMaterial> requiredMaterials = new ArrayList<RequiredMaterial>();
     private JobGroup jobGroupDummy;
+    private ArrayList<Assignment> assignments;
     
     /* Properties */
 
@@ -95,6 +96,10 @@ public class Job extends AbstractModel {
 	public void setMaterialPrice(double materialPrice) {
 		this.materialPrice.set(materialPrice);
 	}    
+	
+	public ArrayList<Assignment> getAssignments() {
+	    return assignments;
+	}
 
 	/* Instance methods */	
 
@@ -135,6 +140,7 @@ public class Job extends AbstractModel {
         
         setParent(parent);
         setChildren(RequiredMaterial.loadRequiredMaterialsForJob(this));
+        loadAssignments();
     }
     
 	@Override
@@ -145,6 +151,11 @@ public class Job extends AbstractModel {
 	@Override
 	public String toString() {
 		return getTitle();
+	}
+	
+	public ArrayList<Assignment> loadAssignments() {
+	    assignments = Assignment.loadAssignmentsForJob(this);
+	    return assignments;
 	}
 
 	/* Static methods */

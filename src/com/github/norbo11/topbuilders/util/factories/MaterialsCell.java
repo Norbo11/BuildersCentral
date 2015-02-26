@@ -37,9 +37,7 @@ public class MaterialsCell extends TreeTableCell<Job, Job> {
                 newMaterial.setParent(job);
                 job.getChildren().add(newMaterial);
                 
-                
-                
-                    addMaterialRow(newMaterial).requestFocus(); 
+                addMaterialRow(newMaterial).requestFocus(); 
                 
                 addButton(); //Re-add the New Material button
             }

@@ -26,6 +26,7 @@ import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
+    private static ArrayList<Employee> employees;
     private static Employee currentEmployee;
     
     private StringProperty username = new SimpleStringProperty("");
@@ -204,6 +205,10 @@ public class Employee extends AbstractModel {
         return settings;
     }
     
+    public static ArrayList<Employee> getEmployees() {
+        return employees;
+    }
+    
     /* Instance methods */
     
     public  ArrayList<Notification> getNotifications() {
@@ -349,11 +354,16 @@ public class Employee extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<Employee> getAllEmployees() {
-		return loadList(loadAllModels(DB_TABLE_NAME));
+	public static ArrayList<Employee> loadEmployees() {
+	    employees = loadList(loadAllModels(DB_TABLE_NAME));
+		return employees;
 	}
 	
 	public static ArrayList<Employee> loadList(ResultSet result) {
 		return loadList(null, result, Employee.class);
 	}
+
+    public static Employee loadEmployeeForAssignment(Assignment assignment) {
+        return loadOne(null, loadAllModelsWhere(DB_TABLE_NAME, "id", assignment.getEmployeeId()), Employee.class);
+    }
 }

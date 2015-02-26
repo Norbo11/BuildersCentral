@@ -1,7 +1,6 @@
 package com.github.norbo11.topbuilders.controllers.custom;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,6 +18,7 @@ import com.github.norbo11.topbuilders.controllers.tabs.QuotesTab;
 import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
+import com.github.norbo11.topbuilders.util.ModelFinder;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.FXMLUtil;
 import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
@@ -38,6 +38,7 @@ public class RequiredMaterialItem extends HBox {
     private Stage stage;
     private RequiredMaterial requiredMaterial;
     private QuotesTab quotesTab;
+    private ModelFinder<StockedMaterial> finder;
     
     public RequiredMaterialItem(RequiredMaterial requiredMaterial, QuotesTab quotesTab) {
         this.requiredMaterial = requiredMaterial;
@@ -121,8 +122,9 @@ public class RequiredMaterialItem extends HBox {
     
     @FXML
     public void initialize() { 
+        this.finder = new ModelFinder<StockedMaterial>(searchList, StockedMaterial.getStockedMaterials(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
+        
         // Search list
-        searchList.getItems().addAll(StockedMaterial.getStockedMaterials());
         searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 setStockedMaterial(newValue);
@@ -136,33 +138,7 @@ public class RequiredMaterialItem extends HBox {
         updateAll();
         
         //This needs to be after the above, as setText will trigger it 
-        nameField.textProperty().addListener((obs, oldVal, newVal) -> searchMaterials(oldVal, newVal));
-    }
-    
-    private void searchMaterials(String oldVal, String newVal) {          
-        //If the number of characters in the text box is less than last time it must be because the user pressed delete
-        if (newVal.length() < oldVal.length()) {
-            //Restore the lists original set of entries and start from the beginning
-            searchList.getItems().clear();
-            searchList.getItems().addAll(StockedMaterial.getStockedMaterials());
-        }
-         
-        //Filter out the entries that don't contain the entered text
-        ObservableList<StockedMaterial> newEntries = FXCollections.observableArrayList();
-        
-        for (StockedMaterial entry : searchList.getItems()) {            
-            //If the entry starts with the entered text then keep it in the search list
-            if (entry.getName().toUpperCase().startsWith(newVal.toUpperCase())) {
-                newEntries.add(entry);
-            }
-        }
-        
-        searchList.setItems(newEntries);
-        
-        //Hide if the user has deleted the contents of the text field, otherwise show.
-        if (newVal.equals("")) {
-            GuiUtil.hideNodeManaged(searchList);
-        } else GuiUtil.showNodeManaged(searchList);
+        nameField.textProperty().addListener((obs, oldVal, newVal) -> finder.search(oldVal, newVal));
     }
 
     public void updateAll() {        

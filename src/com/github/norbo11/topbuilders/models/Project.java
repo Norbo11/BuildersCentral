@@ -8,7 +8,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TreeView;
 
+import com.github.norbo11.topbuilders.models.enums.QuoteSettingType;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.Settings;
@@ -286,5 +290,71 @@ public class Project extends AbstractModel {
     
     public static ArrayList<Project> getProjects() {
         return projects;
+    }
+
+    public void populateTreeTable(TreeView<Job> table) {
+        table.getRoot().getChildren().clear();
+        
+        if (getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
+            //Go through each job group in the project
+            for (JobGroup group : getChildren()) {
+                
+                /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
+                 * as JavaFX does not support more than one data type in a TreeTableView */
+                
+                Job jobDummy = new Job();
+                jobDummy.setDummy(true);
+                jobDummy.setJobGroupDummy(group);
+                jobDummy.setTitle(group.getGroupName());
+                
+                //Create the actual TreeItem
+                TreeItem<Job> groupRoot = new TreeItem<Job>(jobDummy);
+                groupRoot.setExpanded(true);
+                
+                //Go through each job inside the ACTUAL job group object and add them to the above tree item
+                for (Job job : group.getChildren()) {
+                    groupRoot.getChildren().add(new TreeItem<Job>(job));
+                }
+                
+                table.getRoot().getChildren().add(groupRoot);
+            }
+        } else {
+            for (Job job : getAllJobs()) {
+                table.getRoot().getChildren().add(new TreeItem<Job>(job));
+            }
+        }
+    }
+    
+    public void populateTreeTable(TreeTableView<Job> table) {
+        table.getRoot().getChildren().clear();
+        
+        if (getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
+            //Go through each job group in the project
+            for (JobGroup group : getChildren()) {
+                
+                /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
+                 * as JavaFX does not support more than one data type in a TreeTableView */
+                
+                Job jobDummy = new Job();
+                jobDummy.setDummy(true);
+                jobDummy.setJobGroupDummy(group);
+                jobDummy.setTitle(group.getGroupName());
+                
+                //Create the actual TreeItem
+                TreeItem<Job> groupRoot = new TreeItem<Job>(jobDummy);
+                groupRoot.setExpanded(true);
+                
+                //Go through each job inside the ACTUAL job group object and add them to the above tree item
+                for (Job job : group.getChildren()) {
+                    groupRoot.getChildren().add(new TreeItem<Job>(job));
+                }
+                
+                table.getRoot().getChildren().add(groupRoot);
+            }
+        } else {
+            for (Job job : getAllJobs()) {
+                table.getRoot().getChildren().add(new TreeItem<Job>(job));
+            }
+        }
     }
 }

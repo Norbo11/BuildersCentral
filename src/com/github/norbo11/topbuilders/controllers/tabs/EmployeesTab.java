@@ -130,7 +130,7 @@ public class EmployeesTab extends AbstractController {
         managers.getChildren().clear();
         employees.getChildren().clear();
         
-        for (Employee employee : Employee.getAllEmployees()) {
+        for (Employee employee : Employee.loadEmployees()) {
             TreeItem<Employee> item = new TreeItem<Employee>(employee);
                         
             switch (employee.getUserType()) {

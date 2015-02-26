@@ -13,3 +13,5 @@ TODO:
 -CSS
 -Employee reports
 -Export to excel
+-Keep/discard changes popup
+-Fix bug with the material adding

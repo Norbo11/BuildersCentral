@@ -20,18 +20,35 @@
     </TitledPane>
     
     <TitledPane HBox.hgrow="always" text="%manageAssignments.jobs">
-      <TreeView fx:id="jobList" />
+      <TreeView fx:id="jobList" showRoot="false">
+        <root>
+            <TreeItem />
+        </root>
+      </TreeView>
     </TitledPane>
     
     <TitledPane HBox.hgrow="always" text="%manageAssignments.employees">
-      <ListView fx:id="employeeList" />
+      <VBox spacing="5">
+      
+        <ListView fx:id="assignmentList" />
+        
+        <HBox spacing="5">
+          <Label wrapText="true" text="%manageAssignments.employeeName" />
+          
+          <VBox>
+            <TextField HBox.hgrow="always" fx:id="employeeAddNameField" />
+            <ListView fx:id="employeeAddSearchList" />
+          </VBox>
+        </HBox>
+        
+      </VBox>
     </TitledPane>
   </HBox>
   
   <HBox spacing="30">
-    <padding><Insets right="60" left="60" /></padding>
+    <padding><Insets right="250" left="250" /></padding>
   
-    <TitledPane maxHeight="Infinity" HBox.hgrow="always" text="%assignments.details">
+    <TitledPane text="%assignments.details">
       <GridPane hgap="10" vgap="10" alignment="top_center">      
         <Label wrapText="true" text="%assignments.startDate" GridPane.rowIndex="0" GridPane.columnIndex="0" />
         <TextField fx:id="startDate" GridPane.rowIndex="0" GridPane.columnIndex="1" />
@@ -46,11 +63,14 @@
     
     <TitledPane HBox.hgrow="always" text="%manageAssignments.search">
       <VBox>
-        <HBox>
-          <Label wrapText="true" text="%manageAssignments.employeeName" />
-          <TextField HBox.hgrow="always" fx:id="employeeName" />
-        </HBox>
-        <TableView fx:id="assignmentTable">
+        <VBox>
+          <HBox spacing="10">
+            <Label wrapText="true" text="%manageAssignments.employeeName" fx:id="employeeAddLabel" />
+            <TextField HBox.hgrow="always" fx:id="employeeSearchNameField" />
+          </HBox>
+          <ListView fx:id="employeeSearchSearchList" />
+        </VBox>
+        <TableView fx:id="assignmentSearchTable">
         
         </TableView>
       </VBox>

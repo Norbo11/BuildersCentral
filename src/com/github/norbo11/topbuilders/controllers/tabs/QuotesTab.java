@@ -1,7 +1,6 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -9,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -61,24 +59,6 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private TreeTableColumn<Job, Number> materialsCostCol, labourCostCol, totalCostCol;
     
     /* Factories, cells and rows */
-   
-    //Class which cancels the expanding events of tree items
-    private class JobTreeItem extends TreeItem<Job> {
-        private EventHandler<TreeModificationEvent<Job>> cancelExpandHandler = new EventHandler<TreeModificationEvent<Job>>() {
-            @Override
-            public void handle(TreeModificationEvent<Job> e) {
-                e.consume();
-            }
-        };
-
-        public JobTreeItem(Job job) {
-            super(job);
-            
-            this.setGraphic(null);
-            this.addEventHandler(branchExpandedEvent(), cancelExpandHandler);
-            this.addEventHandler(branchCollapsedEvent(), cancelExpandHandler);
-        }
-    }
     
     //Class which removes the expansion arrow of tree items
     private class JobTableRow extends HeadingTreeTableRow<Job> {        
@@ -280,41 +260,10 @@ public class QuotesTab extends AbstractValidationScene {
     }
 
     public void updateJobGroups() {
-        Project project = getSelectedProject();
-        
-        if (project != null) {
-            table.getRoot().getChildren().clear();
+        if (getSelectedProject() != null) {
+            getSelectedProject().populateTreeTable(table);
             
-            if (project.getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
-                //Go through each job group in the project
-                for (JobGroup group : project.getChildren()) {
-                    
-                    /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
-                     * as JavaFX does not support more than one data type in a TreeTableView */
-                    
-                    Job jobDummy = new Job();
-                    jobDummy.setDummy(true);
-                    jobDummy.setJobGroupDummy(group);
-                    jobDummy.setTitle(group.getGroupName());
-                    
-                    //Create the actual TreeItem
-                    JobTreeItem groupRoot = new JobTreeItem(jobDummy);
-                    groupRoot.setExpanded(true);
-                    
-                    //Go through each job inside the ACTUAL job group object and add them to the above tree item
-                    for (Job job : group.getChildren()) {
-                        groupRoot.getChildren().add(new JobTreeItem(job));
-                    }
-                    
-                    table.getRoot().getChildren().add(groupRoot);
-                }
-                
-                updateAddJobControl();
-            } else {
-                for (Job job : project.getAllJobs()) {
-                    table.getRoot().getChildren().add(new JobTreeItem(job));
-                }
-            }
+            updateAddJobControl(); //This used to be inside that methods ^ at the end of the first condition - if it breaks, remember that
         }
     }
     

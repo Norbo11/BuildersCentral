@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.github.norbo11.topbuilders.util.Database;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -15,13 +17,15 @@ import javafx.beans.property.SimpleLongProperty;
 
 public class Assignment extends AbstractModel {
     public static final String DB_TABLE_NAME = "assignments";
-	
+	private static ArrayList<Assignment> assignments;
+    
 	private IntegerProperty employeeId = new SimpleIntegerProperty(0);
 	private IntegerProperty jobId = new SimpleIntegerProperty(0);
 	private DoubleProperty hourlyWage = new SimpleDoubleProperty(0);
 	private LongProperty startTimestamp = new SimpleLongProperty();
 	private LongProperty endTimestamp = new SimpleLongProperty();
 	private BooleanProperty isCompleted = new SimpleBooleanProperty(false);
+	private Employee employee;
 	
     /* Getters and setters */
     
@@ -57,7 +61,7 @@ public class Assignment extends AbstractModel {
 		this.endTimestamp.set(endTimestamp);
 	}
 
-	public boolean getIsCompleted() {
+	public boolean isCompleted() {
 		return isCompleted.get();
 	}
 
@@ -65,16 +69,27 @@ public class Assignment extends AbstractModel {
 		this.isCompleted.set(isCompleted);
 	}
 
-	public IntegerProperty getEmployeeId() {
-		return employeeId;
+	public int getEmployeeId() {
+		return employeeId.get();
 	}
 	
 	public void setEmployeeId(int employeeId) {
 		this.employeeId.set(employeeId);
 	}
 
+	public Employee getEmployee() {
+	    return employee;
+	}
+	
+	public void setEmployee(Employee employee) {
+	    this.employee = employee;
+    }
+	
+	public static ArrayList<Assignment> getAssignments() {
+	    return assignments;
+	}
+	
 	/* Overrides */
-
 
 	@Override
 	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
@@ -82,28 +97,41 @@ public class Assignment extends AbstractModel {
 	    if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
 	    if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
 	    if (containsColumn(columns, "hourlyWage")) setHourlyWage(result.getDouble("hourlyWage"));
-	    if (containsColumn(columns, "startDate")) setStartTimestamp(result.getLong("startDate"));
-	    if (containsColumn(columns, "endDate")) setEndTimestamp(result.getLong("endDate"));
+	    if (containsColumn(columns, "startTimestamp")) setStartTimestamp(result.getLong("startTimestamp"));
+	    if (containsColumn(columns, "endTimestamp")) setEndTimestamp(result.getLong("endTimestamp"));
         if (containsColumn(columns, "isCompleted")) setIsCompleted(result.getBoolean("isCompleted"));
+        
+        loadEmployee();
 	}
 	
+    public void loadEmployee() {
+        employee = Employee.loadEmployeeForAssignment(this);
+    }
+
     @Override
     public int add() {
-        return 0;
-        // TODO Auto-generated method stub
-        
+        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+        + " (employeeId,jobId,hourlyWage,startTimestamp,endTimestamp,isCompleted) "
+        + "VALUES (?,?,?,?,?,?)"
+        , getEmployeeId(), getJobId(), getHourlyWage(), getStartTimestamp(), getEndTimestamp(), isCompleted());
     }
-	
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
+    
+    @Override
+    public void update() {                
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
+        + "employeeId=?,jobId=?,hourlyWage=?,startTimestamp=?,endTimestamp=?,isCompleted=? "
+        + "WHERE id = ?", getEmployeeId(), getJobId(), getHourlyWage(), getStartTimestamp(), getEndTimestamp(), isCompleted(), getId());
+    }
 
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
 	}
+	
+    public static ArrayList<Assignment> loadAssignments() {
+        assignments = loadList(loadAllModels(DB_TABLE_NAME));
+        return assignments;
+    }
 	
 	/* Static methods */
 	
@@ -118,4 +146,8 @@ public class Assignment extends AbstractModel {
 	public static ArrayList<Assignment> loadList(ResultSet result) {
 		return loadList(null, result, Assignment.class);
 	}
+
+    public static ArrayList<Assignment> loadAssignmentsForJob(Job job) {
+        return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
+    }
 }
