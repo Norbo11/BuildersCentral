@@ -146,8 +146,8 @@ public class Notification extends AbstractModel {
         }
         
         if (model instanceof Assignment) {
-            Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? OR typeId=? OR typeId=? AND associatedId=?", 
-            NotificationType.ASSIGNMENT_CLOSE_TO_END, NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE, NotificationType.NEW_ASSIGNMENT.getId(), model.getId());
+            Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE (typeId=? OR typeId=? OR typeId=?) AND associatedId=?", 
+            NotificationType.ASSIGNMENT_CLOSE_TO_END.getId(), NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE.getId(), NotificationType.NEW_ASSIGNMENT.getId(), model.getId());
         }
         
         if (model instanceof QuoteRequest) {

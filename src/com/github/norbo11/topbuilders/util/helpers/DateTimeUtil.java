@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import javafx.scene.control.DatePicker;
+
 public class DateTimeUtil {
     public static long getCurrentTimestamp() {
         return Calendar.getInstance().getTimeInMillis() / 1000;
@@ -25,6 +27,10 @@ public class DateTimeUtil {
 
 	public static LocalDateTime getDateTimeFromTimestamp(long timestamp) {
 		return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), TimeZone.getDefault().toZoneId());
+	}
+
+	public static long getTimestampFromDate(DatePicker date) {
+		return date.getValue().atStartOfDay(TimeZone.getDefault().toZoneId()).toEpochSecond();
 	}
 
 }
