@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 
@@ -73,25 +74,28 @@ public class ManageAssignmentsTab extends AbstractController {
     
     @FXML
 	public void initialize() {		
-        /* Load necessary resources */
-        Assignment.loadAssignments();
-        Employee.loadEmployees();
-        
         /* Populate project list */
-        projectList.getItems().setAll(Project.loadProjects()); 
+        projectList.getItems().setAll(Project.getProjects()); 
         
         /* Define project list behaviour */
         projectList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, clickedProject) -> {
             if (clickedProject != null) {
-                clickedProject.populateTreeTable(jobList);
+                selectProject(clickedProject);
             }
+            
+            updateAssignmentDetails();
         });
         
         /* Define job list behaviour */
         jobList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, clickedJob) -> {
             if (clickedJob != null && !clickedJob.getValue().isDummy()) {
-                selectJob(clickedJob.getValue());
+                showEmployeeAddArea();
+            } else {
+                hideEmployeeAddArea();
             }
+            
+            updateAssignmentsBasedOnJob();
+            updateAssignmentDetails();
         });       
         
         /* Define assignment list cell factory */
@@ -99,9 +103,7 @@ public class ManageAssignmentsTab extends AbstractController {
         
         /* Define assignment list behaviour */
         assignmentList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, clickedAssignment) -> {
-        	if (clickedAssignment != null) {
-                selectAssignment(clickedAssignment);
-            }
+        	updateAssignmentDetails();
         });
         
         /* Search functions */
@@ -140,11 +142,19 @@ public class ManageAssignmentsTab extends AbstractController {
 	            GuiUtil.hideNodeManaged(employeeAddSearchList);
 	            
 	            //Select the recently added item so that assignment details may be edited
-	            selectAssignment(assignment);
+	            assignmentList.getSelectionModel().select(assignment);
+            }
+        });
+        
+        /* Define behaviour upon clicking a found employee (display all found assignments) */
+        employeeSearchSearchList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, clickedEmployee) -> {                
+            if (clickedEmployee != null) {
+                assignmentSearchTable.getItems().setAll(clickedEmployee.getAssignments());
             }
         });
         
         hideEmployeeAddArea();
+        disableAssignmentDetailsArea();
     }    
     
     @FXML
@@ -157,10 +167,19 @@ public class ManageAssignmentsTab extends AbstractController {
     		assignment.setHourlyWage(hourlyWage.getDouble());
     		
     		assignment.save();
+    		getSelectedJob().getAssignments().add(assignment);
     	}
     }
     
     /* Instance methods */
+    
+    public void disableAssignmentDetailsArea() {
+        assignmentDetailsPane.setDisable(true);
+    }
+    
+    public void enableAssignmentDetailsArea() {
+        assignmentDetailsPane.setDisable(false);
+    }
     
     public void hideEmployeeAddArea() {
         employeeAddNameField.setVisible(false);
@@ -172,21 +191,34 @@ public class ManageAssignmentsTab extends AbstractController {
         employeeAddLabel.setVisible(true);
     }
     
-    public void selectJob(Job job) {
-        assignmentList.getItems().setAll(job.getAssignments());
-        showEmployeeAddArea();
+    public void selectProject(Project project) {
+        project.populateTreeTable(jobList);
     }
     
-    public void selectAssignment(Assignment assignment) {
-		startDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getStartTimestamp()));
-		endDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getEndTimestamp()));
-		hourlyWage.setDouble(assignment.getHourlyWage());
-		
-		assignmentDetailsPane.setText(Resources.getResource("%manageAssignments.details", getSelectedJob().getTitle(), assignment.getEmployee().getFullName()));
+    public void updateAssignmentsBasedOnJob() {
+        Job job = getSelectedJob();
+        
+        if (job != null && !job.isDummy()) {
+            assignmentList.getItems().setAll(job.getAssignments());
+        } else assignmentList.getItems().clear();
+    }
+    
+    public void updateAssignmentDetails() {
+        Assignment assignment = getSelectedAssignment();
+        
+        if (assignment != null) {
+    		startDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getStartTimestamp()));
+    		endDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getEndTimestamp()));
+    		hourlyWage.setDouble(assignment.getHourlyWage());
+    		
+    		assignmentDetailsPane.setText(Resources.getResource("manageAssignments.details", getSelectedJob().getTitle(), assignment.getEmployee().getFullName()));
+    		enableAssignmentDetailsArea();
+        } else disableAssignmentDetailsArea();
     }
 
     public Job getSelectedJob() {
-        return jobList.getSelectionModel().getSelectedItem().getValue();
+        TreeItem<Job> treeItem = jobList.getSelectionModel().getSelectedItem();
+        return treeItem == null ? null : treeItem.getValue();
     }
     
     public Assignment getSelectedAssignment() {

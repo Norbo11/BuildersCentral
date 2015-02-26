@@ -19,6 +19,7 @@ public class RequiredMaterial extends AbstractModel {
     private IntegerProperty jobId = new SimpleIntegerProperty(0);
     private DoubleProperty quantityRequired = new SimpleDoubleProperty(0);
     private StockedMaterial stockedMaterial;
+    private Job job;
     
     /* Properties */
     
@@ -67,12 +68,28 @@ public class RequiredMaterial extends AbstractModel {
 	public void setQuantityRequired(double quantityRequired) {
 		this.quantityRequired.set(quantityRequired);
 	}
+	
+	/* Foreign model methods */
+	
+	public Job getJob() {
+        return job == null ? loadJob() : job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+    
+    public StockedMaterial loadStockedMaterial() {
+        stockedMaterial = StockedMaterial.loadStockedMaterialForRequiredMaterial(this);
+        return stockedMaterial;
+    }
+    
+    public Job loadJob() {
+        job = Job.loadJobForRequiredMaterial(this);
+        return job;
+    }
     
 	/* Instance methods */	
-
-	public static ArrayList<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
-		return loadList(job, loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
-	}
 
 	/* Overrides */
 	
@@ -100,14 +117,11 @@ public class RequiredMaterial extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "stockedMaterialId")) setStockedMaterialId(result.getInt("stockedMaterialId"));
         if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
         if (containsColumn(columns, "quantityRequired")) setQuantityRequired(result.getDouble("quantityRequired"));
-        
-        setParent(parent);
-		setStockedMaterial(StockedMaterial.loadStockedMaterialForRequiredMaterial(this));
     }
     
 	@Override
@@ -122,18 +136,24 @@ public class RequiredMaterial extends AbstractModel {
 
 	/* Static methods */
 	
-	/* Standard static methods */
-	
 	public static ArrayList<RequiredMaterial> loadList(Job job, ResultSet result) {
-		return loadList(job, result, RequiredMaterial.class);
-	}
-
-    public static ArrayList<RequiredMaterial> getRequiredMaterials() {
+        ArrayList<RequiredMaterial> requiredMaterials = loadList(result, RequiredMaterial.class);
+        for (RequiredMaterial requiredMaterial : requiredMaterials) {
+            requiredMaterial.setJob(job);
+        }
+        return requiredMaterials;
+    }
+	
+	public static ArrayList<RequiredMaterial> loadRequiredMaterials() {
+        requiredMaterials = loadList(null, loadAllModels(DB_TABLE_NAME));
         return requiredMaterials;
     }
     
-    public static ArrayList<RequiredMaterial> loadRequiredMaterials() {
-        requiredMaterials = loadList(null, loadAllModels(DB_TABLE_NAME));
+    public static ArrayList<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
+        return loadList(job, loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
+    }
+
+    public static ArrayList<RequiredMaterial> getRequiredMaterials() {
         return requiredMaterials;
     }
 }

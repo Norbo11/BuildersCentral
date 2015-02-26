@@ -20,7 +20,7 @@ import com.github.norbo11.topbuilders.util.Settings;
 
 public class Project extends AbstractModel {
     public static final String DB_TABLE_NAME = "projects";        
-    private static ArrayList<Project> projects = new ArrayList<Project>();
+    private static ArrayList<Project> projects = null;
     
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
@@ -37,8 +37,8 @@ public class Project extends AbstractModel {
     private StringProperty projectDescription = new SimpleStringProperty("");
     private StringProperty projectNote = new SimpleStringProperty("");
     
-    private ArrayList<JobGroup> jobGroups = new ArrayList<JobGroup>();
     private Settings<QuoteSetting> settings = new Settings<QuoteSetting>(this, QuoteSetting.class);
+    private ArrayList<JobGroup> jobGroups = null;
     
     /* Properties */
 
@@ -188,40 +188,47 @@ public class Project extends AbstractModel {
 		this.projectNote.set(projectNote);
 	}
 	
-	public void setChildren(ArrayList<JobGroup> jobGroups) {
-        this.jobGroups = jobGroups;
-    }
-	
 	public Settings<QuoteSetting> getSettings() {
 	    return settings;
 	}
 	
+	/* Forgeign key methods */
+	
+	public ArrayList<JobGroup> getJobGroups() {
+        return jobGroups == null ? loadJobGroups() : jobGroups;
+    }
+
+    public void setJobGroups(ArrayList<JobGroup> jobGroups) {
+        this.jobGroups = jobGroups;
+    }
+    
+    public ArrayList<JobGroup> loadJobGroups() {
+        jobGroups = JobGroup.loadJobGroupsForProject(this);
+        return jobGroups;
+    }
+
+    public Settings<QuoteSetting> loadSettings() {
+        settings = QuoteSetting.loadQuoteSettingsForProject(this);
+        return settings;
+    }
+    
 	/* Instance methods */
 	
-	public String getClientFullName() {
+    public String getClientFullName() {
 		return getClientFirstName() + " " + getClientLastName();
 	}
-	
-    private void loadSettings() {
-        settings = QuoteSetting.loadQuoteSettingsForProject(this);
-    }
 	
     public ArrayList<Job> getAllJobs() {
         ArrayList<Job> jobs = new ArrayList<Job>();
         
         for (JobGroup group : jobGroups) {
-            jobs.addAll(group.getChildren());
+            jobs.addAll(group.loadJobs());
         }
         
         return jobs;
     }
     
 	/* Override methods */
-	
-	@Override
-    public ArrayList<JobGroup> getChildren() {
-        return jobGroups;
-    }
     
     @Override
     public int add() {
@@ -239,14 +246,26 @@ public class Project extends AbstractModel {
     }
     
     @Override
-    public void delete() {
-        super.delete();
+    public void save() {
+        super.save();
         
-        settings.delete();
+        for (JobGroup group : jobGroups) {
+           group.save(); 
+        }
     }
     
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {  
+    public void delete() {
+        for (JobGroup group : jobGroups) {
+            group.delete(); 
+        }
+        
+        settings.delete();
+        super.delete();
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {  
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
         if (containsColumn(columns, "completed")) setCompleted(result.getBoolean("completed"));
@@ -260,11 +279,8 @@ public class Project extends AbstractModel {
         if (containsColumn(columns, "email")) setEmail(result.getString("email"));
         if (containsColumn(columns, "projectDescription")) setProjectDescription(result.getString("projectDescription"));
         if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
-        
-        setChildren(JobGroup.loadJobGroupsForProject(this));
-        loadSettings();
     }
-
+    
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
@@ -276,11 +292,9 @@ public class Project extends AbstractModel {
 	}
 	
 	/* Static methods */
-    
-	/* Standard static methods */
 	
 	public static ArrayList<Project> loadList(ResultSet result) {
-		return loadList(null, result, Project.class);
+		return loadList(result, Project.class);
 	}
 
     public static ArrayList<Project> loadProjects() {
@@ -289,7 +303,7 @@ public class Project extends AbstractModel {
     }
     
     public static ArrayList<Project> getProjects() {
-        return projects;
+        return projects == null ? loadProjects() : projects;
     }
 
     public void populateTreeTable(TreeView<Job> table) {
@@ -297,7 +311,7 @@ public class Project extends AbstractModel {
         
         if (getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
             //Go through each job group in the project
-            for (JobGroup group : getChildren()) {
+            for (JobGroup group : getJobGroups()) {
                 
                 /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
                  * as JavaFX does not support more than one data type in a TreeTableView */
@@ -312,7 +326,7 @@ public class Project extends AbstractModel {
                 groupRoot.setExpanded(true);
                 
                 //Go through each job inside the ACTUAL job group object and add them to the above tree item
-                for (Job job : group.getChildren()) {
+                for (Job job : group.getJobs()) {
                     groupRoot.getChildren().add(new TreeItem<Job>(job));
                 }
                 
@@ -330,7 +344,7 @@ public class Project extends AbstractModel {
         
         if (getSettings().getBoolean(QuoteSettingType.GROUPS_ENABLED)) {
             //Go through each job group in the project
-            for (JobGroup group : getChildren()) {
+            for (JobGroup group : getJobGroups()) {
                 
                 /* Create a dummy Job object, which will be used in a TreeItem to represent this group. This is necessary
                  * as JavaFX does not support more than one data type in a TreeTableView */
@@ -345,7 +359,7 @@ public class Project extends AbstractModel {
                 groupRoot.setExpanded(true);
                 
                 //Go through each job inside the ACTUAL job group object and add them to the above tree item
-                for (Job job : group.getChildren()) {
+                for (Job job : group.getJobs()) {
                     groupRoot.getChildren().add(new TreeItem<Job>(job));
                 }
                 

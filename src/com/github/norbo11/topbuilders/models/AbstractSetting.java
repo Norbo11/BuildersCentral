@@ -81,7 +81,7 @@ public abstract class AbstractSetting extends AbstractModel {
     }
 
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, modelField)) setModelId(result.getInt(modelField));
         if (containsColumn(columns, "settingTypeId")) setSettingTypeId(result.getInt("settingTypeId"));

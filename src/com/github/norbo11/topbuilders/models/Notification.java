@@ -89,7 +89,7 @@ public class Notification extends AbstractModel {
             associatedModel = new Message();
             break;
         case NEW_QUOTE_REQUEST:
-            associatedModel = new QuoteRequest();
+            associatedModel = new Project();
             break;
         }
         
@@ -114,7 +114,7 @@ public class Notification extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
         if (containsColumn(columns, "typeId")) setTypeId(result.getInt("typeId"));
@@ -132,7 +132,7 @@ public class Notification extends AbstractModel {
 
 	//Override
 	public static ArrayList<Notification> loadList(ResultSet result) {
-        return loadList(null, result, Notification.class);
+        return loadList(result, Notification.class);
     }
 
 	public static ArrayList<Notification> loadNotificationsForEmployee(Employee employee) {
@@ -150,10 +150,8 @@ public class Notification extends AbstractModel {
             NotificationType.ASSIGNMENT_CLOSE_TO_END.getId(), NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE.getId(), NotificationType.NEW_ASSIGNMENT.getId(), model.getId());
         }
         
-        if (model instanceof QuoteRequest) {
+        if (model instanceof Project) {
             Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_QUOTE_REQUEST.getId(), model.getId());
         }
-        
-        //TabHelper.updateAllTabs();
     }
 }

@@ -17,6 +17,6 @@ public class QuoteSetting extends AbstractSetting {
     /* Static methods */
     
     public static Settings<QuoteSetting> loadQuoteSettingsForProject(Project project) {
-        return new Settings<QuoteSetting>(project, loadList(null, loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()), QuoteSetting.class), QuoteSetting.class);
+        return new Settings<QuoteSetting>(project, loadList(loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()), QuoteSetting.class), QuoteSetting.class);
     }
 }

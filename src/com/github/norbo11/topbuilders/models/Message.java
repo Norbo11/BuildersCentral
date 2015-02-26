@@ -105,7 +105,7 @@ public class Message extends AbstractModel {
 	}
 
 	@Override
-	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "senderId")) setSenderId(result.getInt("senderId"));
         if (containsColumn(columns, "recipientId")) setRecipientId(result.getInt("recipientId"));
@@ -137,6 +137,6 @@ public class Message extends AbstractModel {
     }
     
     public static ArrayList<Message> loadList(ResultSet result) {
-		return loadList(null, result, Message.class);
+		return loadList(result, Message.class);
 	}
 }

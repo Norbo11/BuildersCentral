@@ -50,7 +50,7 @@ public class RequiredMaterialItem extends HBox {
     @FXML
     public void delete() {
         requiredMaterial.delete();
-        requiredMaterial.deleteFromParent();
+        requiredMaterial.getJob().getRequiredMaterials().remove(requiredMaterial);
         quotesTab.updateJobGroups();
     }
     

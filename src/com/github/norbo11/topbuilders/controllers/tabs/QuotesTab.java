@@ -22,7 +22,6 @@ import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.models.QuoteSetting;
-import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.models.enums.QuoteSettingType;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
 import com.github.norbo11.topbuilders.util.Resources;
@@ -88,12 +87,12 @@ public class QuotesTab extends AbstractValidationScene {
                         String info = Resources.getResource("quotes.confirmJobGroupDelete", jobGroup.getGroupName());
                         SceneUtil.showConfirmationDialog(title, info, () -> { 
                             jobGroup.delete();
-                            jobGroup.deleteFromParent();
+                            jobGroup.getProject().getJobGroups().remove(jobGroup);
                             updateJobGroups();
                         });
                     } else {
                         job.delete();
-                        job.deleteFromParent();
+                        job.getJobGroup().getJobs().remove(job);
                         updateJobGroups();
                     }                    
                 });
@@ -140,8 +139,6 @@ public class QuotesTab extends AbstractValidationScene {
         
         newGroupField.setOnAction(e -> newGroupButton.fire());
         
-        StockedMaterial.loadStockedMaterials();
-        Project.loadProjects();
         addNewProjectOption();
         updateAll();
         
@@ -179,11 +176,10 @@ public class QuotesTab extends AbstractValidationScene {
         //Make a new job group and add it to the project
         JobGroup newGroup = new JobGroup();
         newGroup.setNewModel(true);
-        newGroup.projectIdProperty().bind(project.idProperty());
-        newGroup.setParent(project);
+        newGroup.setProjectId(project.getId());
         newGroup.setGroupName(newGroupField.getText());
         
-        project.getChildren().add(newGroup);
+        project.getJobGroups().add(newGroup);
         updateJobGroups();
     }
     
@@ -196,11 +192,10 @@ public class QuotesTab extends AbstractValidationScene {
         	Job newJob = new Job();
             newJob.setNewModel(true);
             newJob.jobGroupIdProperty().bind(selectedGroup.idProperty());
-            newJob.setParent(selectedGroup);
             newJob.setTitle(Resources.getResource("jobs.title"));
             newJob.setDescription(Resources.getResource("jobs.description"));
             
-            selectedGroup.getChildren().add(newJob);
+            selectedGroup.getJobs().add(newJob);
             updateJobGroups();
     	}
     }
@@ -276,7 +271,7 @@ public class QuotesTab extends AbstractValidationScene {
                 SelectionModel<JobGroup> selectionModel = jobGroupCombo.getSelectionModel();
                 JobGroup previousSelection = selectionModel.getSelectedItem();
                 jobGroupCombo.getItems().clear();
-                jobGroupCombo.getItems().addAll(project.getChildren());
+                jobGroupCombo.getItems().addAll(project.getJobGroups());
                 if (jobGroupCombo.getItems().contains(previousSelection)) selectionModel.select(previousSelection);
                 
                 jobGroupCombo.setDisable(false);
@@ -345,7 +340,7 @@ public class QuotesTab extends AbstractValidationScene {
             postcode.textProperty().unbindBidirectional(oldProject.postcodeProperty());
         }
         
-        if (newProject != null) {
+        if (newProject != null) {            
             projectDescription.textProperty().bindBidirectional(newProject.projectDescriptionProperty());
             projectNote.textProperty().bindBidirectional(newProject.projectNoteProperty());
             firstName.textProperty().bindBidirectional(newProject.clientFirstNameProperty());

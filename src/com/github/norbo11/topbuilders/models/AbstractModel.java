@@ -16,7 +16,6 @@ public abstract class AbstractModel {
     private IntegerProperty id;
     private boolean dummy;
     private boolean newModel;
-    private AbstractModel parent;
     
     public AbstractModel() {
         this(0);
@@ -36,14 +35,6 @@ public abstract class AbstractModel {
     
     public int getId() {
         return id.get();
-    }
-    
-    public AbstractModel getParent() {
-        return parent;
-    }
-
-    public void setParent(AbstractModel parent) {
-        this.parent = parent;
     }
     
     public boolean isNewModel() {
@@ -72,16 +63,8 @@ public abstract class AbstractModel {
     
     public abstract void update();
     
-    public ArrayList<? extends AbstractModel> getChildren() {
-        return new ArrayList<AbstractModel>();
-    }
-    
     //Sets all of the properties for this model as obtained by the ResultSet - will only load the specified columns
-    public abstract void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException;
-    
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {
-        loadFromResult(null, result, columns);
-    }
+    public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;
     
     public abstract String getDbTableName();
         
@@ -95,29 +78,13 @@ public abstract class AbstractModel {
         } else {
             update();
         }
-        
-        //Save all children - this needs to happen AFTER the above, so that the ID of this model is set correctly before it's children are inserted (so they may have this model's ID as a foreign key)
-        for (AbstractModel child : getChildren()) {
-            child.save();
-        }
     }
 
     public void delete() {
-        //Delete children
-        for (AbstractModel child : getChildren()) {
-            child.delete();
-        }
-        
         //Delete model if it isn't new
         if (!newModel) {
             Database.executeUpdate("DELETE FROM " + getDbTableName() + " WHERE id = ?", getId());
             Notification.deleteCorrespondingNotification(this);
-        }
-    }
-    
-    public void deleteFromParent() {
-        if (parent != null) {
-            getParent().getChildren().remove(this);
         }
     }
     
@@ -175,13 +142,13 @@ public abstract class AbstractModel {
         return Database.executeQuery(query, param);
     }
     
-	protected static <T extends AbstractModel> ArrayList<T> loadList(AbstractModel parent, ResultSet result, Class<T> clazz) {
+	protected static <T extends AbstractModel> ArrayList<T> loadList(ResultSet result, Class<T> clazz) {
 		ArrayList<T> models = new ArrayList<T>();
         		
         try {
 			while (result.next()) {
 				T model = clazz.newInstance();
-				model.loadFromResult(parent, result);
+				model.loadFromResult(result);
 				models.add(model);
 			}
 		} catch (SQLException | InstantiationException | IllegalAccessException e) {
@@ -190,8 +157,8 @@ public abstract class AbstractModel {
         return models;
 	}
 	
-	protected static <T extends AbstractModel> T loadOne(AbstractModel parent, ResultSet result, Class<T> clazz) {
-        ArrayList<T> models = loadList(parent, result, clazz);
+	protected static <T extends AbstractModel> T loadOne(ResultSet result, Class<T> clazz) {
+        ArrayList<T> models = loadList(result, clazz);
         
         if (models.size() != 0) return models.get(0);
         else return null;

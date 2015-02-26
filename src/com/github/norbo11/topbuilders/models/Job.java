@@ -21,9 +21,10 @@ public class Job extends AbstractModel {
     private StringProperty description = new SimpleStringProperty("");
     private DoubleProperty labourPrice = new SimpleDoubleProperty(0);
     private DoubleProperty materialPrice = new SimpleDoubleProperty(0);
-    private ArrayList<RequiredMaterial> requiredMaterials = new ArrayList<RequiredMaterial>();
-    private JobGroup jobGroupDummy;
-    private ArrayList<Assignment> assignments;
+    
+    private ArrayList<RequiredMaterial> requiredMaterials = null;
+    private ArrayList<Assignment> assignments = null;
+    private JobGroup jobGroup, jobGroupDummy = null;
     
     /* Properties */
 
@@ -96,25 +97,48 @@ public class Job extends AbstractModel {
 	public void setMaterialPrice(double materialPrice) {
 		this.materialPrice.set(materialPrice);
 	}    
-	
-	public ArrayList<Assignment> getAssignments() {
-	    return assignments;
-	}
 
+	public JobGroup getJobGroup() {
+        return jobGroup;
+    }
+
+    public void setJobGroup(JobGroup jobGroup) {
+        this.jobGroup = jobGroup;
+    }
+    
+    /* Forgeign key methods */
+    
+    public ArrayList<RequiredMaterial> getRequiredMaterials() {
+        return requiredMaterials == null ? loadRequiredMaterials() : requiredMaterials;
+    }
+
+    public void setRequiredMaterials(ArrayList<RequiredMaterial> requiredMaterials) {
+        this.requiredMaterials = requiredMaterials;
+    }
+    
+    public ArrayList<Assignment> getAssignments() {
+        return assignments == null ? loadAssignments() : assignments;
+    }
+
+    public void setAssignments(ArrayList<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+    
+    public ArrayList<RequiredMaterial> loadRequiredMaterials() {
+        requiredMaterials = RequiredMaterial.loadRequiredMaterialsForJob(this);
+        return requiredMaterials;
+    }
+    
+    public ArrayList<Assignment> loadAssignments() {
+        assignments = Assignment.loadAssignmentsForJob(this);
+        return assignments;
+    }
+	
 	/* Instance methods */	
 
 	/* Overrides */
 	
-	@Override
-    public ArrayList<RequiredMaterial> getChildren() {
-        return requiredMaterials;
-    }
-	
-    public void setChildren(ArrayList<RequiredMaterial> requiredMaterials) {
-        this.requiredMaterials = requiredMaterials;
-    }
-	
-	@Override
+    @Override
     public int add() {
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
         + " (jobGroupId,title,description,labourPrice,materialPrice) "
@@ -130,17 +154,31 @@ public class Job extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
+    public void save() {
+        super.save();
+        
+        for (RequiredMaterial requiredMaterial : requiredMaterials) {
+            requiredMaterial.save();
+        }
+    }
+    
+    @Override
+    public void delete() {
+        for (RequiredMaterial requiredMaterial : requiredMaterials) {
+            requiredMaterial.delete();
+        }
+        
+        super.delete();
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "jobGroupId")) setJobGroupId(result.getInt("jobGroupId"));
         if (containsColumn(columns, "title")) setTitle(result.getString("title"));
         if (containsColumn(columns, "description")) setDescription(result.getString("description"));
         if (containsColumn(columns, "labourPrice")) setLabourPrice(result.getDouble("labourPrice"));
         if (containsColumn(columns, "materialPrice")) setMaterialPrice(result.getDouble("materialPrice"));
-        
-        setParent(parent);
-        setChildren(RequiredMaterial.loadRequiredMaterialsForJob(this));
-        loadAssignments();
     }
     
 	@Override
@@ -152,11 +190,6 @@ public class Job extends AbstractModel {
 	public String toString() {
 		return getTitle();
 	}
-	
-	public ArrayList<Assignment> loadAssignments() {
-	    assignments = Assignment.loadAssignmentsForJob(this);
-	    return assignments;
-	}
 
 	/* Static methods */
 	
@@ -164,9 +197,17 @@ public class Job extends AbstractModel {
 		return loadList(jobGroup, loadAllModelsWhere(DB_TABLE_NAME, "jobGroupId", jobGroup.getId()));
 	}
 	
+	public static Job loadJobForRequiredMaterial(RequiredMaterial requiredMaterial) {
+        return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", requiredMaterial.getJobId()), Job.class);
+    }
+	
 	/* Standard static methods */
 	
-	public static ArrayList<Job> loadList(AbstractModel parent, ResultSet result) {
-		return loadList(parent, result, Job.class);
+	public static ArrayList<Job> loadList(JobGroup jobGroup, ResultSet result) {
+		ArrayList<Job> jobs = loadList(result, Job.class);
+		for (Job job : jobs) {
+		    job.setJobGroup(jobGroup);
+		}
+		return jobs;
 	}
 }

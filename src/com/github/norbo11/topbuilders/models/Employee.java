@@ -44,6 +44,7 @@ public class Employee extends AbstractModel {
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
     private Settings<EmployeeSetting> settings;
+    private ArrayList<Assignment> assignments;
     
     /* Properties */
     
@@ -96,14 +97,6 @@ public class Employee extends AbstractModel {
     }
     
 	/* Getters and setters */
-    
-    public static void setCurrentEmployee(Employee currentEmployee) {
-        Employee.currentEmployee = currentEmployee;
-    }
-    
-    public static Employee getCurrentEmployee() {
-        return currentEmployee;
-    }
 
     public String getUsername() {
         return username.get();
@@ -201,12 +194,24 @@ public class Employee extends AbstractModel {
         this.defaultWage.set(defaultWage);
     }
     
+    /* Foreign model methods */
+    
     public Settings<EmployeeSetting> getSettings() {
+        return settings == null ? loadSettings() : settings;
+    }
+    
+    public ArrayList<Assignment> getAssignments() {
+        return assignments == null ? loadAssignments() : assignments;
+    }
+    
+    public Settings<EmployeeSetting> loadSettings() {
+        settings = EmployeeSetting.loadSettingsForEmployee(this);
         return settings;
     }
     
-    public static ArrayList<Employee> getEmployees() {
-        return employees;
+    public ArrayList<Assignment> loadAssignments() {
+        assignments = Assignment.loadAssignmentsForEmployee(this);
+        return assignments;
     }
     
     /* Instance methods */
@@ -242,10 +247,6 @@ public class Employee extends AbstractModel {
         SceneUtil.setFullscreen(getSettings().getBoolean(EmployeeSettingType.FULLSCREEN));
         SceneUtil.changeMainScene(MainScene.FXML_FILENAME);
     }
-    
-    private void loadSettings() {
-        settings = EmployeeSetting.loadSettingsForEmployee(this);
-    }
 	
 	/* Overrides */
     
@@ -265,7 +266,7 @@ public class Employee extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "username")) setUsername(result.getString("username"));
         if (containsColumn(columns, "password")) setPassword(result.getString("password"));
@@ -279,8 +280,6 @@ public class Employee extends AbstractModel {
         if (containsColumn(columns, "defaultWage")) setDefaultWage(result.getDouble("defaultWage"));
         if (containsColumn(columns, "activationCode")) setActivationCode(result.getString("activationCode"));
         if (containsColumn(columns, "userTypeId")) setUserTypeId(result.getInt("userTypeId"));
-        
-        loadSettings();
     }
     
 	@Override
@@ -303,6 +302,7 @@ public class Employee extends AbstractModel {
             {
                 Employee employee = new Employee();
                 employee.loadFromResult(result);
+                employee.loadSettings();
                 
                 if (employee.getPassword().equals(HashUtil.generateMD5Hash(inputPassword))) {
                     employee.login();
@@ -354,16 +354,28 @@ public class Employee extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<Employee> loadEmployees() {
-	    employees = loadList(loadAllModels(DB_TABLE_NAME));
-		return employees;
-	}
-	
 	public static ArrayList<Employee> loadList(ResultSet result) {
-		return loadList(null, result, Employee.class);
+		return loadList(result, Employee.class);
 	}
 
     public static Employee loadEmployeeForAssignment(Assignment assignment) {
-        return loadOne(null, loadAllModelsWhere(DB_TABLE_NAME, "id", assignment.getEmployeeId()), Employee.class);
+        return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", assignment.getEmployeeId()), Employee.class);
+    }
+    
+    public static void setCurrentEmployee(Employee currentEmployee) {
+        Employee.currentEmployee = currentEmployee;
+    }
+    
+    public static ArrayList<Employee> loadEmployees() {
+        employees = loadList(loadAllModels(DB_TABLE_NAME));
+        return employees;
+    }
+    
+    public static ArrayList<Employee> getEmployees() {
+        return employees == null ? loadEmployees() : employees;
+    }
+    
+    public static Employee getCurrentEmployee() {
+        return currentEmployee;
     }
 }

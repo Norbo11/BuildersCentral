@@ -25,7 +25,8 @@ public class Assignment extends AbstractModel {
 	private LongProperty startTimestamp = new SimpleLongProperty();
 	private LongProperty endTimestamp = new SimpleLongProperty();
 	private BooleanProperty isCompleted = new SimpleBooleanProperty(false);
-	private Employee employee;
+	private Employee employee = null;
+	private Job job = null;
 	
     /* Getters and setters */
     
@@ -77,18 +78,33 @@ public class Assignment extends AbstractModel {
 		this.employeeId.set(employeeId);
 	}
 
-	public Employee getEmployee() {
-	    return employee;
-	}
+	/* Foreign key methods */
 	
-	public void setEmployee(Employee employee) {
-	    this.employee = employee;
+	public Employee getEmployee() {
+        return employee == null ? loadEmployee() : employee;
+    }
+    
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+	
+    public Employee loadEmployee() {
+        employee = Employee.loadEmployeeForAssignment(this);
+        return employee;
+    }
+    
+	public Job getJob() {
+        return job;
+    }
+    
+    public void setJob(Job job) {
+        this.job = job;
     }
 	
 	/* Overrides */
 
 	@Override
-	public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {
+	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
 	    if (containsColumn(columns, "id")) setId(result.getInt("id"));
 	    if (containsColumn(columns, "employeeId")) setEmployeeId(result.getInt("employeeId"));
 	    if (containsColumn(columns, "jobId")) setJobId(result.getInt("jobId"));
@@ -96,13 +112,7 @@ public class Assignment extends AbstractModel {
 	    if (containsColumn(columns, "startTimestamp")) setStartTimestamp(result.getLong("startTimestamp"));
 	    if (containsColumn(columns, "endTimestamp")) setEndTimestamp(result.getLong("endTimestamp"));
         if (containsColumn(columns, "isCompleted")) setIsCompleted(result.getBoolean("isCompleted"));
-        
-        loadEmployee();
 	}
-	
-    public void loadEmployee() {
-        employee = Employee.loadEmployeeForAssignment(this);
-    }
     
     @Override
     public int add() {
@@ -124,27 +134,23 @@ public class Assignment extends AbstractModel {
 		return DB_TABLE_NAME;
 	}
 	
-    public static ArrayList<Assignment> loadAssignments() {
+	/* Static methods */
+	
+	public static ArrayList<Assignment> loadAssignments() {
         assignments = loadList(loadAllModels(DB_TABLE_NAME));
         return assignments;
     }
-	
-	/* Static methods */
-	
-	public static ArrayList<Assignment> loadAll() {
-		return loadList(loadAllModels(DB_TABLE_NAME));
-	}
-	
-	public static <T> ArrayList<Assignment> loadAllWhere(String field, T id) {
-        return loadList(loadAllModelsWhere(DB_TABLE_NAME, field, id));
-    }
 
 	public static ArrayList<Assignment> loadList(ResultSet result) {
-		return loadList(null, result, Assignment.class);
+		return loadList(result, Assignment.class);
 	}
 
     public static ArrayList<Assignment> loadAssignmentsForJob(Job job) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
+    }
+    
+    public static ArrayList<Assignment> loadAssignmentsForEmployee(Employee employee) {
+        return loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()));
     }
     
     public static ArrayList<Assignment> getAssignments() {

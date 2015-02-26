@@ -34,8 +34,7 @@ public class MaterialsCell extends TreeTableCell<Job, Job> {
                 RequiredMaterial newMaterial = new RequiredMaterial();
                 newMaterial.setNewModel(true);
                 newMaterial.jobIdProperty().bind(job.idProperty());
-                newMaterial.setParent(job);
-                job.getChildren().add(newMaterial);
+                job.getRequiredMaterials().add(newMaterial);
                 
                 addMaterialRow(newMaterial).requestFocus(); 
                 
@@ -77,7 +76,7 @@ public class MaterialsCell extends TreeTableCell<Job, Job> {
                 this.lastItem = null;
                 
                 /* Add material row entries for all required materials for this job */
-                for (RequiredMaterial requiredMaterial : job.getChildren()) {
+                for (RequiredMaterial requiredMaterial : job.getRequiredMaterials()) {
                     addMaterialRow(requiredMaterial);
                 }
                 

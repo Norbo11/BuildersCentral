@@ -16,8 +16,8 @@ public class JobGroup extends AbstractModel {
     
     private IntegerProperty projectId = new SimpleIntegerProperty(0);
     private StringProperty groupName = new SimpleStringProperty("");
-    private ArrayList<Job> jobs = new ArrayList<Job>();
-    
+    private ArrayList<Job> jobs = null;
+    private Project project;
 
     /* Properties */
 
@@ -30,7 +30,6 @@ public class JobGroup extends AbstractModel {
     }
     
 	/* Getters and setters */
-        
 
     public int getProjectId() {
 		return projectId.get();
@@ -48,19 +47,28 @@ public class JobGroup extends AbstractModel {
 		this.groupName.set(groupName);
 	}
 	
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+    
+    /* Forgeign key methods */
+    
+    public ArrayList<Job> getJobs() {
+        return jobs  == null ? loadJobs() : jobs;
+    }
+
+    public void setJobs(ArrayList<Job> jobs) {
+        this.jobs = jobs;
+    }
+	
 	/* Instance methods */	
 
 	/* Overrides */
     
-	@Override
-    public ArrayList<Job> getChildren() {
-        return jobs;
-    }
-	
-	public void setChildren(ArrayList<Job> jobs) {
-        this.jobs = jobs;
-    }
-	
     @Override
     public int add() {  
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
@@ -77,13 +85,33 @@ public class JobGroup extends AbstractModel {
 	}
     
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {   
+    public void save() {
+        super.save();
+        
+        for (Job job : jobs) {
+            job.save();
+        }
+    }
+    
+    @Override
+    public void delete() {
+        for (Job job : jobs) {
+            job.delete();
+        }
+        
+        super.delete();
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {   
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "projectId")) setProjectId(result.getInt("projectId"));
         if (containsColumn(columns, "groupName")) setGroupName(result.getString("groupName"));
-        
-        setParent(parent);
-        setChildren(Job.loadJobsForJobGroup(this));
+    }
+    
+    public ArrayList<Job> loadJobs() {
+        jobs = Job.loadJobsForJobGroup(this);
+        return jobs;
     }
     
 	@Override
@@ -104,7 +132,11 @@ public class JobGroup extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<JobGroup> loadList(AbstractModel parent, ResultSet result) {
-		return loadList(parent, result, JobGroup.class);
+	public static ArrayList<JobGroup> loadList(Project project, ResultSet result) {
+		ArrayList<JobGroup> groups = loadList(result, JobGroup.class);
+		for (JobGroup group : groups) {
+		    group.setProject(project);
+		}
+		return groups;
 	}
 }

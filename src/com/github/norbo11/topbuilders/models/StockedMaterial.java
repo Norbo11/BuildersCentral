@@ -18,7 +18,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 public class StockedMaterial extends AbstractModel {
 
 	public static final String DB_TABLE_NAME = "stockedMaterials";
-	private static ArrayList<StockedMaterial> stockedMaterials = new ArrayList<StockedMaterial>();
+	private static ArrayList<StockedMaterial> stockedMaterials = null;
 
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
@@ -113,7 +113,7 @@ public class StockedMaterial extends AbstractModel {
     }
     
     @Override
-    public void loadFromResult(AbstractModel parent, ResultSet result, String... columns) throws SQLException {      
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {      
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
         if (containsColumn(columns, "name")) setName(result.getString("name"));
         if (containsColumn(columns, "quantityInStock")) setQuantityInStock(result.getDouble("quantityInStock"));
@@ -133,21 +133,22 @@ public class StockedMaterial extends AbstractModel {
 	/* Static methods */
 
 	public static StockedMaterial loadStockedMaterialForRequiredMaterial(RequiredMaterial requiredMaterial) {
-	    return loadOne(null, loadAllModelsWhere(DB_TABLE_NAME, "id", requiredMaterial.getStockedMaterialId()), StockedMaterial.class);
+	    return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", requiredMaterial.getStockedMaterialId()), StockedMaterial.class);
 	}
 	
 	/* Standard static methods */
 	
 	public static ArrayList<StockedMaterial> getStockedMaterials() {
+		return stockedMaterials == null ? loadStockedMaterials() : stockedMaterials;
+	}
+	
+	public static ArrayList<StockedMaterial> loadStockedMaterials() {
+		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
 		return stockedMaterials;
 	}
 	
-	public static void loadStockedMaterials() {
-		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
-	}
-	
 	public static ArrayList<StockedMaterial> loadList(ResultSet result) {
-		return loadList(null, result, StockedMaterial.class);
+		return loadList(result, StockedMaterial.class);
 	}
 
     public static StockedMaterial getStockedMaterialByName(String name) {

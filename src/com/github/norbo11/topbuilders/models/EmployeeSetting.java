@@ -19,7 +19,7 @@ public class EmployeeSetting extends AbstractSetting {
     /* Static methods */
     
     public static Settings<EmployeeSetting> loadSettingsForEmployee(Employee employee) {
-        ArrayList<EmployeeSetting> list = loadList(null, loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()), EmployeeSetting.class);
+        ArrayList<EmployeeSetting> list = loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()), EmployeeSetting.class);
         
         return new Settings<EmployeeSetting>(employee, list, EmployeeSetting.class);
     }

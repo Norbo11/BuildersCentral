@@ -22,8 +22,6 @@ public class QuoteRequestsTab extends AbstractController {
     
     @FXML
 	public void initialize() {			
-        Project.loadProjects();
-        
         select(getInitialProject());        
 	}
     
