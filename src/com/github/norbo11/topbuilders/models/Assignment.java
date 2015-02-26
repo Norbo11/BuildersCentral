@@ -85,10 +85,6 @@ public class Assignment extends AbstractModel {
 	    this.employee = employee;
     }
 	
-	public static ArrayList<Assignment> getAssignments() {
-	    return assignments;
-	}
-	
 	/* Overrides */
 
 	@Override
@@ -107,7 +103,7 @@ public class Assignment extends AbstractModel {
     public void loadEmployee() {
         employee = Employee.loadEmployeeForAssignment(this);
     }
-
+    
     @Override
     public int add() {
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
@@ -150,4 +146,8 @@ public class Assignment extends AbstractModel {
     public static ArrayList<Assignment> loadAssignmentsForJob(Job job) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
     }
+    
+    public static ArrayList<Assignment> getAssignments() {
+	    return assignments;
+	}
 }

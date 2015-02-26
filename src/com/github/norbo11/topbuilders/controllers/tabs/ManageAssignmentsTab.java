@@ -8,6 +8,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 
@@ -18,6 +19,7 @@ import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.util.ModelFinder;
+import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
 
@@ -33,6 +35,7 @@ public class ManageAssignmentsTab extends AbstractController {
     @FXML private DatePicker startDate, endDate;
     @FXML private DoubleTextField hourlyWage;
     @FXML private Label employeeAddLabel;
+    @FXML private TitledPane assignmentDetailsPane;
     private ModelFinder<Employee> employeeSearchFinder, employeeAddFinder;
     
     /* FXML methods */
@@ -149,8 +152,8 @@ public class ManageAssignmentsTab extends AbstractController {
     	Assignment assignment = getSelectedAssignment();
     	
     	if (assignment != null) {
-    		assignment.setStartTimestamp(DateTimeUtil.getTimestampFromDate(startDate));
-    		assignment.setEndTimestamp(DateTimeUtil.getTimestampFromDate(endDate));
+    		assignment.setStartTimestamp(DateTimeUtil.getTimestampFromDate(startDate.getValue()));
+    		assignment.setEndTimestamp(DateTimeUtil.getTimestampFromDate(endDate.getValue()));
     		assignment.setHourlyWage(hourlyWage.getDouble());
     		
     		assignment.save();
@@ -175,10 +178,11 @@ public class ManageAssignmentsTab extends AbstractController {
     }
     
     public void selectAssignment(Assignment assignment) {
-    	//TODO Set text to "" if timestamp is 0
-    	startDate.setValue(DateTimeUtil.getDateTimeFromTimestamp(assignment.getStartTimestamp()).toLocalDate());
-    	endDate.setValue(DateTimeUtil.getDateTimeFromTimestamp(assignment.getEndTimestamp()).toLocalDate());
-    	hourlyWage.setDouble(assignment.getHourlyWage());
+		startDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getStartTimestamp()));
+		endDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getEndTimestamp()));
+		hourlyWage.setDouble(assignment.getHourlyWage());
+		
+		assignmentDetailsPane.setText(Resources.getResource("%manageAssignments.details", getSelectedJob().getTitle(), assignment.getEmployee().getFullName()));
     }
 
     public Job getSelectedJob() {

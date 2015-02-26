@@ -28,10 +28,12 @@
     
     <TitledPane HBox.hgrow="always" text="%manageAssignments.employees">
       <VBox spacing="5">
+        <padding><Insets top="0" bottom="0" right="0" left="0" /></padding>
       
         <ListView fx:id="assignmentList" />
         
         <HBox spacing="5">
+          <padding><Insets top="5" bottom="5" right="5" left="5" /></padding>
           <Label wrapText="true" text="%manageAssignments.employeeName" />
           
           <VBox>
@@ -47,7 +49,7 @@
   <HBox spacing="30">
     <padding><Insets right="250" left="250" /></padding>
   
-    <TitledPane text="%assignments.details">
+    <TitledPane fx:id="assignmentDetailsPane">
       <GridPane hgap="10" vgap="10" alignment="top_center">      
         <Label wrapText="true" text="%assignments.startDate" GridPane.rowIndex="0" GridPane.columnIndex="0" />
         <DatePicker fx:id="startDate" GridPane.rowIndex="0" GridPane.columnIndex="1" />
