@@ -1,12 +1,13 @@
 package com.github.norbo11.topbuilders.models;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Settings;
 
 public class EmployeeSetting extends AbstractSetting {
     public static final String DB_TABLE_NAME = "employeeSettings";	
-    private static ArrayList<EmployeeSetting> employeeSettings = new ArrayList<EmployeeSetting>();
+    private static ObservableList<EmployeeSetting> employeeSettings = FXCollections.observableArrayList();
     
     public EmployeeSetting() {
         super("employeeId");
@@ -20,12 +21,12 @@ public class EmployeeSetting extends AbstractSetting {
     /* Static methods */
     
     public static Settings<EmployeeSetting> loadSettingsForEmployee(Employee employee) {
-        ArrayList<EmployeeSetting> list = loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()), EmployeeSetting.class);
+    	ObservableList<EmployeeSetting> list = loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()), EmployeeSetting.class);
         
         return new Settings<EmployeeSetting>(employee, list, EmployeeSetting.class);
     }
     
-    public static ArrayList<EmployeeSetting> getModels() {
+    public static ObservableList<EmployeeSetting> getModels() {
 	    return employeeSettings;
 	}
 }

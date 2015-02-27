@@ -1,7 +1,9 @@
 package com.github.norbo11.topbuilders.util;
 
-import java.util.ArrayList;
 import java.util.Locale;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.AbstractSetting;
@@ -9,18 +11,18 @@ import com.github.norbo11.topbuilders.models.enums.AbstractSettingType;
 import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 
 public class Settings<T extends AbstractSetting> {
-    private ArrayList<T> settings;
+    private ObservableList<T> settings;
     private Class<T> clazz;
     private AbstractModel parentModel;
     
-    public Settings(AbstractModel parentModel, ArrayList<T> settings, Class<T> clazz) {
+    public Settings(AbstractModel parentModel, ObservableList<T> settings, Class<T> clazz) {
         this.settings = settings;
         this.clazz = clazz;
         this.parentModel = parentModel;
     }
 
     public Settings(AbstractModel parentModel, Class<T> clazz) {
-        this(parentModel, new ArrayList<T>(), clazz);
+        this(parentModel, FXCollections.observableArrayList(), clazz);
     }
 
     public T getSetting(AbstractSettingType type) {

@@ -2,18 +2,19 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Database;
 
 public class RequiredMaterial extends AbstractModel {
     public static final String DB_TABLE_NAME = "requiredMaterials";
-    private static ArrayList<RequiredMaterial> requiredMaterials = new ArrayList<RequiredMaterial>();
+    private static ObservableList<RequiredMaterial> requiredMaterials = FXCollections.observableArrayList();
     
     private IntegerProperty stockedMaterialId = new SimpleIntegerProperty(0);
     private IntegerProperty jobId = new SimpleIntegerProperty(0);
@@ -136,24 +137,24 @@ public class RequiredMaterial extends AbstractModel {
 
 	/* Static methods */
 	
-	public static ArrayList<RequiredMaterial> loadList(Job job, ResultSet result) {
-        ArrayList<RequiredMaterial> requiredMaterials = loadList(result, RequiredMaterial.class);
+	public static ObservableList<RequiredMaterial> loadList(Job job, ResultSet result) {
+        ObservableList<RequiredMaterial> requiredMaterials = loadList(result, RequiredMaterial.class);
         for (RequiredMaterial requiredMaterial : requiredMaterials) {
             requiredMaterial.setJob(job);
         }
         return requiredMaterials;
     }
 	
-	public static ArrayList<RequiredMaterial> loadRequiredMaterials() {
+	public static ObservableList<RequiredMaterial> loadRequiredMaterials() {
         requiredMaterials = loadList(null, loadAllModels(DB_TABLE_NAME));
         return requiredMaterials;
     }
     
-    public static ArrayList<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
+    public static ObservableList<RequiredMaterial> loadRequiredMaterialsForJob(Job job) {
         return loadList(job, loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
     }
 
-    public static ArrayList<RequiredMaterial> getModels() {
+    public static ObservableList<RequiredMaterial> getModels() {
         return requiredMaterials;
     }
 }

@@ -3,10 +3,6 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-
-import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -16,10 +12,15 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 public class Assignment extends AbstractModel {
     public static final String DB_TABLE_NAME = "assignments";
-	private static ArrayList<Assignment> assignments;
+	private static ObservableList<Assignment> assignments = FXCollections.observableArrayList();
     
 	private IntegerProperty employeeId = new SimpleIntegerProperty(0);
 	private IntegerProperty jobId = new SimpleIntegerProperty(0);
@@ -157,24 +158,24 @@ public class Assignment extends AbstractModel {
 
 	/* Static methods */
 	
-	public static ArrayList<Assignment> loadAssignments() {
+	public static ObservableList<Assignment> loadAssignments() {
         assignments = loadList(loadAllModels(DB_TABLE_NAME));
         return assignments;
     }
 
-	public static ArrayList<Assignment> loadList(ResultSet result) {
+	public static ObservableList<Assignment> loadList(ResultSet result) {
 		return loadList(result, Assignment.class);
 	}
 
-    public static ArrayList<Assignment> loadAssignmentsForJob(Job job) {
+    public static ObservableList<Assignment> loadAssignmentsForJob(Job job) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
     }
     
-    public static ArrayList<Assignment> loadAssignmentsForEmployee(Employee employee) {
+    public static ObservableList<Assignment> loadAssignmentsForEmployee(Employee employee) {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()));
     }
     
-    public static ArrayList<Assignment> getModels() {
+    public static ObservableList<Assignment> getModels() {
 	    return assignments;
 	}
 }

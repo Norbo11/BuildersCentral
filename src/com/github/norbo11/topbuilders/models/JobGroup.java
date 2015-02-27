@@ -2,22 +2,23 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Database;
 
 public class JobGroup extends AbstractModel {
     public static final String DB_TABLE_NAME = "jobGroups";
-    private static ArrayList<JobGroup> jobGroups = new ArrayList<JobGroup>();
+    private static ObservableList<JobGroup> jobGroups = FXCollections.observableArrayList();
     
     private IntegerProperty projectId = new SimpleIntegerProperty(0);
     private StringProperty groupName = new SimpleStringProperty("");
-    private ArrayList<Job> jobs = null;
+    private ObservableList<Job> jobs = null;
     private Project project;
 
     /* Properties */
@@ -60,17 +61,17 @@ public class JobGroup extends AbstractModel {
 	    this.project = project;
 	}
 
-    public ArrayList<Job> getJobs() {
+    public ObservableList<Job> getJobs() {
         return jobs  == null ? loadJobs() : jobs;
     }
 
-    public void setJobs(ArrayList<Job> jobs) {
+    public void setJobs(ObservableList<Job> jobs) {
         this.jobs = jobs;
     }
     
     //Loading
     
-    public ArrayList<Job> loadJobs() {
+    public ObservableList<Job> loadJobs() {
         jobs = Job.loadJobsForJobGroup(this);
         return jobs;
     }
@@ -136,14 +137,14 @@ public class JobGroup extends AbstractModel {
 
 	/* Static methods */
 	
-	public static ArrayList<JobGroup> loadJobGroupsForProject(Project project) {
+	public static ObservableList<JobGroup> loadJobGroupsForProject(Project project) {
 		return loadList(project, loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()));
 	}
 	
 	/* Standard static methods */
 	
-	public static ArrayList<JobGroup> loadList(Project project, ResultSet result) {
-		ArrayList<JobGroup> groups = loadList(result, JobGroup.class);
+	public static ObservableList<JobGroup> loadList(Project project, ResultSet result) {
+		ObservableList<JobGroup> groups = loadList(result, JobGroup.class);
 		for (JobGroup group : groups) {
 		    group.setProject(project);
 		}
@@ -154,7 +155,7 @@ public class JobGroup extends AbstractModel {
 		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", job.getJobGroupId()), JobGroup.class);
 	}
 	
-	public static ArrayList<JobGroup> getModels() {
+	public static ObservableList<JobGroup> getModels() {
 	    return jobGroups;
 	}
 }

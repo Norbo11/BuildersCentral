@@ -1,7 +1,5 @@
 package com.github.norbo11.topbuilders.util;
 
-import java.util.ArrayList;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -10,10 +8,10 @@ import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
 
 public class ModelFinder<T> {
     private ListView<T> searchList;
-    private ArrayList<T> models;
+    private ObservableList<T> models;
     private ModelFinderComparator<T> comparator;
     
-    public ModelFinder(ListView<T> searchList, ArrayList<T> models, ModelFinderComparator<T> comparator) {
+    public ModelFinder(ListView<T> searchList, ObservableList<T> models, ModelFinderComparator<T> comparator) {
         this.searchList = searchList;
         this.models = models;
         this.comparator = comparator;

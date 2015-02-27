@@ -63,7 +63,7 @@ public class SettingsTab extends AbstractController {
 		}
 		
 		//Adjust components to reflect current user settings
-		settings = Employee.getCurrentEmployee().getSettings();
+		settings = Employee.getCurrentEmployee().loadSettings();
         languagesCombo.getSelectionModel().select(settings.getLocale(EmployeeSettingType.LOCALE));
         fullscreenCheckbox.setSelected(settings.getBoolean(EmployeeSettingType.FULLSCREEN));
 	}

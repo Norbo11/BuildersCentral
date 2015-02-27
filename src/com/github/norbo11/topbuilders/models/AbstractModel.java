@@ -3,10 +3,11 @@ package com.github.norbo11.topbuilders.models;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
@@ -144,21 +145,20 @@ public abstract class AbstractModel {
     }
     
 	@SuppressWarnings("unchecked")
-	protected static <T extends AbstractModel> ArrayList<T> loadList(ResultSet result, Class<T> clazz) {
-		ArrayList<T> models = new ArrayList<T>();
+	protected static <T extends AbstractModel> ObservableList<T> loadList(ResultSet result, Class<T> clazz) {
+		ObservableList<T> models = FXCollections.observableArrayList();
         		
         try {
 			while (result.next()) {
 				T model = clazz.newInstance();
-				ArrayList<T> modelList = null;
+				ObservableList<T> modelList = null;
 				
 				try {
-					modelList = (ArrayList<T>) clazz.getMethod("getModels").invoke(null); //Invoke the static method getModels
+					modelList = (ObservableList<T>) clazz.getMethod("getModels").invoke(null); //Invoke the static method getModels
 				} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					e.printStackTrace();
 				}
 				
-				System.out.println(modelList);
 				//Try to find an existing model
 				for (AbstractModel existingModel : modelList) {
 					if (existingModel.getId() == result.getInt("id")) {
@@ -183,7 +183,7 @@ public abstract class AbstractModel {
 	}
 	
 	protected static <T extends AbstractModel> T loadOne(ResultSet result, Class<T> clazz) {
-        ArrayList<T> models = loadList(result, clazz);
+		ObservableList<T> models = loadList(result, clazz);
         
         if (models.size() != 0) return models.get(0);
         else return null;

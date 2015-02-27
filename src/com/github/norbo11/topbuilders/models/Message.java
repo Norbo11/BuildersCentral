@@ -3,7 +3,6 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -11,6 +10,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
@@ -22,7 +23,7 @@ import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
-    private static ArrayList<Message> messages = new ArrayList<Message>();
+    private static ObservableList<Message> messages = FXCollections.observableArrayList();
     
     private IntegerProperty senderId = new SimpleIntegerProperty(0);
     private IntegerProperty recipientId = new SimpleIntegerProperty(0);
@@ -133,15 +134,15 @@ public class Message extends AbstractModel {
         controller.updateAll();
     }
     
-    public static ArrayList<Message> loadMessagesForEmployee(Employee employee) {
+    public static ObservableList<Message> loadMessagesForEmployee(Employee employee) {
         return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
     }
     
-    public static ArrayList<Message> loadList(ResultSet result) {
+    public static ObservableList<Message> loadList(ResultSet result) {
 		return loadList(result, Message.class);
 	}
     
-    public static ArrayList<Message> getModels() {
+    public static ObservableList<Message> getModels() {
 	    return messages;
 	}
 }

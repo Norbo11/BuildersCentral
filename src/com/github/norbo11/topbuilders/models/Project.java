@@ -2,12 +2,13 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeView;
@@ -20,7 +21,7 @@ import com.github.norbo11.topbuilders.util.Settings;
 
 public class Project extends AbstractModel {
     public static final String DB_TABLE_NAME = "projects";        
-    private static ArrayList<Project> projects = new ArrayList<Project>();
+    private static ObservableList<Project> projects = FXCollections.observableArrayList();
     
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
@@ -38,7 +39,7 @@ public class Project extends AbstractModel {
     private StringProperty projectNote = new SimpleStringProperty("");
     
     private Settings<QuoteSetting> settings = new Settings<QuoteSetting>(this, QuoteSetting.class);
-    private ArrayList<JobGroup> jobGroups = null;
+    private ObservableList<JobGroup> jobGroups = null;
     
     /* Properties */
 
@@ -194,15 +195,15 @@ public class Project extends AbstractModel {
 	
 	/* Forgeign key methods */
 	
-	public ArrayList<JobGroup> getJobGroups() {
+	public ObservableList<JobGroup> getJobGroups() {
         return jobGroups == null ? loadJobGroups() : jobGroups;
     }
 
-    public void setJobGroups(ArrayList<JobGroup> jobGroups) {
+    public void setJobGroups(ObservableList<JobGroup> jobGroups) {
         this.jobGroups = jobGroups;
     }
     
-    public ArrayList<JobGroup> loadJobGroups() {
+    public ObservableList<JobGroup> loadJobGroups() {
         jobGroups = JobGroup.loadJobGroupsForProject(this);
         return jobGroups;
     }
@@ -218,8 +219,8 @@ public class Project extends AbstractModel {
 		return getClientFirstName() + " " + getClientLastName();
 	}
 	
-    public ArrayList<Job> getAllJobs() {
-        ArrayList<Job> jobs = new ArrayList<Job>();
+    public ObservableList<Job> getAllJobs() {
+        ObservableList<Job> jobs = FXCollections.observableArrayList();
         
         for (JobGroup group : jobGroups) {
             jobs.addAll(group.loadJobs());
@@ -293,16 +294,16 @@ public class Project extends AbstractModel {
 	
 	/* Static methods */
 	
-	public static ArrayList<Project> loadList(ResultSet result) {
+	public static ObservableList<Project> loadList(ResultSet result) {
 		return loadList(result, Project.class);
 	}
 
-    public static ArrayList<Project> loadProjects() {
+    public static ObservableList<Project> loadProjects() {
         projects = loadList(loadAllModels(DB_TABLE_NAME));
         return projects;
     }
     
-    public static ArrayList<Project> getModels() {
+    public static ObservableList<Project> getModels() {
         return projects;
     }
 

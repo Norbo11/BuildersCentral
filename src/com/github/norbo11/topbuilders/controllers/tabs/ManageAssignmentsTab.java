@@ -1,5 +1,6 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -49,7 +50,8 @@ public class ManageAssignmentsTab extends AbstractController {
     		Button button = new Button("X");
             button.setOnAction(e -> { 
                 getItem().delete();
-                getListView().getItems().remove(getItem());
+                getItem().getJob().getAssignments().remove(getItem());
+                //getListView().getItems().remove(getItem());
             });
             
             label = new Label();
@@ -75,7 +77,7 @@ public class ManageAssignmentsTab extends AbstractController {
     @FXML
 	public void initialize() {		
         /* Populate project list */
-        projectList.getItems().setAll(Project.loadProjects()); 
+        Bindings.bindContent(projectList.getItems(), Project.loadProjects());
         
         /* Define project list behaviour */
         projectList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, clickedProject) -> {
@@ -138,7 +140,9 @@ public class ManageAssignmentsTab extends AbstractController {
 	            assignment.save();
 	            
 	            //Add to the assignment list and hide the search list
-	            assignmentList.getItems().add(assignment);
+	            //assignmentList.getItems().add(assignment);
+	            getSelectedJob().getAssignments().add(assignment);
+	            clickedEmployee.getAssignments().add(assignment);
 	            GuiUtil.hideNodeManaged(employeeAddSearchList);
 	            
 	            //Select the recently added item so that assignment details may be edited
@@ -149,7 +153,8 @@ public class ManageAssignmentsTab extends AbstractController {
         /* Define behaviour upon clicking a found employee (display all found assignments) */
         employeeSearchSearchList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, clickedEmployee) -> {                
             if (clickedEmployee != null) {
-                assignmentSearchTable.getItems().setAll(clickedEmployee.getAssignments());
+                Bindings.bindContent(assignmentSearchTable.getItems(), clickedEmployee.loadAssignments());
+                GuiUtil.hideNodeManaged(employeeSearchSearchList);
             }
         });
         
@@ -167,7 +172,6 @@ public class ManageAssignmentsTab extends AbstractController {
     		assignment.setHourlyWage(hourlyWage.getDouble());
     		
     		assignment.save();
-    		getSelectedJob().getAssignments().add(assignment);
     	}
     }
     

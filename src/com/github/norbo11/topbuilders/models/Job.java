@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -10,12 +9,14 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Database;
 
 public class Job extends AbstractModel {
     public static final String DB_TABLE_NAME = "jobs";
-    private static ArrayList<Job> jobs = new ArrayList<Job>();
+    private static ObservableList<Job> jobs = FXCollections.observableArrayList();
     
     private IntegerProperty jobGroupId = new SimpleIntegerProperty(0);
     private StringProperty title = new SimpleStringProperty("");
@@ -23,8 +24,8 @@ public class Job extends AbstractModel {
     private DoubleProperty labourPrice = new SimpleDoubleProperty(0);
     private DoubleProperty materialPrice = new SimpleDoubleProperty(0);
     
-    private ArrayList<RequiredMaterial> requiredMaterials = null;
-    private ArrayList<Assignment> assignments = null;
+    private ObservableList<RequiredMaterial> requiredMaterials = null;
+    private ObservableList<Assignment> assignments = null;
     private JobGroup jobGroup, jobGroupDummy = null;
     
     /* Properties */
@@ -103,19 +104,19 @@ public class Job extends AbstractModel {
 	
 	//Getters & setters
     
-    public ArrayList<RequiredMaterial> getRequiredMaterials() {
+    public ObservableList<RequiredMaterial> getRequiredMaterials() {
         return requiredMaterials == null ? loadRequiredMaterials() : requiredMaterials;
     }
 
-    public void setRequiredMaterials(ArrayList<RequiredMaterial> requiredMaterials) {
+    public void setRequiredMaterials(ObservableList<RequiredMaterial> requiredMaterials) {
         this.requiredMaterials = requiredMaterials;
     }
     
-    public ArrayList<Assignment> getAssignments() {
+    public ObservableList<Assignment> getAssignments() {
         return assignments == null ? loadAssignments() : assignments;
     }
 
-    public void setAssignments(ArrayList<Assignment> assignments) {
+    public void setAssignments(ObservableList<Assignment> assignments) {
         this.assignments = assignments;
     }
     
@@ -129,12 +130,12 @@ public class Job extends AbstractModel {
     
     //Loaders
     
-    public ArrayList<RequiredMaterial> loadRequiredMaterials() {
+    public ObservableList<RequiredMaterial> loadRequiredMaterials() {
         requiredMaterials = RequiredMaterial.loadRequiredMaterialsForJob(this);
         return requiredMaterials;
     }
     
-    public ArrayList<Assignment> loadAssignments() {
+    public ObservableList<Assignment> loadAssignments() {
         assignments = Assignment.loadAssignmentsForJob(this);
         return assignments;
     }
@@ -204,7 +205,7 @@ public class Job extends AbstractModel {
 
 	/* Static methods */
 	
-	public static ArrayList<Job> loadJobsForJobGroup(JobGroup jobGroup) {		
+	public static ObservableList<Job> loadJobsForJobGroup(JobGroup jobGroup) {		
 		return loadList(jobGroup, loadAllModelsWhere(DB_TABLE_NAME, "jobGroupId", jobGroup.getId()));
 	}
 	
@@ -214,8 +215,8 @@ public class Job extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<Job> loadList(JobGroup jobGroup, ResultSet result) {
-		ArrayList<Job> jobs = loadList(result, Job.class);
+	public static ObservableList<Job> loadList(JobGroup jobGroup, ResultSet result) {
+		ObservableList<Job> jobs = loadList(result, Job.class);
 		for (Job job : jobs) {
 		    job.setJobGroup(jobGroup);
 		}
@@ -226,7 +227,7 @@ public class Job extends AbstractModel {
 		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", assignment.getJobId()), Job.class);
 	}
 	
-	public static ArrayList<Job> getModels() {
+	public static ObservableList<Job> getModels() {
 	    return jobs;
 	}
 }

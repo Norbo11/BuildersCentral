@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -10,6 +9,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.controllers.scenes.MainScene;
 import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
@@ -26,7 +27,7 @@ import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 public class Employee extends AbstractModel {
     public static final String DB_TABLE_NAME = "employees";
-    private static ArrayList<Employee> employees = new ArrayList<Employee>();
+    private static ObservableList<Employee> employees = FXCollections.observableArrayList();
     private static Employee currentEmployee;
     
     private StringProperty username = new SimpleStringProperty("");
@@ -43,8 +44,7 @@ public class Employee extends AbstractModel {
     private StringProperty activationCode = new SimpleStringProperty("");
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
-    private Settings<EmployeeSetting> settings;
-    private ArrayList<Assignment> assignments;
+    private ObservableList<Assignment> assignments = FXCollections.observableArrayList();
     
     /* Properties */
     
@@ -196,33 +196,28 @@ public class Employee extends AbstractModel {
     
     /* Foreign model methods */
     
-    public Settings<EmployeeSetting> getSettings() {
-        return settings == null ? loadSettings() : settings;
-    }
-    
-    public ArrayList<Assignment> getAssignments() {
-        return assignments == null ? loadAssignments() : assignments;
-    }
-    
     public Settings<EmployeeSetting> loadSettings() {
-        settings = EmployeeSetting.loadSettingsForEmployee(this);
-        return settings;
+        return EmployeeSetting.loadSettingsForEmployee(this);
     }
     
-    public ArrayList<Assignment> loadAssignments() {
+    public ObservableList<Assignment> loadAssignments() {
         assignments = Assignment.loadAssignmentsForEmployee(this);
         return assignments;
     }
     
-    /* Instance methods */
+    public ObservableList<Assignment> getAssignments() {
+    	return assignments;
+    }
     
-    public  ArrayList<Notification> getNotifications() {
+    public ObservableList<Notification> getNotifications() {
         return Notification.loadNotificationsForEmployee(this);
     }
     
-    public  ArrayList<Message> getMessages() {
+    public ObservableList<Message> getMessages() {
         return Message.loadMessagesForEmployee(this);
     }
+    
+    /* Instance methods */
     
     public UserType getUserType() {
         return UserType.getUserType(getUserTypeId());
@@ -244,7 +239,7 @@ public class Employee extends AbstractModel {
     public void login() {
         Employee.setCurrentEmployee(this);
         Resources.setCurrentBundle(this);
-        SceneUtil.setFullscreen(getSettings().getBoolean(EmployeeSettingType.FULLSCREEN));
+        SceneUtil.setFullscreen(loadSettings().getBoolean(EmployeeSettingType.FULLSCREEN));
         SceneUtil.changeMainScene(MainScene.FXML_FILENAME);
     }
 	
@@ -344,7 +339,7 @@ public class Employee extends AbstractModel {
 	}
 	
 	public static Employee checkActivationCode(String code) {
-	    ArrayList<Employee> employees = loadList(loadAllModelsWhere(DB_TABLE_NAME, "activationCode", code));
+		ObservableList<Employee> employees = loadList(loadAllModelsWhere(DB_TABLE_NAME, "activationCode", code));
 	    
 	    if (employees.size() == 1) {
 	        return employees.get(0);
@@ -354,7 +349,7 @@ public class Employee extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<Employee> loadList(ResultSet result) {
+	public static ObservableList<Employee> loadList(ResultSet result) {
 		return loadList(result, Employee.class);
 	}
 
@@ -366,12 +361,12 @@ public class Employee extends AbstractModel {
         Employee.currentEmployee = currentEmployee;
     }
     
-    public static ArrayList<Employee> loadEmployees() {
+    public static ObservableList<Employee> loadEmployees() {
         employees = loadList(loadAllModels(DB_TABLE_NAME));
         return employees;
     }
     
-    public static ArrayList<Employee> getModels() {
+    public static ObservableList<Employee> getModels() {
         return employees;
     }
     

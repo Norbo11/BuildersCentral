@@ -3,7 +3,6 @@ package com.github.norbo11.topbuilders.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -11,6 +10,8 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.Database;
@@ -19,7 +20,7 @@ import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 public class Notification extends AbstractModel {
     public static final String DB_TABLE_NAME = "notifications";
-    private static ArrayList<Notification> notifications = new ArrayList<Notification>();
+    private static ObservableList<Notification> notifications = FXCollections.observableArrayList();
     
     private IntegerProperty employeeId = new SimpleIntegerProperty(0);
     private IntegerProperty typeId = new SimpleIntegerProperty(0);
@@ -132,15 +133,15 @@ public class Notification extends AbstractModel {
 	/* Static methods */
 
 	//Override
-	public static ArrayList<Notification> loadList(ResultSet result) {
+	public static ObservableList<Notification> loadList(ResultSet result) {
         return loadList(result, Notification.class);
     }
 
-	public static ArrayList<Notification> loadNotificationsForEmployee(Employee employee) {
+	public static ObservableList<Notification> loadNotificationsForEmployee(Employee employee) {
         return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "employeeId", employee.getId(), "timestamp", true));
 	}
 	
-	public static ArrayList<Notification> getModels() {
+	public static ObservableList<Notification> getModels() {
 	    return notifications;
 	}
 	

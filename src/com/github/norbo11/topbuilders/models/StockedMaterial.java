@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -10,6 +9,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.Database;
@@ -18,7 +18,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 public class StockedMaterial extends AbstractModel {
 
 	public static final String DB_TABLE_NAME = "stockedMaterials";
-	private static ArrayList<StockedMaterial> stockedMaterials = null;
+	private static ObservableList<StockedMaterial> stockedMaterials = null;
 
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
@@ -138,16 +138,16 @@ public class StockedMaterial extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<StockedMaterial> getModels() {
+	public static ObservableList<StockedMaterial> getModels() {
 		return stockedMaterials;
 	}
 	
-	public static ArrayList<StockedMaterial> loadStockedMaterials() {
+	public static ObservableList<StockedMaterial> loadStockedMaterials() {
 		stockedMaterials = loadList(loadAllModels(DB_TABLE_NAME));
 		return stockedMaterials;
 	}
 	
-	public static ArrayList<StockedMaterial> loadList(ResultSet result) {
+	public static ObservableList<StockedMaterial> loadList(ResultSet result) {
 		return loadList(result, StockedMaterial.class);
 	}
 

@@ -1,12 +1,13 @@
 package com.github.norbo11.topbuilders.models;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Settings;
 
 public class QuoteSetting extends AbstractSetting {
     public static final String DB_TABLE_NAME = "quoteSettings";	
-    private static ArrayList<QuoteSetting> quoteSettings = new ArrayList<QuoteSetting>();
+    private static ObservableList<QuoteSetting> quoteSettings = FXCollections.observableArrayList();
     
     public QuoteSetting() {
         super("projectId");
@@ -23,7 +24,7 @@ public class QuoteSetting extends AbstractSetting {
         return new Settings<QuoteSetting>(project, loadList(loadAllModelsWhere(DB_TABLE_NAME, "projectId", project.getId()), QuoteSetting.class), QuoteSetting.class);
     }
     
-    public static ArrayList<QuoteSetting> getModels() {
+    public static ObservableList<QuoteSetting> getModels() {
     	return quoteSettings;
     }
 }

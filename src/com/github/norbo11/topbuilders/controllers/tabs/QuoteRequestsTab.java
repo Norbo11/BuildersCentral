@@ -1,7 +1,6 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
 
-import java.util.ArrayList;
-
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -51,7 +50,7 @@ public class QuoteRequestsTab extends AbstractController {
     /* Instance methods */
     
     public Project getNextProject() {
-        ArrayList<Project> projects = Project.getModels();
+        ObservableList<Project> projects = Project.getModels();
         
         int previousSelection = currentSelection;
         
@@ -69,7 +68,7 @@ public class QuoteRequestsTab extends AbstractController {
     }
     
     public Project getPreviousProject() {
-        ArrayList<Project> projects = Project.getModels();
+    	ObservableList<Project> projects = Project.getModels();
         
         int previousSelection = currentSelection;
         
@@ -87,7 +86,7 @@ public class QuoteRequestsTab extends AbstractController {
     }
     
     public Project getInitialProject() {
-        ArrayList<Project> projects = Project.getModels();
+    	ObservableList<Project> projects = Project.getModels();
         
         for (Project project : projects) {
             if (project.isQuoteRequested()) return project;
