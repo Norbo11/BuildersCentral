@@ -1,23 +1,34 @@
 package com.github.norbo11.topbuilders.util;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
 
 public class ModelFinder<T> {
+    public static final int LIST_CELL_HEIGHT = 24; //This must match in the css file
     private ListView<T> searchList;
     private ObservableList<T> models;
     private ModelFinderComparator<T> comparator;
+    private TextField textField;
     
-    public ModelFinder(ListView<T> searchList, ObservableList<T> models, ModelFinderComparator<T> comparator) {
+    public ModelFinder(ListView<T> searchList, TextField textField, ObservableList<T> models, ModelFinderComparator<T> comparator) {
         this.searchList = searchList;
         this.models = models;
         this.comparator = comparator;
-        
+        this.textField = textField;
+                
         searchList.getItems().addAll(models);
-        GuiUtil.hideNodeManaged(searchList);
+        
+        //Ensure height of search list is proportional to number of items in list
+        searchList.prefHeightProperty().bind(Bindings.size(searchList.getItems()).multiply(LIST_CELL_HEIGHT));
+        
+        //Search upon typing in the text field
+        textField.textProperty().addListener((obs, oldVal, newVal) -> search(oldVal, newVal));
+        hideSearchList();
     }
 
     public void search(String oldVal, String newVal) {          
@@ -42,7 +53,24 @@ public class ModelFinder<T> {
         
         //Hide if the user has deleted the contents of the text field, otherwise show.
         if (newVal.equals("")) {
-            GuiUtil.hideNodeManaged(searchList);
-        } else GuiUtil.showNodeManaged(searchList);
+            hideSearchList();
+        } else showSearchList();
+    }
+
+    public void hideSearchList() {
+        GuiUtil.hideNodeManaged(searchList);
+        textField.setText("");
+    }
+    
+    public void showSearchList() {
+       /* searchList.setManaged(false);
+       searchList.setMinSize(10, 10);
+       searchList.setPrefWidth(100);
+       searchList.setMaxSize(100, 100);
+       searchList.setLayoutX(10);
+       searchList.setLayoutY(10);
+       searchList.setVisible(true); */
+        
+       GuiUtil.showNodeManaged(searchList);
     }
 }

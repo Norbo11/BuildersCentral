@@ -9,16 +9,16 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.Resources;
 
 public class StockedMaterial extends AbstractModel {
 
 	public static final String DB_TABLE_NAME = "stockedMaterials";
-	private static ObservableList<StockedMaterial> stockedMaterials = null;
+	private static ObservableList<StockedMaterial> stockedMaterials = FXCollections.observableArrayList();
 
 	private StringProperty name = new SimpleStringProperty("");
 	private DoubleProperty quantityInStock = new SimpleDoubleProperty(0);
@@ -127,7 +127,7 @@ public class StockedMaterial extends AbstractModel {
 
 	@Override
 	public String toString() {
-		return getName() + " - " + getQuantityString() + " " + Resources.getResource("materials.inStock").toLowerCase();
+		return getName();
 	}
 	
 	/* Static methods */

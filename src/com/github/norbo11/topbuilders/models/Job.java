@@ -202,6 +202,11 @@ public class Job extends AbstractModel {
 	public String toString() {
 		return getTitle();
 	}
+	
+	@Override
+    public boolean isDummy() {
+        return jobGroupDummy != null;
+    }
 
 	/* Static methods */
 	

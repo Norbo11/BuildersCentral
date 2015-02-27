@@ -38,14 +38,6 @@ public class RequiredMaterial extends AbstractModel {
     
 	/* Getters and setters */
     
-	public StockedMaterial getStockedMaterial() {
-		return stockedMaterial;
-	}
-
-	public void setStockedMaterial(StockedMaterial stockedMaterial) {
-		this.stockedMaterial = stockedMaterial;
-	}
-    
 	public int getStockedMaterialId() {
 		return stockedMaterialId.get();
 	}
@@ -78,6 +70,14 @@ public class RequiredMaterial extends AbstractModel {
 
     public void setJob(Job job) {
         this.job = job;
+    }
+    
+    public StockedMaterial getStockedMaterial() {
+        return stockedMaterial == null ? loadStockedMaterial() : stockedMaterial;
+    }
+
+    public void setStockedMaterial(StockedMaterial stockedMaterial) {
+        this.stockedMaterial = stockedMaterial;
     }
     
     public StockedMaterial loadStockedMaterial() {
@@ -125,6 +125,12 @@ public class RequiredMaterial extends AbstractModel {
         if (containsColumn(columns, "quantityRequired")) setQuantityRequired(result.getDouble("quantityRequired"));
     }
     
+    @Override
+    public void delete() {
+        getJob().getRequiredMaterials().remove(this);
+        super.delete();
+    }
+    
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
@@ -132,7 +138,7 @@ public class RequiredMaterial extends AbstractModel {
 	
 	@Override
 	public String toString() {
-		return "REQUIRED MATERIAL TOSTRING";
+		return getStockedMaterial() + " (" + getQuantityRequired() + getStockedMaterial().getQuantityType() + ")";
 	}
 
 	/* Static methods */

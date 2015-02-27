@@ -16,7 +16,6 @@ import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 public abstract class AbstractModel {
     private IntegerProperty id;
-    private boolean dummy;
     private boolean newModel;
     
     public AbstractModel() {
@@ -51,14 +50,6 @@ public abstract class AbstractModel {
         this.id.set(id);
     }
         
-    public boolean isDummy() {
-        return dummy;
-    }
-
-    public void setDummy(boolean dummy) {
-        this.dummy = dummy;
-    }
-    
     /* Abstract methods */
     
     public abstract int add();
@@ -69,6 +60,10 @@ public abstract class AbstractModel {
     public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;
     
     public abstract String getDbTableName();
+    
+    public boolean isDummy() {
+        return false;
+    }
             
     /* Instance methods */
     

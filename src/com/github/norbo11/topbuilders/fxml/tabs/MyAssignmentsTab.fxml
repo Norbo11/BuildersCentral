@@ -12,7 +12,39 @@
 <?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
 
 <VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.MyAssignmentsTab">
-  <padding><Insets top="60" bottom="60" right="20" left="20" /></padding>
+  <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
   
+  <TreeTableView fx:id="table" showRoot="false" editable="true">
+    <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+    <columns>    
+      <TreeTableColumn fx:id="completedCol" text="%assignments.projectOrJobGroup" editable="true" minWidth="140" />
   
+      <TreeTableColumn fx:id="titleCol" text="%jobs.title" editable="true" minWidth="140" >
+        <cellValueFactory><TreeItemPropertyValueFactory property="job" /></cellValueFactory>
+      </TreeTableColumn>
+      
+      <TreeTableColumn fx:id="descriptionCol" text="%jobs.description" minWidth="140" >
+        <cellValueFactory><TreeItemPropertyValueFactory property="description" /></cellValueFactory>
+      </TreeTableColumn>
+      
+      <TreeTableColumn fx:id="materialsCol" text="%jobs.materials" editable="true" minWidth="140" >
+        <cellValueFactory><TreeItemPropertyValueFactory property="materials" /></cellValueFactory>
+      </TreeTableColumn>
+      
+      <TreeTableColumn fx:id="startDateCol" text="%assignments.startDate" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="startDate" /></cellValueFactory>
+      </TreeTableColumn>
+      
+      <TreeTableColumn fx:id="endDateCol" text="%assignments.endDate" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="endDate" /></cellValueFactory>
+      </TreeTableColumn>
+      
+      <TreeTableColumn fx:id="coWorkersCol" text="%assignments.coWorkers" editable="true">
+        <cellValueFactory><TreeItemPropertyValueFactory property="coWorkers" /></cellValueFactory>
+      </TreeTableColumn>
+    </columns>
+    <root>
+      <TreeItem value="Projects" expanded="true" />
+    </root>
+  </TreeTableView>
 </VBox>

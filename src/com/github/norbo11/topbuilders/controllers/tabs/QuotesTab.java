@@ -22,6 +22,7 @@ import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.models.QuoteSetting;
+import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.models.enums.QuoteSettingType;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
 import com.github.norbo11.topbuilders.util.Resources;
@@ -105,6 +106,9 @@ public class QuotesTab extends AbstractValidationScene {
     
     @FXML
 	public void initialize() {    
+        Project.loadProjects();
+        StockedMaterial.loadStockedMaterials();
+        
     	/* Cell factories */
         table.setRowFactory(row -> new JobTableRow());
     	

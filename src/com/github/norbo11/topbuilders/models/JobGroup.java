@@ -62,7 +62,7 @@ public class JobGroup extends AbstractModel {
 	}
 
     public ObservableList<Job> getJobs() {
-        return jobs  == null ? loadJobs() : jobs;
+        return jobs == null ? loadJobs() : jobs;
     }
 
     public void setJobs(ObservableList<Job> jobs) {

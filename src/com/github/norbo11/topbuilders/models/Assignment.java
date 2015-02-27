@@ -30,14 +30,32 @@ public class Assignment extends AbstractModel {
 	private BooleanProperty isCompleted = new SimpleBooleanProperty(false);
 	private Employee employee = null;
 	private Job job = null;
+	private Project projectDummy = null;
+	private JobGroup jobGroupDummy = null;
 	
     /* Getters and setters */
+	
+    public Project getProjectDummy() {
+        return projectDummy;
+    }
+
+    public JobGroup getJobGroupDummy() {
+        return jobGroupDummy;
+    }
+
+    public void setProjectDummy(Project projectDummy) {
+        this.projectDummy = projectDummy;
+    }
+
+    public void setJobGroupDummy(JobGroup jobGroupDummy) {
+        this.jobGroupDummy = jobGroupDummy;
+    }
     
     public int getJobId() {
 		return jobId.get();
 	}
 
-	public void setJobId(int jobId) {
+    public void setJobId(int jobId) {
 		this.jobId.set(jobId);
 	}
 
@@ -69,7 +87,7 @@ public class Assignment extends AbstractModel {
 		return isCompleted.get();
 	}
 
-	public void setIsCompleted(boolean isCompleted) {
+	public void setCompleted(boolean isCompleted) {
 		this.isCompleted.set(isCompleted);
 	}
 
@@ -97,7 +115,9 @@ public class Assignment extends AbstractModel {
     }
     
 	public Job getJob() {
-        return job == null ? loadJob() : job;
+	    if (!isDummy()) {
+	        return job == null ? loadJob() : job;
+	    } else return null;
     }
     
     public void setJob(Job job) {
@@ -122,6 +142,38 @@ public class Assignment extends AbstractModel {
 	public LocalDate getEndDate() {
 		return DateTimeUtil.getDateFromTimestamp(getEndTimestamp());
 	}
+	        
+	public String getCoWorkers() {
+	    String coWorkers = "";
+	    
+	    if (!isDummy()) {
+    	    //Go through all assignments of the job corresponding to this assignment, and add the ones that aren't this assignment (therefore adding all co-workers)
+    	    for (Assignment assignment : getJob().getAssignments()) {
+    	        if (assignment != this) {
+    	            coWorkers += assignment.getEmployee() + "\n";
+    	        }
+    	    }    	    
+	    }
+	    
+	    return coWorkers.trim(); //Get rid of last newline character
+	}
+	
+	public String getMaterials() {
+	    String materials = "";
+	    
+	    if (!isDummy()) {
+	        //Go through all materials of the job corresponding to this assignment, and add them to the materials list
+    	    for (RequiredMaterial material : getJob().getRequiredMaterials()) {
+    	        materials += material + "\n";
+    	    }    	    
+	    }
+    	    
+	    return materials.trim(); //Get rid of last newline character
+	}
+	
+	public String getDescription() {
+	    return isDummy() ? "" : getJob().getDescription();
+	}
 	
 	/* Overrides */
 
@@ -133,11 +185,14 @@ public class Assignment extends AbstractModel {
 	    if (containsColumn(columns, "hourlyWage")) setHourlyWage(result.getDouble("hourlyWage"));
 	    if (containsColumn(columns, "startTimestamp")) setStartTimestamp(result.getLong("startTimestamp"));
 	    if (containsColumn(columns, "endTimestamp")) setEndTimestamp(result.getLong("endTimestamp"));
-        if (containsColumn(columns, "isCompleted")) setIsCompleted(result.getBoolean("isCompleted"));
+        if (containsColumn(columns, "isCompleted")) setCompleted(result.getBoolean("isCompleted"));
 	}
     
     @Override
     public int add() {
+        getJob().getAssignments().add(this);
+        getEmployee().getAssignments().add(this);
+        
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
         + " (employeeId,jobId,hourlyWage,startTimestamp,endTimestamp,isCompleted) "
         + "VALUES (?,?,?,?,?,?)"
@@ -151,9 +206,27 @@ public class Assignment extends AbstractModel {
         + "WHERE id = ?", getEmployeeId(), getJobId(), getHourlyWage(), getStartTimestamp(), getEndTimestamp(), isCompleted(), getId());
     }
 
+    @Override
+    public void delete() {
+        getJob().getAssignments().remove(this);
+        getEmployee().getAssignments().remove(this);
+        
+        super.delete();
+    }
+    
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
+	}
+	
+	@Override
+	public String toString() {
+	    return getJob() + " for " + getEmployee();
+	}
+	
+	@Override
+	public boolean isDummy() {
+	    return jobGroupDummy != null || projectDummy != null;
 	}
 
 	/* Static methods */

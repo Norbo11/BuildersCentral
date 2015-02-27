@@ -45,6 +45,7 @@ public class Employee extends AbstractModel {
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
     private ObservableList<Assignment> assignments = FXCollections.observableArrayList();
+    private boolean dummy = false;
     
     /* Properties */
     
@@ -192,6 +193,14 @@ public class Employee extends AbstractModel {
 
     public void setDefaultWage(double defaultWage) {
         this.defaultWage.set(defaultWage);
+    }
+    
+    public boolean getDummy() {
+        return dummy;
+    }
+    
+    public void setDummy(boolean dummy) {
+        this.dummy = dummy;
     }
     
     /* Foreign model methods */

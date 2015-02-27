@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -50,7 +51,6 @@ public class RequiredMaterialItem extends HBox {
     @FXML
     public void delete() {
         requiredMaterial.delete();
-        requiredMaterial.getJob().getRequiredMaterials().remove(requiredMaterial);
         quotesTab.updateJobGroups();
     }
     
@@ -122,13 +122,23 @@ public class RequiredMaterialItem extends HBox {
     
     @FXML
     public void initialize() { 
-        this.finder = new ModelFinder<StockedMaterial>(searchList, StockedMaterial.getModels(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
+        this.finder = new ModelFinder<StockedMaterial>(searchList, nameField, StockedMaterial.getModels(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
         
         // Search list
         searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 setStockedMaterial(newValue);
             }
+        });
+        searchList.setCellFactory(param -> {
+            return new ListCell<StockedMaterial>() {
+                @Override
+                protected void updateItem(StockedMaterial material, boolean empty) {
+                    if (material != null) {
+                        setText(material + " - " + material.getQuantityString() + " " + Resources.getResource("materials.inStock").toLowerCase());
+                    }
+                }
+            };
         });
                
         nameField.focusedProperty().addListener((observable, oldValue, newValue) -> {

@@ -82,30 +82,8 @@
 	-fx-background-color: #C7E7FC;
 }
 
-/* Uncomment to disable table row selections */
-
-/*.tree-table-view.unselectable .tree-table-row-cell:filled:selected, .table-view.unselectable .table-row-cell:filled:selected { 
-  -fx-background: -fx-control-inner-background;
-  -fx-background-color: -fx-table-cell-border-color, -fx-background;
-  -fx-background-insets: 0, 0 0 1 0 ;
-  -fx-table-cell-border-color: derive(-fx-color, 5%);
-}
-
-.tree-table-view.unselectable .tree-table-row-cell:filled:selecte {
-  -fx-table-cell-border-color: transparent;
-}
-
-.table-view.unselectable .tree-table-row-cell:odd:filled:selected, .table-view.unselectable .table-row-cell:odd:filled:selected {
-  -fx-background: -fx-control-inner-background-alt;
-  -fx-table-cell-border-color: derive(-fx-color, 5%);
-}
-
-.table-view.unselectable .tree-table-row-cell:odd:filled:selected {
-  -fx-table-cell-border-color: transparent;
-}*/
-
-.tree-table-row-cell:odd:filled {
-  -fx-background: -fx-control-inner-background-alt;
+.list-cell {
+  -fx-cell-size: 24px;
 }
 
 /* Notifications */

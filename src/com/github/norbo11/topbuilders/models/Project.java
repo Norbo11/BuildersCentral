@@ -322,7 +322,6 @@ public class Project extends AbstractModel {
                  * as JavaFX does not support more than one data type in a TreeTableView */
                 
                 Job jobDummy = new Job();
-                jobDummy.setDummy(true);
                 jobDummy.setJobGroupDummy(group);
                 jobDummy.setTitle(group.getGroupName());
                 
@@ -355,7 +354,6 @@ public class Project extends AbstractModel {
                  * as JavaFX does not support more than one data type in a TreeTableView */
                 
                 Job jobDummy = new Job();
-                jobDummy.setDummy(true);
                 jobDummy.setJobGroupDummy(group);
                 jobDummy.setTitle(group.getGroupName());
                 
