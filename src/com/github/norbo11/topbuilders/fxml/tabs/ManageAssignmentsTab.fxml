@@ -52,7 +52,7 @@
   <!-- Bottom area -->
   
   <HBox spacing="10">
-    <padding><Insets right="250" left="250" /></padding>
+    <padding><Insets right="150" left="150" /></padding>
   
     <TitledPane HBox.hgrow="sometimes" fx:id="assignmentDetailsPane" alignment="center" maxHeight="Infinity">
       <GridPane hgap="30" vgap="10" alignment="center">      

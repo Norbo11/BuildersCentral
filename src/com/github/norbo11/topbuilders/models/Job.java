@@ -15,6 +15,7 @@ import com.github.norbo11.topbuilders.util.Database;
 
 public class Job extends AbstractModel {
     public static final String DB_TABLE_NAME = "jobs";
+    private static ArrayList<Job> jobs = new ArrayList<Job>();
     
     private IntegerProperty jobGroupId = new SimpleIntegerProperty(0);
     private StringProperty title = new SimpleStringProperty("");
@@ -97,16 +98,10 @@ public class Job extends AbstractModel {
 	public void setMaterialPrice(double materialPrice) {
 		this.materialPrice.set(materialPrice);
 	}    
-
-	public JobGroup getJobGroup() {
-        return jobGroup;
-    }
-
-    public void setJobGroup(JobGroup jobGroup) {
-        this.jobGroup = jobGroup;
-    }
     
     /* Forgeign key methods */
+	
+	//Getters & setters
     
     public ArrayList<RequiredMaterial> getRequiredMaterials() {
         return requiredMaterials == null ? loadRequiredMaterials() : requiredMaterials;
@@ -124,6 +119,16 @@ public class Job extends AbstractModel {
         this.assignments = assignments;
     }
     
+    public JobGroup getJobGroup() {
+        return jobGroup == null ? loadJobGroup() : jobGroup;
+    }
+
+    public void setJobGroup(JobGroup jobGroup) {
+        this.jobGroup = jobGroup;
+    }
+    
+    //Loaders
+    
     public ArrayList<RequiredMaterial> loadRequiredMaterials() {
         requiredMaterials = RequiredMaterial.loadRequiredMaterialsForJob(this);
         return requiredMaterials;
@@ -133,6 +138,12 @@ public class Job extends AbstractModel {
         assignments = Assignment.loadAssignmentsForJob(this);
         return assignments;
     }
+    
+    public JobGroup loadJobGroup() {
+    	jobGroup = JobGroup.loadJobGroupForJob(this);
+    	return jobGroup;
+    }
+    
 	
 	/* Instance methods */	
 
@@ -209,5 +220,13 @@ public class Job extends AbstractModel {
 		    job.setJobGroup(jobGroup);
 		}
 		return jobs;
+	}
+
+	public static Job loadJobForAssignment(Assignment assignment) {
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", assignment.getJobId()), Job.class);
+	}
+	
+	public static ArrayList<Job> getModels() {
+	    return jobs;
 	}
 }

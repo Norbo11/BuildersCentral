@@ -200,6 +200,6 @@ public class MaterialsTab extends AbstractController {
         StockedMaterial.loadStockedMaterials();
         
         table.getItems().clear();
-        table.getItems().addAll(StockedMaterial.getStockedMaterials());
+        table.getItems().addAll(StockedMaterial.getModels());
     }
 }

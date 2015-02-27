@@ -1,5 +1,6 @@
 package com.github.norbo11.topbuilders.models;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public abstract class AbstractModel {
     public abstract void loadFromResult(ResultSet result, String... columns) throws SQLException;
     
     public abstract String getDbTableName();
-        
+            
     /* Instance methods */
     
     public void save() {
@@ -142,18 +143,42 @@ public abstract class AbstractModel {
         return Database.executeQuery(query, param);
     }
     
+	@SuppressWarnings("unchecked")
 	protected static <T extends AbstractModel> ArrayList<T> loadList(ResultSet result, Class<T> clazz) {
 		ArrayList<T> models = new ArrayList<T>();
         		
         try {
 			while (result.next()) {
 				T model = clazz.newInstance();
-				model.loadFromResult(result);
+				ArrayList<T> modelList = null;
+				
+				try {
+					modelList = (ArrayList<T>) clazz.getMethod("getModels").invoke(null); //Invoke the static method getModels
+				} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
+				
+				System.out.println(modelList);
+				//Try to find an existing model
+				for (AbstractModel existingModel : modelList) {
+					if (existingModel.getId() == result.getInt("id")) {
+						model = (T) existingModel;
+					}
+				}
+				
+				//If no existing model was found
+				if (model.getId() == 0) {
+					model = clazz.newInstance();
+					model.loadFromResult(result);
+					modelList.add(model);
+				}
+				
 				models.add(model);
 			}
 		} catch (SQLException | InstantiationException | IllegalAccessException e) {
 			Log.error(e);
 		}
+        
         return models;
 	}
 	

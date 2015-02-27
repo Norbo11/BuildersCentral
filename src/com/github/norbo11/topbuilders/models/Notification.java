@@ -19,6 +19,7 @@ import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 public class Notification extends AbstractModel {
     public static final String DB_TABLE_NAME = "notifications";
+    private static ArrayList<Notification> notifications = new ArrayList<Notification>();
     
     private IntegerProperty employeeId = new SimpleIntegerProperty(0);
     private IntegerProperty typeId = new SimpleIntegerProperty(0);
@@ -139,6 +140,9 @@ public class Notification extends AbstractModel {
         return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "employeeId", employee.getId(), "timestamp", true));
 	}
 	
+	public static ArrayList<Notification> getModels() {
+	    return notifications;
+	}
 	
     public static void deleteCorrespondingNotification(AbstractModel model) {
         if (model instanceof Message) {
@@ -154,4 +158,5 @@ public class Notification extends AbstractModel {
             Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_QUOTE_REQUEST.getId(), model.getId());
         }
     }
+    
 }

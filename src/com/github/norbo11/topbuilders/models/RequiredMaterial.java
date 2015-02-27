@@ -153,7 +153,7 @@ public class RequiredMaterial extends AbstractModel {
         return loadList(job, loadAllModelsWhere(DB_TABLE_NAME, "jobId", job.getId()));
     }
 
-    public static ArrayList<RequiredMaterial> getRequiredMaterials() {
+    public static ArrayList<RequiredMaterial> getModels() {
         return requiredMaterials;
     }
 }

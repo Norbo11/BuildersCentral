@@ -20,7 +20,7 @@ import com.github.norbo11.topbuilders.util.Settings;
 
 public class Project extends AbstractModel {
     public static final String DB_TABLE_NAME = "projects";        
-    private static ArrayList<Project> projects = null;
+    private static ArrayList<Project> projects = new ArrayList<Project>();
     
     private BooleanProperty quoteRequested = new SimpleBooleanProperty(false);
     private BooleanProperty completed = new SimpleBooleanProperty(false);
@@ -302,10 +302,14 @@ public class Project extends AbstractModel {
         return projects;
     }
     
-    public static ArrayList<Project> getProjects() {
-        return projects == null ? loadProjects() : projects;
+    public static ArrayList<Project> getModels() {
+        return projects;
     }
 
+	public static Project loadProjectForJobGroup(JobGroup jobGroup) {
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", jobGroup.getProjectId()), Project.class);
+	}
+	
     public void populateTreeTable(TreeView<Job> table) {
         table.getRoot().getChildren().clear();
         

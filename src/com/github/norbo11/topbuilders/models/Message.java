@@ -22,7 +22,8 @@ import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
-
+    private static ArrayList<Message> messages = new ArrayList<Message>();
+    
     private IntegerProperty senderId = new SimpleIntegerProperty(0);
     private IntegerProperty recipientId = new SimpleIntegerProperty(0);
     private StringProperty title = new SimpleStringProperty("");
@@ -138,5 +139,9 @@ public class Message extends AbstractModel {
     
     public static ArrayList<Message> loadList(ResultSet result) {
 		return loadList(result, Message.class);
+	}
+    
+    public static ArrayList<Message> getModels() {
+	    return messages;
 	}
 }

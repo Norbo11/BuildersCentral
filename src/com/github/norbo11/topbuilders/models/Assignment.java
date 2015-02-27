@@ -2,9 +2,11 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -94,12 +96,31 @@ public class Assignment extends AbstractModel {
     }
     
 	public Job getJob() {
-        return job;
+        return job == null ? loadJob() : job;
     }
     
     public void setJob(Job job) {
         this.job = job;
     }
+    
+    public Job loadJob() {
+    	job = Job.loadJobForAssignment(this);
+    	return job;
+    }
+    
+    public Project getProject() {
+    	return getJob().getJobGroup().getProject();
+    }
+    
+    /* Instance methods */
+    
+	public LocalDate getStartDate() {
+		return DateTimeUtil.getDateFromTimestamp(getStartTimestamp());
+	}
+	
+	public LocalDate getEndDate() {
+		return DateTimeUtil.getDateFromTimestamp(getEndTimestamp());
+	}
 	
 	/* Overrides */
 
@@ -133,7 +154,7 @@ public class Assignment extends AbstractModel {
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
 	}
-	
+
 	/* Static methods */
 	
 	public static ArrayList<Assignment> loadAssignments() {
@@ -153,7 +174,7 @@ public class Assignment extends AbstractModel {
         return loadList(loadAllModelsWhere(DB_TABLE_NAME, "employeeId", employee.getId()));
     }
     
-    public static ArrayList<Assignment> getAssignments() {
+    public static ArrayList<Assignment> getModels() {
 	    return assignments;
 	}
 }

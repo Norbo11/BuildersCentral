@@ -13,6 +13,7 @@ import com.github.norbo11.topbuilders.util.Database;
 
 public class JobGroup extends AbstractModel {
     public static final String DB_TABLE_NAME = "jobGroups";
+    private static ArrayList<JobGroup> jobGroups = new ArrayList<JobGroup>();
     
     private IntegerProperty projectId = new SimpleIntegerProperty(0);
     private StringProperty groupName = new SimpleStringProperty("");
@@ -46,23 +47,37 @@ public class JobGroup extends AbstractModel {
 	public void setGroupName(String groupName) {
 		this.groupName.set(groupName);
 	}
-	
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
     
     /* Forgeign key methods */
-    
+
+	//Getting & settings
+	
+	public Project getProject() {
+	    return project == null ? loadProject() : project;
+	}
+	
+	public void setProject(Project project) {
+	    this.project = project;
+	}
+
     public ArrayList<Job> getJobs() {
         return jobs  == null ? loadJobs() : jobs;
     }
 
     public void setJobs(ArrayList<Job> jobs) {
         this.jobs = jobs;
+    }
+    
+    //Loading
+    
+    public ArrayList<Job> loadJobs() {
+        jobs = Job.loadJobsForJobGroup(this);
+        return jobs;
+    }
+    
+    public Project loadProject() {
+        project = Project.loadProjectForJobGroup(this);
+        return project;
     }
 	
 	/* Instance methods */	
@@ -109,11 +124,6 @@ public class JobGroup extends AbstractModel {
         if (containsColumn(columns, "groupName")) setGroupName(result.getString("groupName"));
     }
     
-    public ArrayList<Job> loadJobs() {
-        jobs = Job.loadJobsForJobGroup(this);
-        return jobs;
-    }
-    
 	@Override
 	public String getDbTableName() {
 		return DB_TABLE_NAME;
@@ -138,5 +148,13 @@ public class JobGroup extends AbstractModel {
 		    group.setProject(project);
 		}
 		return groups;
+	}
+
+	public static JobGroup loadJobGroupForJob(Job job) {
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", job.getJobGroupId()), JobGroup.class);
+	}
+	
+	public static ArrayList<JobGroup> getModels() {
+	    return jobGroups;
 	}
 }

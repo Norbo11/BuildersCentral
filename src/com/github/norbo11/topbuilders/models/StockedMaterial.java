@@ -84,7 +84,7 @@ public class StockedMaterial extends AbstractModel {
 	public Double getQuantityRequiredInProjects() {
 	    double required = 0;
 	    
-		for (RequiredMaterial material : RequiredMaterial.getRequiredMaterials()) {
+		for (RequiredMaterial material : RequiredMaterial.getModels()) {
 		    if (material.getStockedMaterialId() == getId()) required += material.getQuantityRequired();
 		}
 		
@@ -138,8 +138,8 @@ public class StockedMaterial extends AbstractModel {
 	
 	/* Standard static methods */
 	
-	public static ArrayList<StockedMaterial> getStockedMaterials() {
-		return stockedMaterials == null ? loadStockedMaterials() : stockedMaterials;
+	public static ArrayList<StockedMaterial> getModels() {
+		return stockedMaterials;
 	}
 	
 	public static ArrayList<StockedMaterial> loadStockedMaterials() {

@@ -122,7 +122,7 @@ public class RequiredMaterialItem extends HBox {
     
     @FXML
     public void initialize() { 
-        this.finder = new ModelFinder<StockedMaterial>(searchList, StockedMaterial.getStockedMaterials(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
+        this.finder = new ModelFinder<StockedMaterial>(searchList, StockedMaterial.getModels(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
         
         // Search list
         searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {

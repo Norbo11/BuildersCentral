@@ -224,7 +224,7 @@ public class QuotesTab extends AbstractValidationScene {
         String info = Resources.getResource("quotes.confirmProjectDelete", project.getFirstLineAddress());
         SceneUtil.showConfirmationDialog(title, info, () -> { 
             project.delete();
-            Project.getProjects().remove(project);
+            Project.getModels().remove(project);
             updateAll();
         });
     }
@@ -301,7 +301,7 @@ public class QuotesTab extends AbstractValidationScene {
     public void updateProjectPicker() {
         int index = projectPicker.getSelectionModel().getSelectedIndex();
         projectPicker.getItems().clear();
-        projectPicker.getItems().addAll(Project.getProjects());
+        projectPicker.getItems().addAll(Project.getModels());
         projectPicker.getSelectionModel().select(index);
     }
     
@@ -323,7 +323,7 @@ public class QuotesTab extends AbstractValidationScene {
         Project newProject = new Project();
         newProject.setNewModel(true);
         newProject.setFirstLineAddress(Resources.getResource("quotes.newProject"));
-        Project.getProjects().add(newProject);
+        Project.getModels().add(newProject);
     }
     
     public void selectProject(Project oldProject, Project newProject) {

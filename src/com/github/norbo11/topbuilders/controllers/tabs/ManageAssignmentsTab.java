@@ -75,7 +75,7 @@ public class ManageAssignmentsTab extends AbstractController {
     @FXML
 	public void initialize() {		
         /* Populate project list */
-        projectList.getItems().setAll(Project.getProjects()); 
+        projectList.getItems().setAll(Project.loadProjects()); 
         
         /* Define project list behaviour */
         projectList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, clickedProject) -> {
@@ -107,11 +107,11 @@ public class ManageAssignmentsTab extends AbstractController {
         });
         
         /* Search functions */
-        this.employeeSearchFinder = new ModelFinder<Employee>(employeeSearchSearchList, Employee.getEmployees(), (entry, input) -> {
+        this.employeeSearchFinder = new ModelFinder<Employee>(employeeSearchSearchList, Employee.loadEmployees(), (entry, input) -> {
             return entry.getFirstName().toUpperCase().startsWith(input.toUpperCase()) || entry.getLastName().toUpperCase().startsWith(input.toUpperCase()); //Standard search by name
         });
         
-        this.employeeAddFinder = new ModelFinder<Employee>(employeeAddSearchList, Employee.getEmployees(), (entry, input) -> {
+        this.employeeAddFinder = new ModelFinder<Employee>(employeeAddSearchList, Employee.getModels(), (entry, input) -> {
           //Iterate through the current assignments and only filter based on whether an employee is not already assigned to this job (as well as their name compared to the input)
             boolean alreadyAssigned = false;
             for (Assignment assignment : assignmentList.getItems()) {
@@ -207,8 +207,8 @@ public class ManageAssignmentsTab extends AbstractController {
         Assignment assignment = getSelectedAssignment();
         
         if (assignment != null) {
-    		startDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getStartTimestamp()));
-    		endDate.setValue(DateTimeUtil.getDateFromTimestamp(assignment.getEndTimestamp()));
+    		startDate.setValue(assignment.getStartDate());
+    		endDate.setValue(assignment.getEndDate());
     		hourlyWage.setDouble(assignment.getHourlyWage());
     		
     		assignmentDetailsPane.setText(Resources.getResource("manageAssignments.details", getSelectedJob().getTitle(), assignment.getEmployee().getFullName()));

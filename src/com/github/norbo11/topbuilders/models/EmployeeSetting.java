@@ -6,7 +6,8 @@ import com.github.norbo11.topbuilders.util.Settings;
 
 public class EmployeeSetting extends AbstractSetting {
     public static final String DB_TABLE_NAME = "employeeSettings";	
-
+    private static ArrayList<EmployeeSetting> employeeSettings = new ArrayList<EmployeeSetting>();
+    
     public EmployeeSetting() {
         super("employeeId");
     }
@@ -23,4 +24,8 @@ public class EmployeeSetting extends AbstractSetting {
         
         return new Settings<EmployeeSetting>(employee, list, EmployeeSetting.class);
     }
+    
+    public static ArrayList<EmployeeSetting> getModels() {
+	    return employeeSettings;
+	}
 }
