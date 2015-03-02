@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField ?>
+
+<fx:root styleClass="notification-item" type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml" spacing="5">
+    <Label fx:id="errorsLabel" visible="false" text="%validation.errors" wrapText="true" />
+    <VBox fx:id="errorsList" />
+</fx:root>

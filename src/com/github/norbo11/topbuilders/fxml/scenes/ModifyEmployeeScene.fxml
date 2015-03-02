@@ -8,7 +8,8 @@
 <?import javafx.scene.web.*?>
 <?import javafx.collections.*?>
 <?import com.github.norbo11.topbuilders.*?>
-<?import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField?>
+<?import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField ?>
+<?import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo ?>
 
 <VBox spacing="20" alignment="top_left" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.ModifyEmployeeScene">
   <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
@@ -54,8 +55,7 @@
     <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
     <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/> 
     
-    <Label fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="6" GridPane.columnIndex="0" />
-    <VBox fx:id="errorsList" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+    <ValidationInfo fx:id="validation" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="4" />
   </GridPane>
     
   <HBox spacing="100" alignment="center">

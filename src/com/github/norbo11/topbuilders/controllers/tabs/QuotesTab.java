@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -12,11 +11,11 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
-import com.github.norbo11.topbuilders.controllers.scenes.AbstractValidationScene;
 import com.github.norbo11.topbuilders.controllers.scenes.QuoteSettingsScene;
 import com.github.norbo11.topbuilders.models.Job;
 import com.github.norbo11.topbuilders.models.JobGroup;
@@ -38,7 +37,7 @@ import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
-public class QuotesTab extends AbstractValidationScene {
+public class QuotesTab extends AbstractController {
 
     public final static String FXML_FILENAME = "tabs/QuotesTab.fxml";
     
@@ -51,8 +50,7 @@ public class QuotesTab extends AbstractValidationScene {
     @FXML private TextArea projectDescription, projectNote;
     @FXML private TextField firstName, lastName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode;
     
-    @FXML private VBox errorsList;
-    @FXML private Label errorsLabel;
+    @FXML private ValidationInfo validation;
     @FXML private TreeTableView<Job> table;
     @FXML private TreeTableColumn<Job, Job> materialsCol, deleteJobCol; 
     @FXML private TreeTableColumn<Job, String> titleCol, descriptionCol;
@@ -370,18 +368,10 @@ public class QuotesTab extends AbstractValidationScene {
     
     public boolean validate() {
         /* Email */
-        if (email.getText().length() > 0 && !Validation.checkEmailFormat(email.getText())) addErrorFromResource("validation.invalidEmail");
+        if (email.getText().length() > 0 && !Validation.checkEmailFormat(email.getText())) {
+        	validation.addErrorFromResource("validation.invalidEmail");
+        }
 
-        return displayErrors();
+        return validation.displayErrors();
     }
-    
-    @Override
-	public VBox getErrorsList() {
-		return errorsList;
-	}
-
-	@Override
-	public Label getErrorsLabel() {
-		return errorsLabel;
-	}
 }

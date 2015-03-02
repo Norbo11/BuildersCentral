@@ -9,23 +9,30 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 import com.github.norbo11.topbuilders.Constants;
 import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.EmployeeSetting;
 import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.Settings;
+import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class SettingsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/SettingsTab.fxml";
     
-    
     @FXML ComboBox<Locale> languagesCombo;
     @FXML CheckBox fullscreenCheckbox;
+    @FXML ValidationInfo passwordValidation, emailValidation;
+    @FXML PasswordField currentPassword, newPassword1, newPassword2;
+    @FXML TextField currentEmail, newEmail1, newEmail2;
+    
     private Settings<EmployeeSetting> settings;
     
     //Custom ListCell class which used to override the default display method of cells in the languages combo box
@@ -68,7 +75,8 @@ public class SettingsTab extends AbstractController {
         fullscreenCheckbox.setSelected(settings.getBoolean(EmployeeSettingType.FULLSCREEN));
 	}
 	
-	@FXML public void saveSettings(ActionEvent event) {
+	@FXML
+	public void saveSettings(ActionEvent event) {
 		settings.set(EmployeeSettingType.LOCALE, languagesCombo.getSelectionModel().getSelectedItem().getLanguage());
 		settings.set(EmployeeSettingType.FULLSCREEN, fullscreenCheckbox.isSelected());
 		settings.save();
@@ -77,7 +85,36 @@ public class SettingsTab extends AbstractController {
 		Main.getMainStage().setFullScreen(fullscreenCheckbox.isSelected());
 	}
 	
-	@FXML public void cancel(ActionEvent event) {
+	@FXML
+	public void changePassword() {
+		
+	}
+	
+	@FXML
+	public void changeEmail() {
+		/* Check current email */
+		if (!Employee.getCurrentEmployee().getEmail().equals(currentEmail.getText())) {
+			emailValidation.addErrorFromResource("validation.invalidCurrentEmail");
+		}
+		
+		/* Email format */
+		if (!Validation.checkEmailFormat(newEmail1.getText())) {
+        	emailValidation.addErrorFromResource("validation.invalidEmail");
+        }
+		
+		/* Check new email match */
+		if (!newEmail1.getText().equals(newEmail2.getText())) {
+			emailValidation.addErrorFromResource("validation.emailMustMatch");
+		}
+		
+		//If no errors occurred
+		if (!emailValidation.displayErrors()) {
+			//Change the email
+		}
+	}
+	
+	@FXML
+	public void cancel(ActionEvent event) {
 		TabUtil.closeCurrentTab();
 	}
 }

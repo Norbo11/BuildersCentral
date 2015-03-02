@@ -1,17 +1,29 @@
-package com.github.norbo11.topbuilders.controllers.scenes;
+package com.github.norbo11.topbuilders.controllers.custom;
 
 import java.util.ArrayList;
 
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.tabs.QuotesTab;
+import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.helpers.FXMLUtil;
 
-public abstract class AbstractValidationScene extends AbstractController {
+public class ValidationInfo extends VBox {
+    public static final String FXML_FILENAME = "ValidationInfo.fxml";
+
+    @FXML private VBox errorsList;
+    @FXML private Label errorsLabel;
+    
     private ArrayList<Label> errors = new ArrayList<Label>();
+
+    public ValidationInfo() {
+        FXMLUtil.loadFxml(FXML_FILENAME, this, this);
+    }
     
     public void addErrorFromResource(String key) {
         addError(Resources.getResource(key));
@@ -26,21 +38,18 @@ public abstract class AbstractValidationScene extends AbstractController {
     }
     
     public boolean displayErrors(boolean resize) {
-        ObservableList<Node> errorList = getErrorsList().getChildren();
+        ObservableList<Node> errorList = errorsList.getChildren();
         errorList.clear();
-        getErrorsLabel().setVisible(false);
+        errorsLabel.setVisible(false);
         
         if (errors.size() > 0) {
             errorList.addAll(errors);
             errors.clear();
             
-            if (resize) getErrorsLabel().getScene().getWindow().sizeToScene();
-            getErrorsLabel().setVisible(true);
+            if (resize) errorsLabel.getScene().getWindow().sizeToScene();
+            errorsLabel.setVisible(true);
             return false;
         } 
         return true;
     }
-    
-    public abstract VBox getErrorsList();
-    public abstract Label getErrorsLabel();
 }

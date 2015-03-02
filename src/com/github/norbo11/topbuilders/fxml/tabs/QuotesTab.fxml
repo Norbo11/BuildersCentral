@@ -5,7 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory ?>
+<?import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo ?>
 
 <VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.QuotesTab">
   <padding><Insets top="25" bottom="25" right="70" left="70" /></padding>
@@ -100,9 +101,7 @@
       <Label wrapText="true" text="%general.address.postcode" GridPane.rowIndex="3" GridPane.columnIndex="2" />
       <TextField GridPane.hgrow="always" fx:id="postcode" GridPane.rowIndex="3" GridPane.columnIndex="3" />
       
-
-      <Label wrapText="true" fx:id="errorsLabel" visible="false" text="%validation.errors" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-      <VBox fx:id="errorsList" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+      <ValidationInfo fx:id="validation" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="4" />
     </GridPane>
   </HBox>
   

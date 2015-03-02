@@ -5,13 +5,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import com.github.norbo11.topbuilders.Constants?>
+<?import com.github.norbo11.topbuilders.controllers.ValidationInfo ?>
 
 <VBox fx:id="parent" spacing="20" fillWidth="false" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.RegisterScene">
   <padding><Insets top="25" bottom="25" right="25" left="25" /></padding>
   
-  <Label fx:id="errorsLabel" visible="false" text="Errors:" />
-  <VBox fx:id="errorsList" />
+  <ValidationInfo />
   
   <VBox fx:id="activateForm" spacing="20">
     <Label text="Please enter the 12-character code provided by your employer" />

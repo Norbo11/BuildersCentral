@@ -6,9 +6,10 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 
+import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
+import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.util.Resources;
@@ -16,14 +17,13 @@ import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-public class ModifyEmployeeScene extends AbstractValidationScene {
+public class ModifyEmployeeScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/ModifyEmployeeScene.fxml";
     
     private Employee employee;
     private boolean isNew;
     
-    @FXML private VBox errorsList;
-    @FXML private Label errorsLabel;
+    @FXML private ValidationInfo validation;
     
     @FXML private TextField username, email, firstName, lastName, firstLineAddress, secondLineAddress, city, postcode;
     @FXML private DoubleTextField defaultWage;
@@ -101,35 +101,25 @@ public class ModifyEmployeeScene extends AbstractValidationScene {
     	/* Username */
     	if (username.getText().length() > 0) {
     		if (userChanged && Employee.checkUsernameExists(username.getText())) {
-    		    addErrorFromResource("validation.usernameExists");
+    		    validation.addErrorFromResource("validation.usernameExists");
         	}
-    	} else addErrorFromResource("validation.usernameRequired");
+    	} else validation.addErrorFromResource("validation.usernameRequired");
     	
     	
     	/* Email */
     	if (email.getText().length() > 0) {
     		if (Validation.checkEmailFormat(email.getText())) {
     			if (emailChanged && Employee.checkEmailExists(email.getText())) {
-    			    addErrorFromResource("validation.emailExists");
+    				validation.addErrorFromResource("validation.emailExists");
             	}
-        	} else addErrorFromResource("validation.invalidEmail");
-    	} else addErrorFromResource("validation.emailRequired");
+        	} else validation.addErrorFromResource("validation.invalidEmail");
+    	} else validation.addErrorFromResource("validation.emailRequired");
     	
     	/* Name */
     	if (firstName.getText().length() == 0 || lastName.getText().length() == 0) {
-    	    addErrorFromResource("validation.namesRequired");
+    		validation.addErrorFromResource("validation.namesRequired");
     	}
     	
-		return displayErrors();
+		return validation.displayErrors();
 	}
-
-    @Override
-    public VBox getErrorsList() {
-        return errorsList;
-    }
-
-    @Override
-    public Label getErrorsLabel() {
-        return errorsLabel;
-    }
 }
