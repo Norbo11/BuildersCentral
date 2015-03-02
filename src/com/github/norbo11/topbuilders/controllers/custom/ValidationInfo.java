@@ -8,8 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import com.github.norbo11.topbuilders.controllers.tabs.QuotesTab;
-import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.FXMLUtil;
 
@@ -30,10 +28,12 @@ public class ValidationInfo extends VBox {
     }
     
     public void addError(String string) {
-        errors.add(new Label(string));
+        Label error = new Label(string);
+        error.setWrapText(true);
+        errors.add(error);
     }
     
-    public boolean displayErrors() {
+    public boolean validate() {
         return displayErrors(false);
     }
     

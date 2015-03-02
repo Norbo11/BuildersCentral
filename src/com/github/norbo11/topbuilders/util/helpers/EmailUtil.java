@@ -19,14 +19,16 @@ public class EmailUtil {
     public static final String PASSWORD = "computing";
     
     public static void sendEmail(String to, String subject, String text) {
-        String host = "smtp.gmail.com";
-
+        //Create properties for the connection
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.auth", "true"); //Attempt to authenticate the user
+        props.put("mail.smtp.starttls.enable", "true"); //Enables the use of the STARTTLS command (ensures an encrypted connection before logging in)
+       
+        //Use Google SMTP server
+        props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
+        //Get a session instance, with a new Authenticator object, which will authenticate with the desires username/password (as in the above constants)
         Session session = Session.getInstance(props, new Authenticator() {
            protected PasswordAuthentication getPasswordAuthentication() {
               return new PasswordAuthentication(USERNAME, PASSWORD);
@@ -34,18 +36,21 @@ public class EmailUtil {
         });
 
         try {
-           Message message = new MimeMessage(session);
-
-           // Set header fields
-           message.setFrom(new InternetAddress(EMAIL_ADDRESS, EMAIL_NAME));
-           message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+           MimeMessage message = new MimeMessage(session); //Create the message to be sent, with the earlier created session
+           
+           //Set header fields
+           message.setFrom(new InternetAddress(EMAIL_ADDRESS, EMAIL_NAME)); //From the Top Builders e-mail address, with the defined full name to be displayed
+           message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); //To the desired e-mail address
+           
+           //Set subject and message content
            message.setSubject(subject);
-           message.setText(text);
-
-           // Send message
+           message.setContent(text, "text/html; charset=utf-8"); //Enable HTML in message, with UTF-8 encoding
+           
+           //Send message
            Transport.send(message);
         } catch (MessagingException | UnsupportedEncodingException e) {
-              e.printStackTrace();
+            //If anything goes wrong, just print an error to the console
+            e.printStackTrace();
         }
     }
 }

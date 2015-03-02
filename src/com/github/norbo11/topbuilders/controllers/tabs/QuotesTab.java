@@ -1,4 +1,9 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,8 +16,15 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
@@ -167,8 +179,40 @@ public class QuotesTab extends AbstractController {
     }
     
     @FXML
-    public void export(ActionEvent e) {
-        
+    public void export() {
+        try {
+            Project project = getSelectedProject();
+            
+            //Create a new workbook and a new sheet
+            Workbook workbook = new HSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Quote");
+            
+            Row row = sheet.createRow(1);
+            row.createCell(1).setCellValue(project.getClientFullName());
+            
+            //Pick a file to save to
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(Resources.getResource("quotes.export.save"));
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Excel workbook", "*.xls")
+            );
+            File file = fileChooser.showSaveDialog(Main.getMainStage());
+            
+            //If the user picked a file
+            if (file != null) {
+                //Save the workbook to the file
+                FileOutputStream fileOut = new FileOutputStream(file);
+                workbook.write(fileOut);
+                workbook.close();
+                fileOut.close();
+
+                //Open the workbook
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(file);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     @FXML
@@ -372,6 +416,6 @@ public class QuotesTab extends AbstractController {
         	validation.addErrorFromResource("validation.invalidEmail");
         }
 
-        return validation.displayErrors();
+        return validation.validate();
     }
 }

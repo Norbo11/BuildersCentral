@@ -29,7 +29,7 @@ public class RegisterScene {
             if (employee != null) {
                 parent.getChildren().remove(activateForm);
                 passwordForm.setVisible(true);
-                validation.displayErrors();
+                validation.validate();
                 return;
             }
         }  
@@ -50,7 +50,7 @@ public class RegisterScene {
             } else validation.addError("Passwords must match");
         } else validation.addError("You must input a password");
         
-        validation.displayErrors();
+        validation.validate();
     }
     
     @FXML

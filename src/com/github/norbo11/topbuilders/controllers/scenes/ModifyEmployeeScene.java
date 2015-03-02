@@ -120,6 +120,6 @@ public class ModifyEmployeeScene extends AbstractController {
     		validation.addErrorFromResource("validation.namesRequired");
     	}
     	
-		return validation.displayErrors();
+		return validation.validate();
 	}
 }

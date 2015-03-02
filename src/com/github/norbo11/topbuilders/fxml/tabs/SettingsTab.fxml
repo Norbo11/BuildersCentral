@@ -9,7 +9,7 @@
 <?import com.github.norbo11.topbuilders.Constants?>
 <?import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo ?>
 
-<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.SettingsTab">
+<VBox spacing="20" alignment="center" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.SettingsTab">
   <padding><Insets top="25" bottom="25" right="170" left="170" /></padding>
   
   <TitledPane text="%settings.password.heading">
@@ -17,16 +17,16 @@
       <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
         <padding><Insets top="10" bottom="10" /></padding>
         <Label text="%settings.password.current" GridPane.rowIndex="0" />
-        <PasswordField fx:id="currentPassword" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <PasswordField GridPane.hgrow="always" maxWidth="300" fx:id="currentPassword" GridPane.rowIndex="0" GridPane.columnIndex="1" />
         
         <Label text="%settings.password.new" GridPane.rowIndex="1" />
-        <PasswordField fx:id="newPassword1" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        <PasswordField GridPane.hgrow="always" maxWidth="300" fx:id="newPassword1" GridPane.rowIndex="1" GridPane.columnIndex="1" />
         
         <Label text="%settings.password.confirm" GridPane.rowIndex="2" />
-        <PasswordField fx:id="newPassword2" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        <PasswordField GridPane.hgrow="always" maxWidth="300" fx:id="newPassword2" GridPane.rowIndex="2" GridPane.columnIndex="1" />
       </GridPane>
       
-      <ValidationInfo HBox.hgrow="always" fx:id="passwordValidation" />
+      <ValidationInfo HBox.hgrow="SOMETIMES" fx:id="passwordValidation" />
       
       <Button onAction="#changePassword" text="%settings.password.heading" prefWidth="150" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
         <padding><Insets top="10" bottom="10" /></padding>
@@ -40,16 +40,16 @@
       <GridPane hgap="20" vgap="10" AnchorPane.leftAnchor="0">
         <padding><Insets top="10" bottom="10" /></padding>
         <Label text="%settings.email.current" GridPane.rowIndex="0" />
-        <TextField fx:id="currentEmail" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label fx:id="currentEmail" GridPane.rowIndex="0" GridPane.columnIndex="1" />
         
         <Label text="%settings.email.new" GridPane.rowIndex="1" />
-        <TextField fx:id="newEmail1" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        <TextField GridPane.hgrow="always" maxWidth="300" fx:id="newEmail1" GridPane.rowIndex="1" GridPane.columnIndex="1" />
         
         <Label text="%settings.email.confirm" GridPane.rowIndex="2" />
-        <TextField fx:id="newEmail2" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        <TextField GridPane.hgrow="always" maxWidth="300" fx:id="newEmail2" GridPane.rowIndex="2" GridPane.columnIndex="1" />
       </GridPane>
       
-      <ValidationInfo HBox.hgrow="always" fx:id="emailValidation" />
+      <ValidationInfo HBox.hgrow="SOMETIMES" fx:id="emailValidation" />
       
       <Button onAction="#changeEmail" text="%settings.email.heading" prefWidth="150" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
         <padding><Insets top="10" bottom="10" /></padding>

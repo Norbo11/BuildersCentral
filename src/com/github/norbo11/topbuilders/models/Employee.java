@@ -228,6 +228,10 @@ public class Employee extends AbstractModel {
     
     /* Instance methods */
     
+    public boolean checkPassword(String inputPassword) {
+        return getPassword().equals(HashUtil.generateMD5Hash(inputPassword));
+    }
+    
     public UserType getUserType() {
         return UserType.getUserType(getUserTypeId());
     }
@@ -308,7 +312,7 @@ public class Employee extends AbstractModel {
                 employee.loadFromResult(result);
                 employee.loadSettings();
                 
-                if (employee.getPassword().equals(HashUtil.generateMD5Hash(inputPassword))) {
+                if (employee.checkPassword(inputPassword)) {
                     employee.login();
                     return employee; 
                 } else throw new PasswordException();
