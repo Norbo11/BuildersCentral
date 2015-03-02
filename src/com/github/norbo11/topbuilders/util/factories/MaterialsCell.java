@@ -1,7 +1,6 @@
 package com.github.norbo11.topbuilders.util.factories;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.layout.VBox;
 
@@ -36,7 +35,7 @@ public class MaterialsCell extends TreeTableCell<Job, Job> {
                 newMaterial.jobIdProperty().bind(job.idProperty());
                 job.getRequiredMaterials().add(newMaterial);
                 
-                addMaterialRow(newMaterial).requestFocus(); 
+                addMaterialRow(newMaterial).getNameField().requestFocus(); 
                 
                 addButton(); //Re-add the New Material button
             }
@@ -47,10 +46,10 @@ public class MaterialsCell extends TreeTableCell<Job, Job> {
         vbox.setMaxWidth(Double.MAX_VALUE);
 	}
 	
-    private TextField addMaterialRow(RequiredMaterial requiredMaterial) {
+    private RequiredMaterialItem addMaterialRow(RequiredMaterial requiredMaterial) {
         lastItem = new RequiredMaterialItem(requiredMaterial, controller);
         vbox.getChildren().add(lastItem);
-        return lastItem.getNameField(); //Return this for focus purposes
+        return lastItem;
     }
 	
 	private void addButton() {

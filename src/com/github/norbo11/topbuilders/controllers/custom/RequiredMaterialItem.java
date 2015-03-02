@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,7 +23,6 @@ import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.ModelFinder;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.FXMLUtil;
-import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
@@ -33,13 +33,12 @@ public class RequiredMaterialItem extends HBox {
     @FXML private Label typeLabel;
     @FXML private TextField nameField;
     @FXML private DoubleTextField quantityField;
-    @FXML private VBox nameVBox;
+    @FXML private AnchorPane nameAnchorPane;
     @FXML private ListView<StockedMaterial> searchList;
     
     private Stage stage;
     private RequiredMaterial requiredMaterial;
     private QuotesTab quotesTab;
-    private ModelFinder<StockedMaterial> finder;
     
     public RequiredMaterialItem(RequiredMaterial requiredMaterial, QuotesTab quotesTab) {
         this.requiredMaterial = requiredMaterial;
@@ -122,7 +121,7 @@ public class RequiredMaterialItem extends HBox {
     
     @FXML
     public void initialize() { 
-        this.finder = new ModelFinder<StockedMaterial>(searchList, nameField, StockedMaterial.getModels(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
+        new ModelFinder<StockedMaterial>(searchList, nameField, StockedMaterial.getModels(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
         
         // Search list
         searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
@@ -146,9 +145,6 @@ public class RequiredMaterialItem extends HBox {
         });
                 
         updateAll();
-        
-        //This needs to be after the above, as setText will trigger it 
-        nameField.textProperty().addListener((obs, oldVal, newVal) -> finder.search(oldVal, newVal));
     }
 
     public void updateAll() {        
@@ -164,9 +160,9 @@ public class RequiredMaterialItem extends HBox {
             typeLabel.setText("");
         }
         
-        GuiUtil.hideNodeManaged(searchList);
+        searchList.setVisible(false);
     }
-
+    
     public TextField getNameField() {
         return nameField;
     }

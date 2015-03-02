@@ -11,15 +11,11 @@
 <fx:root styleClass="notification-item" type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml" spacing="5">
   <Button fx:id="deleteButton" text="X" onAction="#delete" />
   
-  <VBox fx:id="nameVBox">      
-    <HBox.hgrow>ALWAYS</HBox.hgrow>
-  
-    <TextField fx:id="nameField" onAction="#commit">
-      <maxWidth><Double fx:constant="MAX_VALUE" /></maxWidth>
-    </TextField>
+  <AnchorPane HBox.hgrow="always" fx:id="nameAnchorPane" >        
+    <TextField AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" fx:id="nameField" onAction="#commit" />
     
-    <ListView fx:id="searchList" prefHeight="70" visible="false" />
-  </VBox>
+    <ListView AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" fx:id="searchList" maxHeight="100" />
+  </AnchorPane>
   
   <DoubleTextField fx:id="quantityField" minWidth="50" prefWidth="50" onAction="#commit" />
   <Label fx:id="typeLabel" minWidth="30" prefWidth="30" />
