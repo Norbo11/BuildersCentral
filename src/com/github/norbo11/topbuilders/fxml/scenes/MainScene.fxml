@@ -23,7 +23,7 @@
       
       <right>
         <ImageView preserveRatio="true" fitWidth="200">
-          <image><Image url="/img/logo.png" /></image>
+          <image><Image url="img/logo.png" /></image>
         </ImageView>
       </right>
     </BorderPane>

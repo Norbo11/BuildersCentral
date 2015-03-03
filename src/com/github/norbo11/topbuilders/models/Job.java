@@ -12,7 +12,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import com.github.norbo11.topbuilders.models.enums.QuoteSettingType;
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.Settings;
 
 public class Job extends AbstractModel {
     public static final String DB_TABLE_NAME = "jobs";
@@ -235,4 +237,26 @@ public class Job extends AbstractModel {
 	public static ObservableList<Job> getModels() {
 	    return jobs;
 	}
+
+    public String getRequiredMaterialsString(boolean commaSeperated) {
+        String materials = "";
+        
+        if (!isDummy()) {
+            //Go through all materials of the job corresponding to this assignment, and add them to the materials list
+            for (RequiredMaterial material : getRequiredMaterials()) {
+                materials += material;
+                if (commaSeperated) materials += ", ";
+                else materials += "\n";
+            }           
+        }
+            
+        return materials.trim(); //Get rid of 2 characters
+    }
+
+    public double getTotalCost() {
+        //If both material and labour prices are enabled, add them. Otherwise, use the labour price field to decide the total price.
+        
+        Settings<QuoteSetting> settings = getJobGroup().getProject().getSettings();
+        return settings.getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED) && settings.getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED) ? getLabourPrice() + getMaterialPrice() : getLabourPrice();
+    }
 }

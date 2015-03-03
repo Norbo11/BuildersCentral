@@ -74,7 +74,7 @@ public class Database {
                 Log.info("Database close: success");
             } else Log.error("Database close: not connected");
             
-        } catch(SQLException e)
+        } catch (SQLException e)
         {
             Log.error("Database close: exception", e);
         }

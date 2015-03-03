@@ -374,4 +374,44 @@ public class Project extends AbstractModel {
             }
         }
     }
+
+    public double calculateTotalMaterialCost() {
+        double total = 0;
+        
+        if (getSettings().getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED)) {
+            for (JobGroup group : getJobGroups()) {
+                for (Job job : group.getJobs()) {
+                    total += job.getMaterialPrice();
+                }
+            }
+        }
+        
+        return total;
+    }
+    
+    public double calculateTotalLabourCost() {
+        double total = 0;
+        
+        if (getSettings().getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED)) {
+            for (JobGroup group : getJobGroups()) {
+                for (Job job : group.getJobs()) {
+                    total += job.getLabourPrice();
+                }
+            }
+        }
+        
+        return total;
+    }
+    
+    public double calculateTotalCost() {
+        double total = 0;
+        
+        for (JobGroup group : getJobGroups()) {
+            for (Job job : group.getJobs()) {
+                total += job.getTotalCost();
+            }
+        }
+        
+        return total;
+    }
 }

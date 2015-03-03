@@ -159,16 +159,7 @@ public class Assignment extends AbstractModel {
 	}
 	
 	public String getMaterials() {
-	    String materials = "";
-	    
-	    if (!isDummy()) {
-	        //Go through all materials of the job corresponding to this assignment, and add them to the materials list
-    	    for (RequiredMaterial material : getJob().getRequiredMaterials()) {
-    	        materials += material + "\n";
-    	    }    	    
-	    }
-    	    
-	    return materials.trim(); //Get rid of last newline character
+	    return getJob().getRequiredMaterialsString(false);
 	}
 	
 	public String getDescription() {

@@ -1,8 +1,13 @@
 package com.github.norbo11.topbuilders.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
+
+import org.apache.poi.util.IOUtils;
 
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
@@ -61,5 +66,20 @@ public class Resources {
         if (currentBundle != null) {
             loader.setResources(currentBundle);
         }
+    }
+
+    public static byte[] getAsBytes(String string) {
+        FileInputStream stream = null;
+        byte[] bytes = null;
+        
+        try {
+            stream = new FileInputStream(new File(string));
+            bytes = IOUtils.toByteArray(stream);
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return bytes;
     }
 }
