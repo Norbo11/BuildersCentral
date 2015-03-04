@@ -7,21 +7,22 @@ import java.io.IOException;
 
 import javafx.stage.FileChooser;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.PaperSize;
-import org.apache.poi.ss.usermodel.ShapeTypes;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFChildAnchor;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFPicture;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFShapeGroup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFSimpleShape;
 import org.apache.poi.xssf.usermodel.XSSFTextBox;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -42,7 +43,7 @@ public class ExcelUtil {
                 new FileChooser.ExtensionFilter("Excel workbook", "*.xlsx")
             );
             //File file = fileChooser.showSaveDialog(Main.getMainStage());
-            File file = new File("C:/Users/Norbo11/Desktop/quote.xlsx");
+            File file = new File("N:/quote.xlsx");
             
             //Create a new workbook and a new sheet
             XSSFWorkbook workbook = new XSSFWorkbook();
@@ -65,16 +66,20 @@ public class ExcelUtil {
             headingFont.setBold(true);
             
             //Create styles  
-            XSSFCellStyle baseStyle = workbook.createCellStyle();
-            baseStyle.setWrapText(true);
+            XSSFCellStyle borderStyle = workbook.createCellStyle();
+            borderStyle.setBorderBottom(BorderStyle.THIN);
+            borderStyle.setBorderTop(BorderStyle.THIN);
+            borderStyle.setBorderLeft(BorderStyle.THIN);
+            borderStyle.setBorderRight(BorderStyle.THIN);
+            borderStyle.setWrapText(true);
             
             XSSFCellStyle darkBlue = workbook.createCellStyle();
-            darkBlue.cloneStyleFrom(baseStyle);
+            darkBlue.cloneStyleFrom(borderStyle);
             darkBlue.setFillForegroundColor(new XSSFColor(new byte[] { (byte) 72, (byte) 119, (byte) 212 }));
             darkBlue.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
             
             XSSFCellStyle lightBlue = workbook.createCellStyle();
-            lightBlue.cloneStyleFrom(baseStyle);
+            lightBlue.cloneStyleFrom(borderStyle);
             lightBlue.setFillForegroundColor(new XSSFColor(new byte[] { (byte) 220, (byte) 230, (byte) 241 }));
             lightBlue.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
             
@@ -88,25 +93,29 @@ public class ExcelUtil {
             workbookHeadingStyle.setAlignment(HorizontalAlignment.CENTER);
             
             XSSFCellStyle headingStyle = workbook.createCellStyle();
-            headingStyle.cloneStyleFrom(darkBlue);
+            headingStyle.cloneStyleFrom(borderStyle);
             headingStyle.setFont(headingFont);
             headingStyle.setAlignment(HorizontalAlignment.CENTER);
+            headingStyle.setFillForegroundColor(new XSSFColor(new byte[] { (byte) 72, (byte) 119, (byte) 212 }));
+            headingStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
             
             XSSFCellStyle accountingStyle = workbook.createCellStyle();
-            accountingStyle.cloneStyleFrom(baseStyle);
+            accountingStyle.cloneStyleFrom(borderStyle);
             accountingStyle.setDataFormat((short) 44);
-            
+
             XSSFCellStyle blueAccountingStyle = workbook.createCellStyle();
-            blueAccountingStyle.cloneStyleFrom(lightBlue);
+            blueAccountingStyle.cloneStyleFrom(borderStyle);
             blueAccountingStyle.setDataFormat((short) 44);
+            blueAccountingStyle.setFillForegroundColor(new XSSFColor(new byte[] { (byte) 220, (byte) 230, (byte) 241 }));
+            blueAccountingStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
             
             //Set defaults
             sheet.setDefaultRowHeightInPoints(22.5f);
 
             //Column widths
             sheet.setColumnWidth(0, 30 * 255);
-            sheet.setColumnWidth(1, 34 * 255);
-            sheet.setColumnWidth(2, 26 * 255);
+            sheet.setColumnWidth(1, 32 * 255);
+            sheet.setColumnWidth(2, 25 * 255);
             sheet.setColumnWidth(3, 16 * 255);
             sheet.setColumnWidth(4, 16 * 255);
             sheet.setColumnWidth(5, 16 * 255);
@@ -115,37 +124,22 @@ public class ExcelUtil {
             
             //Workbook heading
             XSSFRow headingRow = sheet.createRow(0);
-            XSSFCell headingCell = headingRow.createCell(1);
+            XSSFCell headingCell = headingRow.createCell(0);
             headingCell.setCellStyle(workbookHeadingStyle);
             headingCell.setCellValue("Price estimate for:");
             
             //Address
-            XSSFCell fullNameCell = headingRow.createCell(2);
+            XSSFCell fullNameCell = headingRow.createCell(1);
             fullNameCell.setCellValue(project.getClientFullName());
             
             for (int i = 1; i < 4; i++) {
-                XSSFCell cell = sheet.createRow(i).createCell(2);
-                cell.setCellStyle(lightBlue);
+                XSSFCell cell = sheet.createRow(i).createCell(1);
                 switch (i) {
                     case 1: cell.setCellValue(project.getFirstLineAddress()); break;
                     case 2: cell.setCellValue(project.getSecondLineAddress()); break;
                     case 3: cell.setCellValue((project.getCity().equals("") ? "" : project.getCity() + ", ") + project.getPostcode()); break;
                 }
             }
-            
-            //Logo area
-            XSSFDrawing drawing = sheet.createDrawingPatriarch();
-            XSSFShapeGroup group = drawing.createGroup(drawing.createAnchor(0, 0, 1000, 0, 4, 0, 4, 5));
-            
-            int picture = workbook.addPicture(Resources.getAsBytes("src/img/logo.png"), Workbook.PICTURE_TYPE_PNG);
-            group.createPicture(drawing.createAnchor(0, 0, 1000, 0, 4, 0, 4, 3), picture);
-
-            XSSFSimpleShape line = group.createSimpleShape(new XSSFChildAnchor(0, 255, 250, 255));
-            line.setShapeType(ShapeTypes.LINE);
-            
-            //TODO fonts
-            XSSFTextBox textbox = group.createTextbox(new XSSFChildAnchor(0, 250, 250, 500));
-            textbox.setText(new XSSFRichTextString("Top Builders\n07540734201\npitbuilder44@googlemail.com\nwww.top-builders.org"));
 
             boolean descriptionsEnabled = project.getSettings().getBoolean(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED);
             boolean materialsEnabled = project.getSettings().getBoolean(QuoteSettingType.MATERIALS_ENABLED);
@@ -158,7 +152,7 @@ public class ExcelUtil {
             
             //Headings
             XSSFRow tableHeadings = sheet.createRow(5);
-            int lastColumn = 0;
+            int lastColumn = 0, totalPriceColumn = 0, variableColumns = 0;
             for (int i = 0; i < 6; i++) {                
                 XSSFCell cell = tableHeadings.createCell(lastColumn);
                 switch (i) {
@@ -188,6 +182,7 @@ public class ExcelUtil {
                         if (materialsPriceEnabled && labourPriceEnabled) {
                             cell.setCellStyle(headingStyle);
                             cell.setCellValue("Material cost");
+                            variableColumns++;
                             lastColumn++;
                         }
                         break;
@@ -196,6 +191,7 @@ public class ExcelUtil {
                         if (labourPriceEnabled && materialsPriceEnabled) {
                             cell.setCellStyle(headingStyle);
                             cell.setCellValue("Labour cost");
+                            variableColumns++;
                             lastColumn++;
                         }
                         break;
@@ -203,6 +199,8 @@ public class ExcelUtil {
                     case 5: {
                         cell.setCellStyle(headingStyle);
                         cell.setCellValue("Total cost");
+                        totalPriceColumn = lastColumn;
+                        variableColumns++;
                         lastColumn++;
                         break;
                     }
@@ -211,7 +209,8 @@ public class ExcelUtil {
             
             //Jobs
             int lastRow = 7;
-            for (JobGroup jobGroup : project.getJobGroups()) {
+            int firstRow = 7;
+            for (JobGroup jobGroup : project.getJobGroups()) {            	
                 if (jobGroupsEnabled) {
                     XSSFRow row = sheet.createRow(lastRow);
                     for (int i = 0; i < lastColumn; i++) {
@@ -283,39 +282,79 @@ public class ExcelUtil {
             
             //Fill in the last 4 columns created
             XSSFRow subTotalRow = sheet.createRow(lastRow + 1);
-            
-            double totalCost = project.calculateTotalCost();
-            
+                        
+            int startOfVariableColumns = lastColumn - variableColumns - 1;
             int columnNumber = 0;
-            int totalLabelColumn = 0;
-            for (int i = lastColumn - 1; i > lastColumn - 5; i--) {
+            for (int i = startOfVariableColumns; i < lastColumn; i++) {
                 XSSFCell cell = subTotalRow.createCell(i);
-                cell.setCellStyle(lightBlue);
                 
                 switch (columnNumber) {
-                    case 3: {
-                        cell.setCellStyle(headingStyle);
-                        cell.setCellValue("Sub total:");
-                        break;
+	                case 0: {
+	                    cell.setCellStyle(headingStyle);
+	                    cell.setCellValue("Sub total:");
+	                    break;
+	                }
+	                case 1: {
+	                	String startCell = CellReference.convertNumToColString(i) + firstRow; 
+	                    String endCell = CellReference.convertNumToColString(i) + lastRow;
+	                    
+	                    cell.setCellStyle(blueAccountingStyle);
+	                	cell.setCellFormula("SUM(" + startCell + ":" + endCell + ")");
+	                	break;
+	                }
+	                case 2: {
+                    	String startCell = CellReference.convertNumToColString(i) + firstRow; 
+                        String endCell = CellReference.convertNumToColString(i) + lastRow;
+                        
+                        cell.setCellStyle(blueAccountingStyle);
+                    	cell.setCellFormula("SUM(" + startCell + ":" + endCell + ")");
+                    	break;
                     }
-                    case 2: cell.setCellValue(project.calculateTotalMaterialCost()); break;
-                    case 1: cell.setCellValue(project.calculateTotalLabourCost()); break;
-                    case 0: cell.setCellValue(totalCost); break;
+	                case 3: {
+                    	String startCell = CellReference.convertNumToColString(i) + firstRow; 
+                        String endCell = CellReference.convertNumToColString(i) + lastRow;
+                        
+                        cell.setCellStyle(blueAccountingStyle);
+                    	cell.setCellFormula("SUM(" + startCell + ":" + endCell + ")");
+                    	break;
+                    }
                 }
                 columnNumber++;
-                totalLabelColumn = i; //This is done so that the Total cost row may be aligned properly
             }
             
             //Total
             XSSFRow totalRow = sheet.createRow(subTotalRow.getRowNum() + 2);
-            XSSFCell totalLabel = totalRow.createCell(totalLabelColumn);
+            XSSFCell totalLabel = totalRow.createCell(startOfVariableColumns);
             totalLabel.setCellStyle(headingStyle);
             totalLabel.setCellValue("Total cost:");
             
-            XSSFCell totalCell = totalRow.createCell(totalLabelColumn + 1);
-            totalCell.setCellStyle(lightBlue);
-            totalCell.setCellValue(totalCost);
+            XSSFCell totalCell = totalRow.createCell(startOfVariableColumns + 1);
+            totalCell.setCellStyle(blueAccountingStyle);
+            totalCell.setCellFormula(CellReference.convertNumToColString(totalPriceColumn) + (lastRow + 2));
                         
+            //Logo area
+            XSSFCreationHelper helper = workbook.getCreationHelper();
+            XSSFClientAnchor logoAnchor = helper.createClientAnchor();
+            logoAnchor.setCol1(lastColumn - 1);
+            logoAnchor.setRow1(0);
+            logoAnchor.setCol2(lastColumn);
+            logoAnchor.setRow2(3);
+            
+            XSSFClientAnchor textBoxAnchor = helper.createClientAnchor();
+            textBoxAnchor.setCol1(lastColumn - 1);
+            textBoxAnchor.setRow1(4);
+            textBoxAnchor.setCol2(lastColumn + 1);
+            textBoxAnchor.setRow2(4);
+                        
+            XSSFDrawing drawing = sheet.createDrawingPatriarch();
+            
+            int picture = workbook.addPicture(Resources.getAsBytes("src/img/logo.png"), Workbook.PICTURE_TYPE_PNG);
+            XSSFPicture pic = drawing.createPicture(logoAnchor, picture);
+            
+            //TODO fonts
+            XSSFTextBox textbox = drawing.createTextbox(textBoxAnchor);
+            textbox.setText(new XSSFRichTextString("Top Builders\n07540734201\npitbuilder44@googlemail.com\nwww.top-builders.org"));
+            
             //If the user picked a file
             if (file != null) {
                 //Save the workbook to the file

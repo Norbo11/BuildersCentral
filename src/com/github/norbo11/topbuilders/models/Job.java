@@ -250,7 +250,7 @@ public class Job extends AbstractModel {
             }           
         }
             
-        return materials.trim(); //Get rid of 2 characters
+        return materials.length() > 0 ? materials.substring(0, materials.length() - 2) : materials; //Get rid of 2 characters
     }
 
     public double getTotalCost() {
