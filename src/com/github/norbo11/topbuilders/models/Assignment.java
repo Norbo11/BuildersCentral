@@ -2,6 +2,7 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
 
 import javafx.beans.property.BooleanProperty;
@@ -15,7 +16,10 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import com.github.norbo11.topbuilders.models.enums.NotificationType;
+import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.util.Database;
+import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 public class Assignment extends AbstractModel {
@@ -241,5 +245,48 @@ public class Assignment extends AbstractModel {
     
     public static ObservableList<Assignment> getModels() {
 	    return assignments;
+	}
+
+	public void updateNewAssignmentNotification() {
+		if (isCompleted()) {
+			
+			//Create an Assignment Completed notification for all managers
+			for (Employee manager : Employee.getModels()) {
+				if (manager.getUserType().isAtLeast(UserType.MANAGER)) {
+		            Notification notification = new Notification();
+		            notification.setNewModel(true);
+		            notification.setEmployeeId(manager.getId());
+		            notification.setTypeId(NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE.getId());
+		            notification.setAssociatedId(getId());
+		            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
+		            notification.save();
+				}
+			}
+		} else {
+			//Delete all notifications associated with this assignment
+			Notification.deleteCorrespondingNotifications(this);
+		}
+	}
+
+	public long calculateDaysLeft() {
+		return Duration.between(getEndDate(), LocalDate.now()).toDays();
+	}
+
+	public void updateAssignmentCloseToEndNotification() {
+		Notification existingNotification = Notification.loadAssignmentCloseToEndNotificationForAssignment(this);
+		
+		//If there is no existing notification and the days left to the assignment are less than 7, create a new notification
+		Log.info("Days left: " + calculateDaysLeft());
+		Log.info("Existing: " + existingNotification);
+		
+		if (calculateDaysLeft() < 7 && existingNotification == null) {
+			Notification notification = new Notification();
+            notification.setNewModel(true);
+            notification.setEmployeeId(getEmployeeId());
+            notification.setTypeId(NotificationType.ASSIGNMENT_CLOSE_TO_END.getId());
+            notification.setAssociatedId(getId());
+            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
+            notification.save();
+		}
 	}
 }

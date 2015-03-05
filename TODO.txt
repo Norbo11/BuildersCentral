@@ -1,12 +1,14 @@
 TODO:
 
--Splash screen
 -Some bugs with viewing a project quote from quote requests
 -Quote request image display
 -Assignment and quote request notifications
 -Message replying, forwarding, and sent messages (need to stop deleting message rows and just mark them as deleted)
 -CSS
--Keep/discard changes popup
+-Keep/discard changes popup on closing some tabs
 -Fix bug with the material adding
 -Popup after quote export to either open or attach to e-mail message
 -E-mail button in messages tab
+-Add assignment completion confirmation dialog
+-Fix saving of settings
+-Add notifications read functionality

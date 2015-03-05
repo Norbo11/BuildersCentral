@@ -218,11 +218,11 @@ public class Employee extends AbstractModel {
     	return assignments;
     }
     
-    public ObservableList<Notification> getNotifications() {
+    public ObservableList<Notification> loadNotifications() {
         return Notification.loadNotificationsForEmployee(this);
     }
     
-    public ObservableList<Message> getMessages() {
+    public ObservableList<Message> loadMessages() {
         return Message.loadMessagesForEmployee(this);
     }
     
@@ -318,7 +318,7 @@ public class Employee extends AbstractModel {
                 } else throw new PasswordException();
             } else throw new UsernameException();
         } catch (SQLException e) {
-            Log.error(e);
+            Log.error("Database error", e);
         }
         
         return null;
@@ -337,7 +337,7 @@ public class Employee extends AbstractModel {
 		try {
 			return loadAllModelsWhere(DB_TABLE_NAME, "username", username).next();
 		} catch (SQLException e) {
-			Log.error(e);
+			Log.error("Database error", e);
 			return true;
 		}
 	}
@@ -346,7 +346,7 @@ public class Employee extends AbstractModel {
 		try {
 			return loadAllModelsWhere(DB_TABLE_NAME, "email", email).next();
 		} catch (SQLException e) {
-			Log.error(e);
+			Log.error("Database error", e);
 			return true;
 		}
 	}

@@ -145,7 +145,7 @@ public class Notification extends AbstractModel {
 	    return notifications;
 	}
 	
-    public static void deleteCorrespondingNotification(AbstractModel model) {
+    public static void deleteCorrespondingNotifications(AbstractModel model) {
         if (model instanceof Message) {
             Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_MESSAGE.getId(), model.getId());
         }
@@ -159,5 +159,9 @@ public class Notification extends AbstractModel {
             Database.executeUpdate("DELETE FROM " + DB_TABLE_NAME + " WHERE typeId=? AND associatedId=?", NotificationType.NEW_QUOTE_REQUEST.getId(), model.getId());
         }
     }
+
+	public static Notification loadAssignmentCloseToEndNotificationForAssignment(Assignment assignment) {
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, new String[] { "typeId", "associatedModelId" }, new Object[] { NotificationType.ASSIGNMENT_CLOSE_TO_END, assignment.getId() }), Notification.class);
+	}
     
 }

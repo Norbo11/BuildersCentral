@@ -27,7 +27,7 @@
         <cellValueFactory><TreeItemPropertyValueFactory property="description" /></cellValueFactory>
       </TreeTableColumn>
       
-      <TreeTableColumn fx:id="materialsCol" text="%jobs.materials" editable="true" minWidth="140" >
+      <TreeTableColumn fx:id="materialsCol" text="%jobs.materials" editable="true">
         <cellValueFactory><TreeItemPropertyValueFactory property="materials" /></cellValueFactory>
       </TreeTableColumn>
       
@@ -39,7 +39,7 @@
         <cellValueFactory><TreeItemPropertyValueFactory property="endDate" /></cellValueFactory>
       </TreeTableColumn>
       
-      <TreeTableColumn fx:id="coWorkersCol" text="%assignments.coWorkers" editable="true">
+      <TreeTableColumn fx:id="coWorkersCol" text="%assignments.coWorkers" editable="true" minWidth="140">
         <cellValueFactory><TreeItemPropertyValueFactory property="coWorkers" /></cellValueFactory>
       </TreeTableColumn>
     </columns>

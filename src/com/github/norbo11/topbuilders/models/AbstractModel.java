@@ -81,7 +81,7 @@ public abstract class AbstractModel {
         //Delete model if it isn't new
         if (!newModel) {
             Database.executeUpdate("DELETE FROM " + getDbTableName() + " WHERE id = ?", getId());
-            Notification.deleteCorrespondingNotification(this);
+            Notification.deleteCorrespondingNotifications(this);
         }
     }
     
@@ -107,7 +107,7 @@ public abstract class AbstractModel {
                 loadFromResult(result, columns);
             }
         } catch (SQLException e) {
-            Log.error(e);
+			Log.error("Error loading model from ID " + this);
         }
     }
     
@@ -171,7 +171,7 @@ public abstract class AbstractModel {
 				models.add(model);
 			}
 		} catch (SQLException | InstantiationException | IllegalAccessException e) {
-			Log.error(e);
+			Log.error("Error loading list of models " + clazz, e);
 		}
         
         return models;

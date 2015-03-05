@@ -41,6 +41,7 @@ public class MyAssignmentsTab extends AbstractController {
                     checkBox.setSelected(item.isCompleted());
                     checkBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
                         item.setCompleted(checkBox.isSelected());
+                        item.updateNewAssignmentNotification();
                         item.save();
                     });
                     setGraphic(checkBox);

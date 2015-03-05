@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.NotificationItem;
 import com.github.norbo11.topbuilders.controllers.scenes.LoginScene;
+import com.github.norbo11.topbuilders.models.Assignment;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.util.Resources;
@@ -43,21 +44,29 @@ public class ManagerHomeTab extends AbstractController {
    }
    
    public void updateAll() {
+	   //Check if there are any assignments close to finishing and update their notifications if necessary
+       for (Assignment assignment : Employee.getCurrentEmployee().loadAssignments()) {
+    	   assignment.updateAssignmentCloseToEndNotification();
+       }
+	   
        ObservableList<Node> notifications = getNotificationsList().getChildren();
        notifications.clear();
         
-       for (Notification notification : Employee.getCurrentEmployee().getNotifications()) {
+       //Get all the notifications for the employee and add them
+       for (Notification notification : Employee.getCurrentEmployee().loadNotifications()) {
            notifications.add(new NotificationItem(notification));
        }
-         
-        if (notifications.size() > 0) {
+       
+       if (notifications.size() > 0) {
+            //If at least one was added, adjust the style of the the last item
             notifications.get(notifications.size() - 1).getStyleClass().add("notification-item-last");
             getNotificationsList().getStyleClass().remove("empty");
        } else {
+    	    //Otherwise, add a label
             Label label = new Label(Resources.getResource("notifications.empty"));
             getNotificationsList().getStyleClass().add("empty");
             notifications.add(label);
-        }
+       }
     }
     
     public VBox getNotificationsList() {

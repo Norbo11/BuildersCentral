@@ -88,6 +88,6 @@ public class MessagesTab extends AbstractController {
     
     public void updateAll() {
         table.getItems().clear();
-        table.getItems().addAll(Employee.getCurrentEmployee().getMessages());
+        table.getItems().addAll(Employee.getCurrentEmployee().loadMessages());
     }
 }

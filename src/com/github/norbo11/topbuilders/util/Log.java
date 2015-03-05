@@ -5,21 +5,12 @@ import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class Log {
 
-    public static void error(Exception e)
-    {
-        error("", e);
-    }
-
     public static void error(String string) {
         SceneUtil.showInfoDialog("Error!", string);
     }
     
     public static void error(String string, Exception e) {
     	e.printStackTrace();
-    	
-        for (StackTraceElement element : e.getStackTrace()) {
-            string += element.toString() + "\n";
-        }
         
         error(string);
     }
