@@ -159,7 +159,7 @@ public class Assignment extends AbstractModel {
 	}
 	
 	public String getMaterials() {
-	    return getJob().getRequiredMaterialsString(false);
+	    return isDummy() ? "" : getJob().getRequiredMaterialsString(false);
 	}
 	
 	public String getDescription() {

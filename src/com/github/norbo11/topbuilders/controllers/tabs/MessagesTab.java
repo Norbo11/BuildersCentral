@@ -20,7 +20,6 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactory;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
-import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
 public class MessagesTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";    
@@ -90,6 +89,5 @@ public class MessagesTab extends AbstractController {
     public void updateAll() {
         table.getItems().clear();
         table.getItems().addAll(Employee.getCurrentEmployee().getMessages());
-        TabUtil.updateMainTab();
     }
 }

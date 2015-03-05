@@ -25,11 +25,15 @@
   
     <VBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="4">
       <HBox spacing="20">
-        <Button fx:id="submitButton" text="Sign In" prefWidth="110" prefHeight="25" onAction="#submitLogin" />
-        <Button text="Register" prefWidth="110" prefHeight="25" onAction="#register" />
-        <Button text="Test account" prefWidth="110" prefHeight="25" onAction="#testAccount" />
+        <Button fx:id="submitButton" text="Sign In" prefWidth="150" prefHeight="25" onAction="#submitLogin" />
+        <Button text="Register" prefWidth="150" prefHeight="25" onAction="#register" />
+        <Button text="Forgot password" prefWidth="150" prefHeight="25" onAction="#forgotPassword" />
       </HBox>
       <Text fx:id="statusText" textAlignment="CENTER" />
     </VBox>
+    
+    <Button text="Test account" prefWidth="150" prefHeight="25" onAction="#testAccount" GridPane.columnIndex="1" GridPane.rowIndex="5" />
   </GridPane>
+  
+  
 </VBox>

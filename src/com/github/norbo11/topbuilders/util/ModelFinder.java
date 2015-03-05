@@ -2,23 +2,21 @@ package com.github.norbo11.topbuilders.util;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
-import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+
+import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
 
 public class ModelFinder<T> {
     public static final int LIST_CELL_HEIGHT = 24; //This must match in the css file
     private ListView<T> searchList;
     private ObservableList<T> models;
     private ModelFinderComparator<T> comparator;
-    private TextField textField;
     
     public ModelFinder(ListView<T> searchList, TextField textField, ObservableList<T> models, ModelFinderComparator<T> comparator) {
         this.searchList = searchList;
         this.models = models;
         this.comparator = comparator;
-        this.textField = textField;
                 
         //searchList.setManaged(false);
         searchList.getItems().addAll(models);
@@ -59,22 +57,10 @@ public class ModelFinder<T> {
     }
 
     public void hideSearchList() {
-        searchList.setVisible(false);
-        textField.setText("");
+    	GuiUtil.hideNodeManaged(searchList);
     }
     
     public void showSearchList() {
-       searchList.setManaged(false);
-       // compute bounds of text field relative to suggestion box's parent:
-       Parent parent = searchList.getParent(); // AnchorPane
-       Bounds tfBounds = textField.getBoundsInLocal();
-       Bounds tfBoundsInScene = textField.localToScene(tfBounds);
-       Bounds tfBoundsInParent = parent.sceneToLocal(tfBoundsInScene);
-       
-       // position suggestion box:
-       searchList.setLayoutX(tfBoundsInParent.getMinX());
-       searchList.setLayoutY(tfBoundsInParent.getMaxY());
-       //searchList.setPrefWidth(tfBoundsInParent.getWidth()); 
-       searchList.setVisible(true);
+        GuiUtil.showNodeManaged(searchList);
     }
 }

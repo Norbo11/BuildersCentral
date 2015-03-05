@@ -3,11 +3,10 @@ TODO:
 -Splash screen
 -Some bugs with viewing a project quote from quote requests
 -Quote request image display
--Forgotten password
 -Assignment and quote request notifications
 -Message replying, forwarding, and sent messages (need to stop deleting message rows and just mark them as deleted)
 -CSS
--Employee reports
--Export to excel
 -Keep/discard changes popup
 -Fix bug with the material adding
+-Popup after quote export to either open or attach to e-mail message
+-E-mail button in messages tab

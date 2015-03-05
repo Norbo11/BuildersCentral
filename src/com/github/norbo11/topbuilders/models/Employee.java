@@ -386,4 +386,8 @@ public class Employee extends AbstractModel {
     public static Employee getCurrentEmployee() {
         return currentEmployee;
     }
+
+	public static Employee loadEmployeeByUsername(String username) {
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "username", username), Employee.class);
+	}
 }

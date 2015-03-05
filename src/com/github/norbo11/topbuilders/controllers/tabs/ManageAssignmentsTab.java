@@ -19,7 +19,9 @@ import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.models.Assignment;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Job;
+import com.github.norbo11.topbuilders.models.Notification;
 import com.github.norbo11.topbuilders.models.Project;
+import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.util.ModelFinder;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
@@ -172,6 +174,15 @@ public class ManageAssignmentsTab extends AbstractController {
             assignment.setJobId(getSelectedJob().getId());
             assignment.setHourlyWage(clickedEmployee.getDefaultWage());
             assignment.save();
+            
+            //Create new assignment notification, add it to database
+            Notification notification = new Notification();
+            notification.setNewModel(true);
+            notification.setEmployeeId(clickedEmployee.getId());
+            notification.setTypeId(NotificationType.NEW_ASSIGNMENT.getId());
+            notification.setAssociatedId(assignment.getId());
+            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
+            notification.save();
             
             //Select the recently added item so that assignment details may be edited
             assignmentList.getSelectionModel().select(assignment);

@@ -19,7 +19,6 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -113,8 +112,8 @@ public class ExcelUtil {
             sheet.setDefaultRowHeightInPoints(22.5f);
 
             //Column widths
-            sheet.setColumnWidth(0, 30 * 255);
-            sheet.setColumnWidth(1, 32 * 255);
+            sheet.setColumnWidth(0, 28 * 255);
+            sheet.setColumnWidth(1, 30 * 255);
             sheet.setColumnWidth(2, 25 * 255);
             sheet.setColumnWidth(3, 16 * 255);
             sheet.setColumnWidth(4, 16 * 255);
@@ -335,21 +334,21 @@ public class ExcelUtil {
             //Logo area
             XSSFCreationHelper helper = workbook.getCreationHelper();
             XSSFClientAnchor logoAnchor = helper.createClientAnchor();
-            logoAnchor.setCol1(lastColumn - 1);
+            logoAnchor.setCol1(lastColumn - 2);
             logoAnchor.setRow1(0);
             logoAnchor.setCol2(lastColumn);
-            logoAnchor.setRow2(3);
+            logoAnchor.setRow2(4);
             
             XSSFClientAnchor textBoxAnchor = helper.createClientAnchor();
-            textBoxAnchor.setCol1(lastColumn - 1);
+            textBoxAnchor.setCol1(lastColumn - 2);
             textBoxAnchor.setRow1(4);
-            textBoxAnchor.setCol2(lastColumn + 1);
+            textBoxAnchor.setCol2(lastColumn);
             textBoxAnchor.setRow2(4);
                         
             XSSFDrawing drawing = sheet.createDrawingPatriarch();
             
             int picture = workbook.addPicture(Resources.getAsBytes("src/img/logo.png"), Workbook.PICTURE_TYPE_PNG);
-            XSSFPicture pic = drawing.createPicture(logoAnchor, picture);
+            drawing.createPicture(logoAnchor, picture);
             
             //TODO fonts
             XSSFTextBox textbox = drawing.createTextbox(textBoxAnchor);

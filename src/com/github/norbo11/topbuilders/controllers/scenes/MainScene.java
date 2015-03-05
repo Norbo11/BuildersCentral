@@ -13,10 +13,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.controllers.tabs.EmployeeHomeTab;
-import com.github.norbo11.topbuilders.controllers.tabs.ManagerHomeTab;
 import com.github.norbo11.topbuilders.models.Employee;
-import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
@@ -46,7 +43,6 @@ public class MainScene extends AbstractController {
         
         TabUtil.setTabPane(tabPane);
         
-        String scene = Employee.getCurrentEmployee().getUserType().isAtLeast(UserType.MANAGER) ? ManagerHomeTab.FXML_FILENAME : EmployeeHomeTab.FXML_FILENAME;
-        TabUtil.createAndSwitchTab(Resources.getResource("home"), scene).setClosable(false);
+        TabUtil.createHomeTab();
     }
 }
