@@ -135,7 +135,9 @@ public class ManageAssignmentsTab extends AbstractController {
         /* Define behaviour upon clicking a table row */
         assignmentSearchTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, clickedAssignment) -> { 
             if (clickedAssignment != null) {
-                selectAssignment(clickedAssignment);
+            	projectList.getSelectionModel().select(clickedAssignment.getProject());
+            	changeJobSelection(clickedAssignment.getJob());
+            	assignmentList.getSelectionModel().select(clickedAssignment);
             }
         });
         
@@ -143,7 +145,19 @@ public class ManageAssignmentsTab extends AbstractController {
         disableAssignmentDetailsArea();
     }    
 
-    @FXML
+    public void changeJobSelection(Job job) {
+    	//Find the TreeItem which holds the given job and select it
+    	for (TreeItem<Job> jobGroupEntry : jobList.getRoot().getChildren()) {
+    		for (TreeItem<Job> jobEntry : jobGroupEntry.getChildren()) {
+    			if (jobEntry.getValue() == job) {
+        			jobList.getSelectionModel().select(jobEntry);
+        			return;
+        		}
+    		}
+    	}
+	}
+
+	@FXML
     public void saveDetails() {
     	Assignment assignment = getSelectedAssignment();
     	

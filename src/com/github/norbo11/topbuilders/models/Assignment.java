@@ -2,8 +2,8 @@ package com.github.norbo11.topbuilders.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -269,17 +269,19 @@ public class Assignment extends AbstractModel {
 	}
 
 	public long calculateDaysLeft() {
-		return Duration.between(getEndDate(), LocalDate.now()).toDays();
+		return Period.between(LocalDate.now(), getEndDate()).getDays();
 	}
 
 	public void updateAssignmentCloseToEndNotification() {
 		Notification existingNotification = Notification.loadAssignmentCloseToEndNotificationForAssignment(this);
 		
 		//If there is no existing notification and the days left to the assignment are less than 7, create a new notification
-		Log.info("Days left: " + calculateDaysLeft());
-		Log.info("Existing: " + existingNotification);
 		
-		if (calculateDaysLeft() < 7 && existingNotification == null) {
+		if (getEndDate() != null) {
+			Log.info(calculateDaysLeft());
+		}
+		
+		if (getEndDate() != null && calculateDaysLeft() < 7 && existingNotification == null) {
 			Notification notification = new Notification();
             notification.setNewModel(true);
             notification.setEmployeeId(getEmployeeId());

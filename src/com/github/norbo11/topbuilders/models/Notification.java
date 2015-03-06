@@ -161,7 +161,7 @@ public class Notification extends AbstractModel {
     }
 
 	public static Notification loadAssignmentCloseToEndNotificationForAssignment(Assignment assignment) {
-		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, new String[] { "typeId", "associatedModelId" }, new Object[] { NotificationType.ASSIGNMENT_CLOSE_TO_END, assignment.getId() }), Notification.class);
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, new String[] { "typeId", "associatedId" }, new Object[] { NotificationType.ASSIGNMENT_CLOSE_TO_END.getId(), assignment.getId() }), Notification.class);
 	}
     
 }

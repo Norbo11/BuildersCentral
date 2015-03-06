@@ -5,12 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-public class RegisterScene {
+public class RegisterScene extends AbstractController {
 	public static final String FXML_FILENAME = "scenes/RegisterScene.fxml";
         
     @FXML TextField code, newPass, confirmPass;

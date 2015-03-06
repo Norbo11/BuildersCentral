@@ -41,7 +41,7 @@ public class Database {
             } else Log.error("Query error: inconsistent objects array. SQL: " + debug);
         } catch (SQLException e)
         {
-            Log.error(e);
+            Log.error("Database exception on SELECT", e);
         }
         return null;
     }
@@ -62,7 +62,7 @@ public class Database {
                 return insertedId;
             }
         } catch (SQLException e) {
-            Log.error(e);
+            Log.error("Database exception on (INSERT/UPDATE)", e);
         }
         return 0;
     }
