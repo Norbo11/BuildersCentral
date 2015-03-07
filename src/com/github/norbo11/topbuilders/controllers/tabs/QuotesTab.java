@@ -377,4 +377,8 @@ public class QuotesTab extends AbstractController {
 
         return validation.validate();
     }
+
+    public ComboBox<Project> getProjectPicker() {
+        return projectPicker;
+    }
 }

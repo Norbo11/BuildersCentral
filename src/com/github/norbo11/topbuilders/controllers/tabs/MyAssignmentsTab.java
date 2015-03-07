@@ -14,6 +14,7 @@ import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.JobGroup;
 import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.util.Resources;
+import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 public class MyAssignmentsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MyAssignmentsTab.fxml";
@@ -39,11 +40,27 @@ public class MyAssignmentsTab extends AbstractController {
                 } else {
                     CheckBox checkBox = new CheckBox(Resources.getResource("assignments.completed"));
                     checkBox.setSelected(item.isCompleted());
-                    checkBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
-                        item.setCompleted(checkBox.isSelected());
-                        item.updateNewAssignmentNotification();
-                        item.save();
+                    checkBox.setOnAction(e -> {
+                        //Create a runnable which updates the completed status of the assignment
+                        Runnable confirmRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                item.setCompleted(checkBox.isSelected());
+                                item.updateNewAssignmentNotification();
+                                item.save();
+                            }
+                        };
+
+                        
+                        //If assignment is being checked, show a confirmation dialog before changing completion status. Otherwise, just change it without confirmation.
+                        if (checkBox.isSelected()) {
+                            SceneUtil.showConfirmationDialog(Resources.getResource("assignments.confirmCompleted.title"), Resources.getResource("assignments.confirmCompleted.info", item.getJob(), item.getProject()), confirmRunnable, () -> checkBox.setSelected(false));
+                        } else {
+                            confirmRunnable.run();
+                            
+                        }
                     });
+                    
                     setGraphic(checkBox);
                     setText("");
                 }

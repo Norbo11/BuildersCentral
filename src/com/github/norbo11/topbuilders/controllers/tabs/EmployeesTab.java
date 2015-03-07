@@ -116,7 +116,7 @@ public class EmployeesTab extends AbstractController {
         if (!employee.isDummy()) {
             //Create new window
             Stage stage = StageUtil.createDialogStage(employee.getFullName());
-            AbstractScene scene = SceneUtil.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME);
+            AbstractScene scene = SceneUtil.changeScene(stage, ModifyEmployeeScene.FXML_FILENAME, true);
             
             //Display details
             ModifyEmployeeScene controller = (ModifyEmployeeScene) scene.getController();

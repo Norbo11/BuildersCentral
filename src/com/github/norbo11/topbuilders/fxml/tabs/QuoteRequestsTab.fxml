@@ -15,23 +15,21 @@
   <padding><Insets top="60" bottom="60" right="130" left="130" /></padding>
   
   <HBox spacing="15" alignment="center">  
-    <ImageView fitWidth="100" preserveRatio="true" onMousePressed="#goLeft">
+    <ImageView fx:id="leftArrow" fitWidth="100" preserveRatio="true" onMousePressed="#goLeft">
         <image><Image url="/img/leftArrow.png" /></image>
     </ImageView>
     
-    <HBox spacing="10" HBox.hgrow="always" alignment="center">
-        <ImageView fx:id="projectImage" preserveRatio="true" fitWidth="300"/>
+    <HBox spacing="10" HBox.hgrow="always">
+        <ImageView fx:id="projectImage" preserveRatio="true" fitHeight="300"/>
         
         <VBox spacing="10" HBox.hgrow="always">
-          <GridPane vgap="5" hgap="5">
+          <GridPane VBox.vgrow="always"  vgap="5" hgap="5">
             <Label GridPane.hgrow="always" wrapText="true" fx:id="clientName" GridPane.rowIndex="0" GridPane.columnIndex="0" />
             
             <Label GridPane.hgrow="always" wrapText="true" fx:id="contactNumber" GridPane.rowIndex="1" GridPane.columnIndex="0" />
             
             <Label GridPane.hgrow="always" wrapText="true" fx:id="email" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-            
-            <Label GridPane.hgrow="always" wrapText="true" text="%general.address" GridPane.rowIndex="0" GridPane.columnIndex="1" />
-            
+                        
             <Label GridPane.hgrow="always" wrapText="true" fx:id="firstLineAddress" GridPane.rowIndex="1" GridPane.columnIndex="1" />
             
             <Label GridPane.hgrow="always" wrapText="true" fx:id="secondLineAddress" GridPane.rowIndex="2" GridPane.columnIndex="1" />
@@ -40,19 +38,19 @@
             
             <Label GridPane.hgrow="always" wrapText="true" fx:id="postcode" GridPane.rowIndex="4" GridPane.columnIndex="1" />
             
-            <ScrollPane GridPane.hgrow="always" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2">
+            <ScrollPane GridPane.vgrow="always"  GridPane.hgrow="always" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2">
                 <Label wrapText="true" fx:id="projectDescription" />
             </ScrollPane>
           </GridPane>
         
           <HBox spacing="100" alignment="center">
-            <Button text="%requests.respond" prefWidth="190" prefHeight="40" onAction="#respond" />
-            <Button text="%map.view" prefWidth="190" prefHeight="40" onAction="#viewMap" />
+            <Button HBox.hgrow="sometimes" maxWidth="Infinity" text="%requests.respond" prefHeight="40" onAction="#respond" />
+            <Button HBox.hgrow="sometimes" maxWidth="Infinity" text="%map.view" prefHeight="40" onAction="#viewMap" />
           </HBox>
         </VBox>
     </HBox>
     
-    <ImageView fitWidth="100" preserveRatio="true" onMousePressed="#goRight">
+    <ImageView fx:id="rightArrow" fitWidth="100" preserveRatio="true" onMousePressed="#goRight">
         <image><Image url="/img/rightArrow.png" /></image>
     </ImageView>
   </HBox>

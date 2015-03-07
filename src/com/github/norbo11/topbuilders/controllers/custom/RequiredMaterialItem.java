@@ -11,7 +11,6 @@ import javafx.scene.layout.HBox;
 import com.github.norbo11.topbuilders.controllers.tabs.QuotesTab;
 import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
-import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.ModelFinder;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.FXMLUtil;
@@ -45,7 +44,6 @@ public class RequiredMaterialItem extends HBox {
     
     @FXML
     public void commit() {
-    	Log.info("commited");
         requiredMaterial.setQuantityRequired(quantityField.getDouble());
        
         StockedMaterial stockedMaterial = StockedMaterial.getStockedMaterialByName(nameField.getText());

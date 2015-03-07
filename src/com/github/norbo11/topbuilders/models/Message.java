@@ -126,7 +126,7 @@ public class Message extends AbstractModel {
     public static void displayMessage(Message message) {
         //Create new window
         Stage stage = StageUtil.createDialogStage(message.getTitle());
-        AbstractScene scene = SceneUtil.changeScene(stage, DisplayMessageScene.FXML_FILENAME);
+        AbstractScene scene = SceneUtil.changeScene(stage, DisplayMessageScene.FXML_FILENAME, true);
         
         //Display details
         DisplayMessageScene controller = (DisplayMessageScene) scene.getController();

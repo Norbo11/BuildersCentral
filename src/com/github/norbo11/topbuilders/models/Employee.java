@@ -13,7 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.controllers.scenes.MainScene;
-import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.models.exceptions.PasswordException;
 import com.github.norbo11.topbuilders.models.exceptions.UsernameException;
@@ -46,6 +45,7 @@ public class Employee extends AbstractModel {
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
     private ObservableList<Assignment> assignments = FXCollections.observableArrayList();
     private boolean dummy = false;
+    private Settings<EmployeeSetting> settings;
     
     /* Properties */
     
@@ -206,7 +206,8 @@ public class Employee extends AbstractModel {
     /* Foreign model methods */
     
     public Settings<EmployeeSetting> loadSettings() {
-        return EmployeeSetting.loadSettingsForEmployee(this);
+        settings = EmployeeSetting.loadSettingsForEmployee(this);
+        return settings;
     }
     
     public ObservableList<Assignment> loadAssignments() {
@@ -252,7 +253,6 @@ public class Employee extends AbstractModel {
     public void login() {
         Employee.setCurrentEmployee(this);
         Resources.setCurrentBundle(this);
-        SceneUtil.setFullscreen(loadSettings().getBoolean(EmployeeSettingType.FULLSCREEN));
         SceneUtil.changeMainScene(MainScene.FXML_FILENAME);
     }
 	
@@ -390,4 +390,8 @@ public class Employee extends AbstractModel {
 	public static Employee loadEmployeeByUsername(String username) {
 		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "username", username), Employee.class);
 	}
+
+    public Settings<EmployeeSetting> getSettings() {
+        return settings == null ? loadSettings() : settings;
+    }
 }

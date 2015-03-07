@@ -13,22 +13,20 @@ import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
+import com.github.norbo11.topbuilders.models.Employee;
+import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 import com.github.norbo11.topbuilders.util.Resources;
 
 public class SceneUtil {
-	
-    private static boolean fullscreen = false;
-    
-	public static boolean isFullscreen() {
-        return fullscreen;
-    }
-
-    public static void setFullscreen(boolean value) {
-        fullscreen = value;
-    }
 
     private static AbstractScene changeScene(Stage stage, AbstractScene scene) {
-        stage.setFullScreen(fullscreen);
+        boolean fullscreen = false;
+        
+        if (Employee.getCurrentEmployee() != null) {
+            fullscreen = Employee.getCurrentEmployee().getSettings().getBoolean(EmployeeSettingType.FULLSCREEN);
+        }
+        
+        if (!scene.isNeverFullScreen()) stage.setFullScreen(fullscreen);
         stage.setScene(scene);
         stage.show();
         return scene;
@@ -38,6 +36,12 @@ public class SceneUtil {
         return changeScene(stage, new AbstractScene(root));
     }
     
+    public static AbstractScene changeScene(Stage stage, String filename, boolean neverFullScreen) {
+        AbstractScene scene = new AbstractScene(FXMLUtil.loadFxml(filename));
+        scene.setNeverFullScreen(true);
+        return changeScene(stage, scene);
+    }
+        
     public static AbstractScene changeScene(Stage stage, String filename) {
         return changeScene(stage, new AbstractScene(FXMLUtil.loadFxml(filename)));
 	}
@@ -67,15 +71,21 @@ public class SceneUtil {
         showDialog(title, info, button);
     }
     
-    public static void showConfirmationDialog(String title, String info, Runnable runnable) {
+    public static void showConfirmationDialog(String title, String info, Runnable confirmRunnable) {
+        showConfirmationDialog(title, info, confirmRunnable, () -> { return; });
+    }
+
+    
+    public static void showConfirmationDialog(String title, String info, Runnable confirmRunnable, Runnable discardRunnable) {
         Button ok = new Button(Resources.getResource("general.ok"));
         ok.setOnAction(e -> { 
-            runnable.run();
+            confirmRunnable.run();
             SceneUtil.closeScene((Node) e.getSource());
         });
         
         Button cancel = new Button(Resources.getResource("general.cancel"));
         cancel.setOnAction(e -> { 
+            discardRunnable.run();
             SceneUtil.closeScene((Node) e.getSource());
         });
         
@@ -85,7 +95,9 @@ public class SceneUtil {
     private static void showDialog(String title, String info, Button... buttons) {
         VBox vbox = createDialogVBox(info, buttons);
         Stage stage = StageUtil.createDialogStage(title);
-        changeScene(stage, vbox);
+        AbstractScene scene = new AbstractScene(vbox);
+        scene.setNeverFullScreen(true);
+        changeScene(stage, scene);
     }
     
     private static VBox createDialogVBox(String info, Button... buttons) {

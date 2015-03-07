@@ -19,7 +19,6 @@ import javafx.collections.ObservableList;
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.util.Database;
-import com.github.norbo11.topbuilders.util.Log;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 
 public class Assignment extends AbstractModel {
@@ -276,10 +275,6 @@ public class Assignment extends AbstractModel {
 		Notification existingNotification = Notification.loadAssignmentCloseToEndNotificationForAssignment(this);
 		
 		//If there is no existing notification and the days left to the assignment are less than 7, create a new notification
-		
-		if (getEndDate() != null) {
-			Log.info(calculateDaysLeft());
-		}
 		
 		if (getEndDate() != null && calculateDaysLeft() < 7 && existingNotification == null) {
 			Notification notification = new Notification();

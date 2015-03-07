@@ -23,6 +23,15 @@ public class AbstractScene extends Scene {
    
     private String stylesheetPath;
     private AbstractController controller;
+    private boolean neverFullScreen;
+
+    public boolean isNeverFullScreen() {
+        return neverFullScreen;
+    }
+
+    public void setNeverFullScreen(boolean neverFullScreen) {
+        this.neverFullScreen = neverFullScreen;
+    }
 
     public AbstractController getController() {
         return controller;

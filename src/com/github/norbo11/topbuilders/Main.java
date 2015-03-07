@@ -16,7 +16,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
         Database.connect();
-        Database.createTables();
         
         stage.setWidth(Constants.WINDOW_WIDTH);
         stage.setHeight(Constants.WINDOW_HEIGHT);

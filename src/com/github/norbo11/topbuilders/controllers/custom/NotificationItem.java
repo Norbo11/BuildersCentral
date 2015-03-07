@@ -3,6 +3,7 @@ package com.github.norbo11.topbuilders.controllers.custom;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
@@ -55,7 +56,7 @@ public class NotificationItem extends TitledPane {
 	            case EMPLOYEE_ASSIGNMENT_COMPLETE:
 	            	Assignment assignment2 = (Assignment) associatedModel;
 	            	
-	            	setText(Resources.getResource("notifications.assignmentCompleted"));
+	            	setText(Resources.getResource("notifications.assignmentCompleted", assignment2.getEmployee()));
 	            	content.setText(
 	            			Resources.getResource("quotes.project") + ": " + assignment2.getProject().getFirstLineAddress() + "\n" + 
         					Resources.getResource("jobs.title") + ": " + assignment2.getJob().getTitle()
@@ -87,6 +88,19 @@ public class NotificationItem extends TitledPane {
 	                		Resources.getResource("quotes.clientFullName") + ": " + project.getClientFullName() + "\n" +
 	                		Resources.getResource("general.address") + ": " + project.getFirstLineAddress()
 	                );
+	                break;
+	        }
+	        
+	        /* Set image */
+	        switch (notification.getType()) {
+	            case ASSIGNMENT_CLOSE_TO_END: case NEW_ASSIGNMENT: case EMPLOYEE_ASSIGNMENT_COMPLETE:
+	                image.setImage(new Image("img/page.png"));
+	                break;
+	            case NEW_MESSAGE:
+	                image.setImage(new Image("img/envelope.png"));
+	                break;
+	            case NEW_QUOTE_REQUEST:
+	                image.setImage(new Image("img/house.png"));
 	                break;
 	        }
 	        
@@ -122,7 +136,7 @@ public class NotificationItem extends TitledPane {
 	                
 	            case NEW_QUOTE_REQUEST:
 	            	//Open the Quote Requests tab and select the associated quote
-	            	AbstractTab tab = TabUtil.createAndSwitchTab(Resources.getResource("home.quoteRequests"), QuoteRequestsTab.FXML_FILENAME);
+	            	AbstractTab tab = TabUtil.createAndSwitchTab(Resources.getResource("home.requests"), QuoteRequestsTab.FXML_FILENAME);
 	                QuoteRequestsTab controller = (QuoteRequestsTab) tab.getController();
 	                controller.select((Project) associatedModel);
 	            	break;

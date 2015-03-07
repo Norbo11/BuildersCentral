@@ -15,6 +15,14 @@ public class Database {
     private static final String DB_PASSWORD = "computing";
     private static Connection connection = null;
     
+    static {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    
     private static ResultSet execute(String query, boolean update, Object... objects) {
         try
         {
@@ -71,7 +79,6 @@ public class Database {
         try {
             if (connection != null) {
                 connection.close();
-                Log.info("Database close: success");
             } else Log.error("Database close: not connected");
             
         } catch (SQLException e)
@@ -82,15 +89,9 @@ public class Database {
     
     public static void connect() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT 	+ "/" + DB_NAME, DB_USER, DB_PASSWORD);
-            Log.info("Database connect: success");
+            connection = DriverManager.getConnection("jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT 	+ "/" + DB_NAME + "?autoReconnect=true", DB_USER, DB_PASSWORD);
         } catch (Exception e) {
             Log.error("Database connect: exception", e);
         }
-    }
-    
-    public static void createTables() {
-        //TODO Insert code here once table structure is created -  generate with PHPMyAdmin
     }
 }
