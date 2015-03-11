@@ -43,10 +43,13 @@ public class Employee extends AbstractModel {
     private StringProperty activationCode = new SimpleStringProperty("");
     private DoubleProperty defaultWage = new SimpleDoubleProperty(0);
     private IntegerProperty userTypeId = new SimpleIntegerProperty(0);
-    private ObservableList<Assignment> assignments = FXCollections.observableArrayList();
-    private boolean dummy = false;
-    private Settings<EmployeeSetting> settings;
     
+    private ObservableList<Message> messages;
+    private ObservableList<Assignment> assignments = FXCollections.observableArrayList();
+
+    private Settings<EmployeeSetting> settings;    
+    private boolean dummy = false;
+
     /* Properties */
     
     public StringProperty usernameProperty() {
@@ -205,6 +208,28 @@ public class Employee extends AbstractModel {
     
     /* Foreign model methods */
     
+    
+    public ObservableList<Assignment> getAssignments() {
+    	return assignments == null ? loadAssignments() : assignments;
+    }
+    
+    public Settings<EmployeeSetting> getSettings() {
+        return settings == null ? loadSettings() : settings;
+    }
+
+	public ObservableList<Message> getMessages() {
+		return messages == null ? loadMessages() : messages;
+	}
+    
+    public ObservableList<Notification> loadNotifications() {
+        return Notification.loadNotificationsForEmployee(this);
+    }
+    
+    public ObservableList<Message> loadMessages() {
+    	messages = Message.loadMessagesForEmployee(this);
+        return messages;
+    }
+    
     public Settings<EmployeeSetting> loadSettings() {
         settings = EmployeeSetting.loadSettingsForEmployee(this);
         return settings;
@@ -213,18 +238,6 @@ public class Employee extends AbstractModel {
     public ObservableList<Assignment> loadAssignments() {
         assignments = Assignment.loadAssignmentsForEmployee(this);
         return assignments;
-    }
-    
-    public ObservableList<Assignment> getAssignments() {
-    	return assignments;
-    }
-    
-    public ObservableList<Notification> loadNotifications() {
-        return Notification.loadNotificationsForEmployee(this);
-    }
-    
-    public ObservableList<Message> loadMessages() {
-        return Message.loadMessagesForEmployee(this);
     }
     
     /* Instance methods */
@@ -390,8 +403,4 @@ public class Employee extends AbstractModel {
 	public static Employee loadEmployeeByUsername(String username) {
 		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "username", username), Employee.class);
 	}
-
-    public Settings<EmployeeSetting> getSettings() {
-        return settings == null ? loadSettings() : settings;
-    }
 }

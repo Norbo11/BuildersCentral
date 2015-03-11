@@ -56,7 +56,7 @@ public class DisplayMessageScene extends AbstractController {
     
     @FXML
     public void delete(ActionEvent event) {
-        
+        message.delete();
     }
     
     @FXML

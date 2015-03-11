@@ -30,6 +30,7 @@ public class Message extends AbstractModel {
     private StringProperty title = new SimpleStringProperty("");
     private StringProperty content = new SimpleStringProperty("");
     private LongProperty timestamp = new SimpleLongProperty(0);
+    private Employee recipientEmployee;
   
     /* Getters and setters */
     
@@ -91,10 +92,22 @@ public class Message extends AbstractModel {
         return DateTimeUtil.getDateTimeFromTimestamp(getTimestamp());
 	}
 	
-	/* Override methods */
+	/* Foreign key methods */
 	
-    @Override
+	public Employee getRecipientEmployee() {
+		return recipientEmployee;
+	}
+	
+	public void setRecipientEmployee(Employee employee) {
+		this.recipientEmployee = employee;
+	}
+	
+	/* Override methods */
+
+	@Override
     public int add() {
+		getRecipientEmployee().getMessages().add(this);
+		
         return Database.executeUpdate("INSERT INTO " + Message.DB_TABLE_NAME + " (senderId, recipientId, title, content, timestamp) VALUES (?,?,?,?,?)", 
         getSenderId(), getRecipientId(), getTitle(), getContent(), getTimestamp());
     }
@@ -105,7 +118,14 @@ public class Message extends AbstractModel {
         + "senderId=?,recipientId=?,title=?,content=?,timestamp=? "
         + "WHERE id = ?", getSenderId(), getRecipientId(), getTitle(), getContent(), getTimestamp(), getId());        
 	}
-
+	
+	@Override
+	public void delete() {
+		getRecipientEmployee().getMessages().remove(this);
+		
+		super.delete();
+	}
+	
 	@Override
 	public void loadFromResult(ResultSet result, String... columns) throws SQLException {
         if (containsColumn(columns, "id")) setId(result.getInt("id"));
@@ -135,14 +155,17 @@ public class Message extends AbstractModel {
     }
     
     public static ObservableList<Message> loadMessagesForEmployee(Employee employee) {
-        return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true));
+    	ObservableList<Message> messages = loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true),  Message.class);
+    	
+    	for (Message message : messages) {
+    		message.setRecipientEmployee(employee);
+    	}
+    	
+        return messages;
     }
-    
-    public static ObservableList<Message> loadList(ResultSet result) {
-		return loadList(result, Message.class);
-	}
     
     public static ObservableList<Message> getModels() {
 	    return messages;
 	}
+    
 }

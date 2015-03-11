@@ -3,6 +3,7 @@ package com.github.norbo11.topbuilders.controllers.tabs;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
@@ -12,7 +13,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
-import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
@@ -50,12 +50,15 @@ public class MessagesTab extends AbstractController {
     /* FXML methods */
 
     @FXML
-	public void initialize() {				
+	public void initialize() {		
+    	System.out.println("when initializaed " + Employee.getCurrentEmployee().hashCode());
+    	Bindings.bindContent(table.getItems(), Employee.getCurrentEmployee().loadMessages());
+    	
 		//Set custom date/time cell display classes
 		dateCol.setCellFactory(column -> new DateCell());
 		timeCol.setCellFactory(column -> new TimeCell());
 
-		DeleteModelButtonCellFactory.assignCellFactory(xCol, () -> updateAll());
+		DeleteModelButtonCellFactory.assignCellFactory(xCol, () -> { return; });
 		
 	    table.setRowFactory(value -> {
 	        TableRow<Message> row = new TableRow<Message>();
@@ -66,28 +69,16 @@ public class MessagesTab extends AbstractController {
 	        });
 	        return row;
 	    });
-	    
-	    updateAll();
 	}
 
     @FXML
 	public void newMessage(ActionEvent event) {
 	    Stage stage = StageUtil.createDialogStage(Resources.getResource("messages.new"));
-	    AbstractScene scene = SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
-	    NewMessageScene controller =  (NewMessageScene) scene.getController();
-	    controller.setParent(this);
+	    SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
 	}
     
     @FXML
     public void readMessage(ActionEvent event) {
         Message.displayMessage(table.getSelectionModel().getSelectedItem());
-    }
-    
-    
-    /* Instance methods */
-    
-    public void updateAll() {
-        table.getItems().clear();
-        table.getItems().addAll(Employee.getCurrentEmployee().loadMessages());
     }
 }

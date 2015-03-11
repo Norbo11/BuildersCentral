@@ -3,7 +3,6 @@ TODO:
 -Message replying, forwarding, and sent messages (need to stop deleting message rows and just mark them as deleted)
 -CSS
 -Keep/discard changes popup on closing some tabs
--Fix saving of settings
 -Add notifications read functionality
 -Add quit button somewhere (fullscreen usage) - possibly on the lower right corner where the date bar is
 -fix fullscreen not being set properly on initial log in
