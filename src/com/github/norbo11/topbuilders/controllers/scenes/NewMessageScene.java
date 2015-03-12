@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.models.Notification;
@@ -22,6 +23,7 @@ public class NewMessageScene extends AbstractController {
     @FXML private ComboBox<Employee> toCombo;
     @FXML private TextField titleField;
     @FXML private HTMLEditor contentEditor;
+    private MessagesTab parent;
     
     @FXML
     public void sendMessage(ActionEvent event) {
@@ -50,6 +52,7 @@ public class NewMessageScene extends AbstractController {
         notification.save();
         
         discard(event);
+        parent.updateAll();
     }
     
     @FXML
@@ -59,8 +62,12 @@ public class NewMessageScene extends AbstractController {
     
     @FXML
     public void initialize() {
-    	Bindings.bindContent(toCombo.getItems(), Employee.loadEmployees());
+    	Bindings.bindContent(toCombo.getItems(), Employee.getModels());
 
         toCombo.getSelectionModel().selectFirst();
     }
+
+	public void setParent(MessagesTab messagesTab) {
+		this.parent = messagesTab;
+	}
 }

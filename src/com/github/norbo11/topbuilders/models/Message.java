@@ -106,8 +106,6 @@ public class Message extends AbstractModel {
 
 	@Override
     public int add() {
-		getRecipientEmployee().getMessages().add(this);
-		
         return Database.executeUpdate("INSERT INTO " + Message.DB_TABLE_NAME + " (senderId, recipientId, title, content, timestamp) VALUES (?,?,?,?,?)", 
         getSenderId(), getRecipientId(), getTitle(), getContent(), getTimestamp());
     }
@@ -117,13 +115,6 @@ public class Message extends AbstractModel {
 	    Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
         + "senderId=?,recipientId=?,title=?,content=?,timestamp=? "
         + "WHERE id = ?", getSenderId(), getRecipientId(), getTitle(), getContent(), getTimestamp(), getId());        
-	}
-	
-	@Override
-	public void delete() {
-		getRecipientEmployee().getMessages().remove(this);
-		
-		super.delete();
 	}
 	
 	@Override
@@ -155,13 +146,7 @@ public class Message extends AbstractModel {
     }
     
     public static ObservableList<Message> loadMessagesForEmployee(Employee employee) {
-    	ObservableList<Message> messages = loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true),  Message.class);
-    	
-    	for (Message message : messages) {
-    		message.setRecipientEmployee(employee);
-    	}
-    	
-        return messages;
+        return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true),  Message.class);
     }
     
     public static ObservableList<Message> getModels() {

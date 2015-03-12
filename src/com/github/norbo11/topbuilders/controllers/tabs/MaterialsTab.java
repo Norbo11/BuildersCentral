@@ -13,7 +13,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -25,6 +24,8 @@ import com.github.norbo11.topbuilders.models.RequiredMaterial;
 import com.github.norbo11.topbuilders.models.StockedMaterial;
 import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactory;
+import com.github.norbo11.topbuilders.util.factories.StringStringConverter;
+import com.github.norbo11.topbuilders.util.factories.TextFieldCell;
 public class MaterialsTab extends AbstractController {
     public final static String FXML_FILENAME = "tabs/MaterialsTab.fxml";
     
@@ -103,12 +104,18 @@ public class MaterialsTab extends AbstractController {
             comboBox.getItems().addAll(QuantityType.values());      
             comboBox.getSelectionModel().select(getQuantityType());
             comboBox.setOnAction((e) -> commit());
+            comboBox.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            	if (!newVal) commit();
+            });
         }
         
         private void createTextField() {
             textField = new DoubleTextField(getItem().getQuantityInStock());
             textField.setPrefWidth(60);
             textField.setOnAction((e) -> commit());
+            textField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            	if (!newVal) commit();
+            });
         }
         
         private void commit() {
@@ -139,7 +146,7 @@ public class MaterialsTab extends AbstractController {
         
         DeleteModelButtonCellFactory.assignCellFactory(xColumn, () -> updateAll());
 		
-		nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		nameColumn.setCellFactory((param) -> new TextFieldCell<StockedMaterial, String>(new StringStringConverter()));
 		nameColumn.setOnEditCommit(editEvent -> {
 			StockedMaterial material = (StockedMaterial) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow());
 			material.setName(editEvent.getNewValue());

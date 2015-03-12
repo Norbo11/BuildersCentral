@@ -47,7 +47,13 @@ public class NotificationItem extends TitledPane {
 	            case ASSIGNMENT_CLOSE_TO_END:
 	            	Assignment assignment1 = (Assignment) associatedModel;
 	            	
-	            	setText(Resources.getResource("notifications.assignmentCloseToEnd", assignment1.calculateDaysLeft()));
+	            	long daysLeft = assignment1.calculateDaysLeft();
+	            	if (daysLeft >= 0) {
+		            	setText(Resources.getResource("notifications.assignmentCloseToEnd", daysLeft));
+	            	} else {
+	            		setText(Resources.getResource("notifications.assignmentCloseToEnd.late", -daysLeft));
+	            	}
+	            	
 	            	content.setText(
 	            			Resources.getResource("quotes.project") + ": " + assignment1.getProject().getFirstLineAddress() + "\n" + 
         					Resources.getResource("jobs.title") + ": " + assignment1.getJob().getTitle()
@@ -112,15 +118,10 @@ public class NotificationItem extends TitledPane {
     public void view(MouseEvent event) {
     	if (associatedModel != null) {
 	        switch (notification.getType()) {
-	            case ASSIGNMENT_CLOSE_TO_END:
+	            case ASSIGNMENT_CLOSE_TO_END: case NEW_ASSIGNMENT:
 	            	//Simply open the My Assignments tab
 	            	TabUtil.createAndSwitchTab(Resources.getResource("home.myAssignments"), MyAssignmentsTab.FXML_FILENAME);
 	            	break;
-	            
-	            case NEW_ASSIGNMENT:
-	            	//Simply open the My Assignments tab
-	            	TabUtil.createAndSwitchTab(Resources.getResource("home.myAssignments"), MyAssignmentsTab.FXML_FILENAME);
-	                break;
 	                
 	            case NEW_MESSAGE:
 	            	//Display the message in a new window

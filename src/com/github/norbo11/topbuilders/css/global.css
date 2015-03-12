@@ -1,7 +1,7 @@
 /* Boilerplate */
 
 .root {    
-    -fx-font: 1em "Verdana";
+    -fx-font: 1.2em "Segoe UI";
     -fx-background-color: white;
     -fx-focus-color: transparent; 
     -fx-faint-focus-color: transparent;
@@ -25,6 +25,7 @@
 
 #welcomeText {
     -fx-font-size: 3em;
+    -fx-padding: 0 0 0 15px;
 }
 
 #bottomPane {
@@ -43,8 +44,13 @@
     -fx-background-color: white;
 }   
 
+.button {
+	-fx-border-color: #97CBE6;
+	-fx-border-size: 2px;
+}
+
 .button, .combo-box, .combo-box .list-view {
-    -fx-font: normal bold 1em "Verdana";
+    -fx-font: normal bold 1.27em "Segoe UI";
     -fx-text-fill: #2D86B3;
      
     -fx-background-color: #C7E7FC;

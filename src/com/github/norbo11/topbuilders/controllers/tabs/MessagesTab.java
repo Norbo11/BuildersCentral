@@ -13,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
@@ -51,14 +52,13 @@ public class MessagesTab extends AbstractController {
 
     @FXML
 	public void initialize() {		
-    	System.out.println("when initializaed " + Employee.getCurrentEmployee().hashCode());
     	Bindings.bindContent(table.getItems(), Employee.getCurrentEmployee().loadMessages());
     	
 		//Set custom date/time cell display classes
 		dateCol.setCellFactory(column -> new DateCell());
 		timeCol.setCellFactory(column -> new TimeCell());
 
-		DeleteModelButtonCellFactory.assignCellFactory(xCol, () -> { return; });
+		DeleteModelButtonCellFactory.assignCellFactory(xCol, () -> { updateAll(); });
 		
 	    table.setRowFactory(value -> {
 	        TableRow<Message> row = new TableRow<Message>();
@@ -74,11 +74,18 @@ public class MessagesTab extends AbstractController {
     @FXML
 	public void newMessage(ActionEvent event) {
 	    Stage stage = StageUtil.createDialogStage(Resources.getResource("messages.new"));
-	    SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
+	    AbstractScene scene = SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
+	    NewMessageScene controller = (NewMessageScene) scene.getController();
+	    controller.setParent(this);
 	}
     
     @FXML
     public void readMessage(ActionEvent event) {
         Message.displayMessage(table.getSelectionModel().getSelectedItem());
+    }
+    
+    public void updateAll() {
+    	table.getItems().clear();
+    	table.getItems().addAll(Employee.getCurrentEmployee().loadMessages());
     }
 }
