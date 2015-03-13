@@ -24,11 +24,8 @@
     <Label text="%quotes.settings.materialsEnabled" GridPane.rowIndex="2" />
     <CheckBox fx:id="materialsEnabled" GridPane.rowIndex="2" GridPane.columnIndex="1" />
     
-    <Label text="%quotes.settings.materialsPriceEnabled" GridPane.rowIndex="3" />
-    <CheckBox fx:id="materialsPriceEnabled" GridPane.rowIndex="3" GridPane.columnIndex="1" />
-    
-    <Label text="%quotes.settings.labourPriceEnabled" GridPane.rowIndex="4" />
-    <CheckBox fx:id="labourPriceEnabled" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    <Label text="%quotes.settings.splitPrice" GridPane.rowIndex="3" />
+    <CheckBox fx:id="splitPrice" GridPane.rowIndex="3" GridPane.columnIndex="1" />
   </GridPane>
     
   <HBox spacing="100" alignment="center">

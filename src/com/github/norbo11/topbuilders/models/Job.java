@@ -257,6 +257,6 @@ public class Job extends AbstractModel {
         //If both material and labour prices are enabled, add them. Otherwise, use the labour price field to decide the total price.
         
         Settings<QuoteSetting> settings = getJobGroup().getProject().getSettings();
-        return settings.getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED) && settings.getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED) ? getLabourPrice() + getMaterialPrice() : getLabourPrice();
+        return settings.getBoolean(QuoteSettingType.SPLIT_PRICE) ? getLabourPrice() + getMaterialPrice() : getLabourPrice();
     }
 }

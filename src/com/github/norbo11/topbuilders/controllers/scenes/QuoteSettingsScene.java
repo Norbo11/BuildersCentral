@@ -16,7 +16,7 @@ import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 public class QuoteSettingsScene extends AbstractController {
     public static final String FXML_FILENAME = "scenes/QuoteSettingsScene.fxml";
 
-    @FXML private CheckBox groupsEnabled, jobDescriptionsEnabled, materialsEnabled, materialsPriceEnabled, labourPriceEnabled;
+    @FXML private CheckBox groupsEnabled, jobDescriptionsEnabled, materialsEnabled, splitPrice;
     private Settings<QuoteSetting> settings;
     private QuotesTab quotesTab;
     
@@ -33,8 +33,7 @@ public class QuoteSettingsScene extends AbstractController {
         settings.set(QuoteSettingType.GROUPS_ENABLED, groupsEnabled.isSelected());
         settings.set(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED, jobDescriptionsEnabled.isSelected());
         settings.set(QuoteSettingType.MATERIALS_ENABLED, materialsEnabled.isSelected());
-        settings.set(QuoteSettingType.MATERIALS_PRICE_ENABLED, materialsPriceEnabled.isSelected());
-        settings.set(QuoteSettingType.LABOUR_PRICE_ENABLED, labourPriceEnabled.isSelected());
+        settings.set(QuoteSettingType.SPLIT_PRICE, splitPrice.isSelected());
         settings.save();
         
         quotesTab.updateColumns();
@@ -56,7 +55,6 @@ public class QuoteSettingsScene extends AbstractController {
         groupsEnabled.setSelected(settings.getBoolean(QuoteSettingType.GROUPS_ENABLED));
         jobDescriptionsEnabled.setSelected(settings.getBoolean(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED));
         materialsEnabled.setSelected(settings.getBoolean(QuoteSettingType.MATERIALS_ENABLED));
-        materialsPriceEnabled.setSelected(settings.getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED));
-        labourPriceEnabled.setSelected(settings.getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED));
+        splitPrice.setSelected(settings.getBoolean(QuoteSettingType.SPLIT_PRICE));
     }
 }

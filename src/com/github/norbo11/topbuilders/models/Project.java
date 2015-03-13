@@ -378,7 +378,7 @@ public class Project extends AbstractModel {
     public double calculateTotalMaterialCost() {
         double total = 0;
         
-        if (getSettings().getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED)) {
+        if (getSettings().getBoolean(QuoteSettingType.SPLIT_PRICE)) {
             for (JobGroup group : getJobGroups()) {
                 for (Job job : group.getJobs()) {
                     total += job.getMaterialPrice();
@@ -392,7 +392,7 @@ public class Project extends AbstractModel {
     public double calculateTotalLabourCost() {
         double total = 0;
         
-        if (getSettings().getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED)) {
+        if (getSettings().getBoolean(QuoteSettingType.SPLIT_PRICE)) {
             for (JobGroup group : getJobGroups()) {
                 for (Job job : group.getJobs()) {
                     total += job.getLabourPrice();

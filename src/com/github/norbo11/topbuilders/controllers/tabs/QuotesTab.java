@@ -28,7 +28,6 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.Settings;
 import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.factories.DoubleMoneyConverter;
-import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.factories.MaterialsCell;
 import com.github.norbo11.topbuilders.util.factories.StringStringConverter;
 import com.github.norbo11.topbuilders.util.factories.TextAreaTreeCell;
@@ -58,16 +57,6 @@ public class QuotesTab extends AbstractController {
     @FXML private TreeTableColumn<Job, Number> materialsCostCol, labourCostCol, totalCostCol;
     
     /* Factories, cells and rows */
-    
-    //Class which removes the expansion arrow of tree items
-    private class JobTableRow extends HeadingTreeTableRow<Job> {        
-        @Override
-        protected void updateItem(Job job, boolean empty) {
-            super.updateItem(job, empty);
-            
-            setDisclosureNode(null); //Responsible for the "arrow" node
-        }
-    }
 
     //Class which handles the delete cells of tree items
     private class DeleteModelButtonTreeCellFactory extends TreeTableCell<Job, Job> {
@@ -79,7 +68,7 @@ public class QuotesTab extends AbstractController {
                 setGraphic(null);
             } else {
                 Button button = new Button("X");
-                button.setOnAction(e -> { 
+                button.setOnAction(e -> {
                     //If this is a job group sell
                     if (job.isDummy()) {
                         JobGroup jobGroup = job.getJobGroupDummy();
@@ -101,6 +90,15 @@ public class QuotesTab extends AbstractController {
         }
     }
     
+    private class TotalCostTreeCell extends TreeTableCell<Job, Number> {
+        @Override
+        protected void updateItem(Number job, boolean empty) {
+            super.updateItem(job, empty);
+
+            //new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter())
+        }
+    }
+    
     /* Initialization */
     
     @FXML
@@ -109,7 +107,7 @@ public class QuotesTab extends AbstractController {
         StockedMaterial.loadStockedMaterials();
         
     	/* Cell factories */
-        table.setRowFactory(row -> new JobTableRow());
+        //table.setRowFactory(row -> new JobTableRow());
     	
         deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
         titleCol.setCellFactory(param -> new TextFieldTreeCell<Job, String>(new StringStringConverter()));
@@ -117,7 +115,7 @@ public class QuotesTab extends AbstractController {
     	materialsCol.setCellFactory(column -> new MaterialsCell(this));
     	materialsCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
     	labourCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
-    	totalCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
+    	totalCostCol.setCellFactory(param -> new TotalCostTreeCell());
     	
         /* Cell value factories */
         deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
@@ -318,8 +316,12 @@ public class QuotesTab extends AbstractController {
             
             descriptionCol.setVisible(settings.getBoolean(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED));
             materialsCol.setVisible(settings.getBoolean(QuoteSettingType.MATERIALS_ENABLED));
-            materialsCostCol.setVisible(settings.getBoolean(QuoteSettingType.MATERIALS_PRICE_ENABLED));
-            labourCostCol.setVisible(settings.getBoolean(QuoteSettingType.LABOUR_PRICE_ENABLED));
+            
+            boolean splitPrice = settings.getBoolean(QuoteSettingType.SPLIT_PRICE);
+            
+            materialsCostCol.setVisible(splitPrice);
+            labourCostCol.setVisible(splitPrice);
+            
         }
     }
     

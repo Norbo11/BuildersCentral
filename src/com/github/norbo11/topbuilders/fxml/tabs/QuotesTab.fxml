@@ -25,7 +25,7 @@
   <TreeTableView fx:id="table" showRoot="false" editable="true" styleClass="unselectable">
     <columnResizePolicy><TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
     <columns>
-      <TreeTableColumn fx:id="deleteJobCol" text="X" minWidth="50" editable="true" />
+      <TreeTableColumn fx:id="deleteJobCol" text="X" minWidth="70" editable="true" />
     
       <TreeTableColumn fx:id="titleCol" text="%jobs.title" editable="true">
         <cellValueFactory><TreeItemPropertyValueFactory property="title" /></cellValueFactory>

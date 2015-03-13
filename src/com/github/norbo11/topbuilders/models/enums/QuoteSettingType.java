@@ -2,8 +2,7 @@ package com.github.norbo11.topbuilders.models.enums;
 
 public enum QuoteSettingType implements AbstractSettingType {
     MATERIALS_ENABLED(0, true), 
-    MATERIALS_PRICE_ENABLED(1, true),
-    LABOUR_PRICE_ENABLED(2, true),
+    SPLIT_PRICE(1, true),
     JOB_DESCRIPTIONS_ENABLED(3, true),
     GROUPS_ENABLED(4, true);
     
