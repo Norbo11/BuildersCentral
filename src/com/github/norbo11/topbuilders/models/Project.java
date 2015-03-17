@@ -229,88 +229,6 @@ public class Project extends AbstractModel {
         return jobs;
     }
     
-	/* Override methods */
-    
-    @Override
-    public int add() {
-        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
-        + " (quoteRequested,completed,clientFirstName,clientLastName,firstLineAddress,secondLineAddress,city,postcode,contactNumber,email,projectDescription,projectNote) "
-        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
-        , isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote());
-    }
-    
-    @Override
-    public void update() {
-        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
-        + "quoteRequested=?,completed=?,clientFirstName=?,clientLastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,contactNumber=?,email=?,projectDescription=?,projectNote=? "
-        + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());        
-    }
-    
-    @Override
-    public void save() {
-        super.save();
-        
-        for (JobGroup group : jobGroups) {
-           group.save(); 
-        }
-    }
-    
-    @Override
-    public void delete() {
-        for (JobGroup group : jobGroups) {
-            group.delete(); 
-        }
-        
-        settings.delete();
-        super.delete();
-    }
-    
-    @Override
-    public void loadFromResult(ResultSet result, String... columns) throws SQLException {  
-        if (containsColumn(columns, "id")) setId(result.getInt("id"));
-        if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
-        if (containsColumn(columns, "completed")) setCompleted(result.getBoolean("completed"));
-        if (containsColumn(columns, "clientFirstName")) setClientFirstName(result.getString("clientFirstName"));
-        if (containsColumn(columns, "clientLastName")) setClientLastName(result.getString("clientLastName"));
-        if (containsColumn(columns, "firstLineAddress")) setFirstLineAddress(result.getString("firstLineAddress"));
-        if (containsColumn(columns, "secondLineAddress")) setSecondLineAddress(result.getString("secondLineAddress"));
-        if (containsColumn(columns, "city")) setCity(result.getString("city"));
-        if (containsColumn(columns, "postcode")) setPostcode(result.getString("postcode"));
-        if (containsColumn(columns, "contactNumber")) setContactNumber(result.getString("contactNumber"));
-        if (containsColumn(columns, "email")) setEmail(result.getString("email"));
-        if (containsColumn(columns, "projectDescription")) setProjectDescription(result.getString("projectDescription"));
-        if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
-    }
-    
-	@Override
-	public String getDbTableName() {
-		return DB_TABLE_NAME;
-	}
-	
-	@Override
-	public String toString() {
-		return getFirstLineAddress().equals("") ? Resources.getResource("quotes.unnamedProject") : getFirstLineAddress();
-	}
-	
-	/* Static methods */
-	
-	public static ObservableList<Project> loadList(ResultSet result) {
-		return loadList(result, Project.class);
-	}
-
-    public static ObservableList<Project> loadProjects() {
-        projects = loadList(loadAllModels(DB_TABLE_NAME));
-        return projects;
-    }
-    
-    public static ObservableList<Project> getModels() {
-        return projects;
-    }
-
-	public static Project loadProjectForJobGroup(JobGroup jobGroup) {
-		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", jobGroup.getProjectId()), Project.class);
-	}
-	
     public void populateTreeTable(TreeView<Job> table) {
         table.getRoot().getChildren().clear();
         
@@ -414,4 +332,87 @@ public class Project extends AbstractModel {
         
         return total;
     }
+    
+	/* Override methods */
+    
+    @Override
+    public int add() {
+        return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME
+        + " (quoteRequested,completed,clientFirstName,clientLastName,firstLineAddress,secondLineAddress,city,postcode,contactNumber,email,projectDescription,projectNote) "
+        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+        , isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote());
+    }
+    
+    @Override
+    public void update() {
+        Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET "
+        + "quoteRequested=?,completed=?,clientFirstName=?,clientLastName=?,firstLineAddress=?,secondLineAddress=?,city=?,postcode=?,contactNumber=?,email=?,projectDescription=?,projectNote=? "
+        + "WHERE id = ?", isQuoteRequested(), isCompleted(), getClientFirstName(), getClientLastName(), getFirstLineAddress(), getSecondLineAddress(), getCity(), getPostcode(), getContactNumber(), getEmail(), getProjectDescription(), getProjectNote(), getId());        
+    }
+    
+    @Override
+    public void save() {
+        super.save();
+        
+        for (JobGroup group : jobGroups) {
+           group.save(); 
+        }
+    }
+    
+    @Override
+    public void delete() {
+        for (JobGroup group : jobGroups) {
+            group.delete(); 
+        }
+        
+        settings.delete();
+        super.delete();
+    }
+    
+    @Override
+    public void loadFromResult(ResultSet result, String... columns) throws SQLException {  
+        if (containsColumn(columns, "id")) setId(result.getInt("id"));
+        if (containsColumn(columns, "quoteRequested")) setQuoteRequested(result.getBoolean("quoteRequested"));
+        if (containsColumn(columns, "completed")) setCompleted(result.getBoolean("completed"));
+        if (containsColumn(columns, "clientFirstName")) setClientFirstName(result.getString("clientFirstName"));
+        if (containsColumn(columns, "clientLastName")) setClientLastName(result.getString("clientLastName"));
+        if (containsColumn(columns, "firstLineAddress")) setFirstLineAddress(result.getString("firstLineAddress"));
+        if (containsColumn(columns, "secondLineAddress")) setSecondLineAddress(result.getString("secondLineAddress"));
+        if (containsColumn(columns, "city")) setCity(result.getString("city"));
+        if (containsColumn(columns, "postcode")) setPostcode(result.getString("postcode"));
+        if (containsColumn(columns, "contactNumber")) setContactNumber(result.getString("contactNumber"));
+        if (containsColumn(columns, "email")) setEmail(result.getString("email"));
+        if (containsColumn(columns, "projectDescription")) setProjectDescription(result.getString("projectDescription"));
+        if (containsColumn(columns, "projectNote")) setProjectNote(result.getString("projectNote"));
+    }
+    
+	@Override
+	public String getDbTableName() {
+		return DB_TABLE_NAME;
+	}
+	
+	@Override
+	public String toString() {
+		return getFirstLineAddress().equals("") ? Resources.getResource("quotes.unnamedProject") : getFirstLineAddress();
+	}
+	
+	/* Static methods */
+	
+	public static ObservableList<Project> loadList(ResultSet result) {
+		return loadList(result, Project.class);
+	}
+
+    public static ObservableList<Project> loadProjects() {
+        projects = loadList(loadAllModels(DB_TABLE_NAME));
+        return projects;
+    }
+    
+    public static ObservableList<Project> getModels() {
+        return projects;
+    }
+
+	public static Project loadProjectForJobGroup(JobGroup jobGroup) {
+		return loadOne(loadAllModelsWhere(DB_TABLE_NAME, "id", jobGroup.getProjectId()), Project.class);
+	}
+	
 }

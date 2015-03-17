@@ -7,16 +7,8 @@
 <?import javafx.scene.text.*?>
 
 <HBox alignment="center" spacing="50" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.tabs.ManagerHomeTab">
-  <padding><Insets top="25" bottom="25" right="100" left="100" /></padding>
+  <padding><Insets top="25" bottom="25" right="200" left="200" /></padding>
   
-  <TitledPane fx:id="notificationsPane" text="%notifications.heading" prefWidth="400" collapsible="false" maxHeight="520">
-    <ScrollPane fitToWidth="true">
-      <padding><Insets top="0" bottom="0" left="0" right="0"></Insets></padding>
-      <VBox fx:id="notificationsList">
-      </VBox>
-    </ScrollPane>
-  </TitledPane>
-
   <VBox alignment="center">
     <GridPane hgap="20" vgap="20">  
       <Button fx:id="quotes" onAction="#buttonAction" prefWidth="200" prefHeight="70" GridPane.rowIndex="0" GridPane.columnIndex="1" text="%home.quotes" />
@@ -32,4 +24,12 @@
       </Button>
     </GridPane>
   </VBox>
+  
+  <TitledPane HBox.hgrow="always" fx:id="notificationsPane" text="%notifications.heading" maxWidth="Infinity" collapsible="false" maxHeight="520">
+    <ScrollPane fitToWidth="true">
+      <padding><Insets top="0" bottom="0" left="0" right="0"></Insets></padding>
+      <VBox fx:id="notificationsList">
+      </VBox>
+    </ScrollPane>
+  </TitledPane>
 </HBox>

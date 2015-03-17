@@ -150,6 +150,28 @@ public class Job extends AbstractModel {
 	
 	/* Instance methods */	
 
+    public String getRequiredMaterialsString(boolean commaSeperated) {
+        String materials = "";
+        
+        if (!isDummy()) {
+            //Go through all materials of the job corresponding to this assignment, and add them to the materials list
+            for (RequiredMaterial material : getRequiredMaterials()) {
+                materials += material;
+                if (commaSeperated) materials += ", ";
+                else materials += "\n";
+            }           
+        }
+            
+        return materials.length() > 0 ? materials.substring(0, materials.length() - 2) : materials; //Get rid of 2 characters
+    }
+
+    public double getTotalCost() {
+        //If both material and labour prices are enabled, add them. Otherwise, use the labour price field to decide the total price.
+        
+        Settings<QuoteSetting> settings = getJobGroup().getProject().getSettings();
+        return settings.getBoolean(QuoteSettingType.SPLIT_PRICE) ? getLabourPrice() + getMaterialPrice() : getLabourPrice();
+    }
+    
 	/* Overrides */
 	
     @Override
@@ -237,26 +259,4 @@ public class Job extends AbstractModel {
 	public static ObservableList<Job> getModels() {
 	    return jobs;
 	}
-
-    public String getRequiredMaterialsString(boolean commaSeperated) {
-        String materials = "";
-        
-        if (!isDummy()) {
-            //Go through all materials of the job corresponding to this assignment, and add them to the materials list
-            for (RequiredMaterial material : getRequiredMaterials()) {
-                materials += material;
-                if (commaSeperated) materials += ", ";
-                else materials += "\n";
-            }           
-        }
-            
-        return materials.length() > 0 ? materials.substring(0, materials.length() - 2) : materials; //Get rid of 2 characters
-    }
-
-    public double getTotalCost() {
-        //If both material and labour prices are enabled, add them. Otherwise, use the labour price field to decide the total price.
-        
-        Settings<QuoteSetting> settings = getJobGroup().getProject().getSettings();
-        return settings.getBoolean(QuoteSettingType.SPLIT_PRICE) ? getLabourPrice() + getMaterialPrice() : getLabourPrice();
-    }
 }

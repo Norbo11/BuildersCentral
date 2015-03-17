@@ -21,7 +21,7 @@ public class RegisterScene extends AbstractController {
     private Employee employee;
     
     @FXML
-    public void next(ActionEvent event) {
+    public void next() {
         String code = this.code.getText();
         
         if (!code.equals("")) {
@@ -40,7 +40,7 @@ public class RegisterScene extends AbstractController {
     }
 
     @FXML
-    public void activate(ActionEvent event) {        
+    public void activate() {        
         if (newPass.getText().length() > 0) {
             if (newPass.getText().equals(confirmPass.getText())) {
                 employee.setPassword(HashUtil.generateMD5Hash(newPass.getText()));
