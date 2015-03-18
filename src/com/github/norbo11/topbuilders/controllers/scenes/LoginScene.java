@@ -78,9 +78,6 @@ public class LoginScene extends AbstractController {
     		if (employee != null) {
     			String newPassword = StringUtil.generateRandomString(7);
     			
-    			employee.setPassword(HashUtil.generateMD5Hash(newPassword));
-    			employee.save();
-    			
     			EmailUtil.sendEmail(employee.getEmail(), "Top Builders password reset", ""
     					+ "<p>You have received this message because you attempted to reset your password for the Top Builders project managment system.</p>"
     					+ "<p>Your new password is: " + newPassword + "</p>"
@@ -88,7 +85,11 @@ public class LoginScene extends AbstractController {
     					+ "<p>Regards,<br />Top Builders team."
 				);	
     			
-    			SceneUtil.closeScene(button);
+    			employee.setPassword(HashUtil.generateMD5Hash(newPassword));
+                employee.save();
+    			
+                SceneUtil.closeScene(button);
+                SceneUtil.showInfoDialog("Password reset!", "Your password has been reset and an e-mail has been sent to " + employee.getEmail());
     		} else {
     			label.setText("Username not found. Try again.");
     		}

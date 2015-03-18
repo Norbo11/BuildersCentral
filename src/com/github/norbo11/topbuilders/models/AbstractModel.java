@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.Log;
-import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 
 public abstract class AbstractModel {
@@ -98,13 +97,12 @@ public abstract class AbstractModel {
     }
 
     //Load specified columns
-    public void loadFromId(int id, String... columns) {
-        String columnString = columns.length > 0 ? StringUtil.join(columns, ",") : "*";
-        ResultSet result = Database.executeQuery("SELECT " + columnString + " FROM " + getDbTableName() + " WHERE id = ?", id);
+    public void loadFromId(int id) {
+        ResultSet result = loadAllModelsWhere(getDbTableName(), "id", id);
         
         try {
             if (result.next()) {
-                loadFromResult(result, columns);
+                loadFromResult(result);
             }
         } catch (SQLException e) {
 			Log.error("Error loading model from ID " + this);

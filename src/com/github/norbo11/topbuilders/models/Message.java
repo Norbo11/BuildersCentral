@@ -78,13 +78,13 @@ public class Message extends AbstractModel {
 
 	public Employee getSender() {
         Employee employee = new Employee();
-        employee.loadFromId(getSenderId(), "firstName", "lastName");
+        employee.loadFromId(getSenderId());
         return employee;
     }
     
     public Employee getRecipient() {
         Employee employee = new Employee();
-        employee.loadFromId(getRecipientId(), "firstName", "lastName");
+        employee.loadFromId(getRecipientId());
         return employee;
     }
 	
