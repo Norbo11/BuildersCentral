@@ -169,6 +169,47 @@ public class Assignment extends AbstractModel {
 	    return isDummy() ? "" : getJob().getDescription();
 	}
 	
+	public void updateNewAssignmentNotification() {
+		if (isCompleted()) {
+			
+			//Create an Assignment Completed notification for all managers
+			for (Employee manager : Employee.getModels()) {
+				if (manager.getUserType().isAtLeast(UserType.MANAGER)) {
+		            Notification notification = new Notification();
+		            notification.setNewModel(true);
+		            notification.setEmployeeId(manager.getId());
+		            notification.setTypeId(NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE.getId());
+		            notification.setAssociatedId(getId());
+		            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
+		            notification.save();
+				}
+			}
+		} else {
+			//Delete all notifications associated with this assignment
+			Notification.deleteCorrespondingNotifications(this);
+		}
+	}
+
+	public long calculateDaysLeft() {
+		return Period.between(LocalDate.now(), getEndDate()).getDays();
+	}
+
+	public void updateAssignmentCloseToEndNotification() {
+		Notification existingNotification = Notification.loadAssignmentCloseToEndNotificationForAssignment(this);
+		
+		//If there is no existing notification and the days left to the assignment are less than 7, create a new notification
+		
+		if (getEndDate() != null && calculateDaysLeft() < 7 && existingNotification == null) {
+			Notification notification = new Notification();
+            notification.setNewModel(true);
+            notification.setEmployeeId(getEmployeeId());
+            notification.setTypeId(NotificationType.ASSIGNMENT_CLOSE_TO_END.getId());
+            notification.setAssociatedId(getId());
+            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
+            notification.save();
+		}
+	}
+	
 	/* Overrides */
 
 	@Override
@@ -244,46 +285,5 @@ public class Assignment extends AbstractModel {
     
     public static ObservableList<Assignment> getModels() {
 	    return assignments;
-	}
-
-	public void updateNewAssignmentNotification() {
-		if (isCompleted()) {
-			
-			//Create an Assignment Completed notification for all managers
-			for (Employee manager : Employee.getModels()) {
-				if (manager.getUserType().isAtLeast(UserType.MANAGER)) {
-		            Notification notification = new Notification();
-		            notification.setNewModel(true);
-		            notification.setEmployeeId(manager.getId());
-		            notification.setTypeId(NotificationType.EMPLOYEE_ASSIGNMENT_COMPLETE.getId());
-		            notification.setAssociatedId(getId());
-		            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
-		            notification.save();
-				}
-			}
-		} else {
-			//Delete all notifications associated with this assignment
-			Notification.deleteCorrespondingNotifications(this);
-		}
-	}
-
-	public long calculateDaysLeft() {
-		return Period.between(LocalDate.now(), getEndDate()).getDays();
-	}
-
-	public void updateAssignmentCloseToEndNotification() {
-		Notification existingNotification = Notification.loadAssignmentCloseToEndNotificationForAssignment(this);
-		
-		//If there is no existing notification and the days left to the assignment are less than 7, create a new notification
-		
-		if (getEndDate() != null && calculateDaysLeft() < 7 && existingNotification == null) {
-			Notification notification = new Notification();
-            notification.setNewModel(true);
-            notification.setEmployeeId(getEmployeeId());
-            notification.setTypeId(NotificationType.ASSIGNMENT_CLOSE_TO_END.getId());
-            notification.setAssociatedId(getId());
-            notification.setTimestamp(DateTimeUtil.getCurrentTimestamp());
-            notification.save();
-		}
 	}
 }

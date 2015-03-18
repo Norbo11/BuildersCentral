@@ -79,7 +79,7 @@
             <Label wrapText="true" text="%manageAssignments.employeeName" />
             <TextField HBox.hgrow="always" fx:id="employeeSearchNameField" />
           </HBox>
-          <ListView fx:id="employeeSearchSearchList" />
+          <ListView fx:id="employeeSearchSearchList" maxHeight="200" />
         </VBox>
         <TableView fx:id="assignmentSearchTable">
           <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
