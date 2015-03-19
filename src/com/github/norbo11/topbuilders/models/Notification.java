@@ -46,7 +46,7 @@ public class Notification extends AbstractModel {
         return timestamp.get();
     }
 
-    public boolean getSeen() {
+    public boolean isSeen() {
         return seen.get();
     }
 
@@ -106,13 +106,13 @@ public class Notification extends AbstractModel {
     @Override
     public int add() {
         return Database.executeUpdate("INSERT INTO " + DB_TABLE_NAME + " (employeeId, typeId, associatedId, timestamp, seen) VALUES (?,?,?,?,?)", 
-        getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), getSeen());
+        getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), isSeen());
     }
 
     @Override
 	public void update() {
         Database.executeUpdate("UPDATE " + DB_TABLE_NAME + " SET employeeId=?, typeId=?, associatedId=?, timestamp=?, seen=? WHERE id=?", 
-        getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), getSeen(), getId());
+        getEmployeeId(), getTypeId(), getAssociatedId(), getTimestamp(), isSeen(), getId());
 	}
 
 	@Override

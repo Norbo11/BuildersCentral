@@ -1,6 +1,7 @@
 package com.github.norbo11.topbuilders.controllers.custom;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
@@ -28,6 +29,7 @@ public class NotificationItem extends TitledPane {
     @FXML private Label title;
     @FXML private Label content;
     @FXML private Label timestamp;
+    @FXML private CheckBox seenCheckbox;
 
     private Notification notification; 
     private AbstractModel associatedModel;
@@ -110,6 +112,24 @@ public class NotificationItem extends TitledPane {
 	                break;
 	        }
 	        
+	        //Mark the seen checkbox and collapse the titled pane if appropriate
+	        boolean seen = notification.isSeen();
+	        seenCheckbox.setSelected(seen);
+	        setExpanded(!seen);
+	        
+	        if (seen) getStyleClass().add("seen");
+	        
+	        //Set seen checkbox behaviour
+	        seenCheckbox.setOnAction(e -> {
+	        	boolean newSeen = seenCheckbox.isSelected();
+	        	notification.setSeen(newSeen);
+	        	notification.save();
+	        	
+	        	setExpanded(!newSeen);
+	        	if (newSeen) getStyleClass().add("seen");
+	        	else getStyleClass().remove("seen");
+	        });
+	        
 	        timestamp.setText(DateTimeUtil.formatDate(notification.getDate()) + "\n" + DateTimeUtil.formatTime(notification.getDate()));
     	}
     }
@@ -142,6 +162,10 @@ public class NotificationItem extends TitledPane {
 	                controller.select((Project) associatedModel);
 	            	break;
 	        }
+	        
+	        //Mark as read, for all types of notification
+	        notification.setSeen(true);
+	        notification.save();
     	}
     }
     

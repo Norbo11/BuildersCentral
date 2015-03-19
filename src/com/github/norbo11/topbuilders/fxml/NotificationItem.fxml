@@ -16,6 +16,17 @@
         </ImageView>
     </left>
     <center><Label BorderPane.alignment="CENTER_LEFT" fx:id="content" wrapText="true" /></center>
-    <right><Label BorderPane.alignment="CENTER_RIGHT" fx:id="timestamp" prefWidth="75" wrapText="true" textAlignment="RIGHT"/></right>
+    <right>
+      <VBox BorderPane.alignment="CENTER_RIGHT" alignment="CENTER_RIGHT">
+        <Label fx:id="timestamp" prefWidth="75" wrapText="true" textAlignment="RIGHT" />
+        
+        <HBox alignment="CENTER_RIGHT">
+          <padding><Insets top="5" /></padding>
+          
+          <Label text="%notifications.seen" />
+          <CheckBox fx:id="seenCheckbox" />
+        </HBox>
+      </VBox>
+    </right>
   </BorderPane>
 </fx:root>

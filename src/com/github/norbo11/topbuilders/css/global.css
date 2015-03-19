@@ -8,7 +8,7 @@
 }
 
 .scroll-pane > .viewport {
-   -fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .root.popup {
@@ -111,6 +111,10 @@
 .notification-item-last {
     -fx-border-color: transparent transparent -fx-box-border transparent;
     -fx-border-width: 0px 0px 1px 0px;
+}
+
+.notification-item.seen .title {
+	-fx-background-color: #D5E8F4;
 }
 
 /* Tabs */
