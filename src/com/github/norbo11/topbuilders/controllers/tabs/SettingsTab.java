@@ -132,7 +132,7 @@ public class SettingsTab extends AbstractController {
 	public void changeEmail() {
 		/* Check new email format */
 		if (!Validation.checkEmailFormat(newEmail1.getText())) {
-        	emailValidation.addErrorFromResource("validation.invalidEmail");
+        	emailValidation.addErrorFromResource("validation.invalidEmailFormat");
         }
 		
 		/* Check new email match */

@@ -15,8 +15,9 @@ public class DoubleTextField extends TextField {
             String character = e.getCharacter();
             
             //If the character is a dot, and one already exists, cancel the event
+            //Also cancel the event if there are no characters currently entered (the input cannot begin with a dot)
             if (character.equals(".")) {
-                if (getText().contains(".")) e.consume();
+                if (getText().contains(".") || getText().length() == 0) e.consume();
             }
             
             //Also, if the character isn't a dot but is anything but a number, cancel the event

@@ -10,7 +10,7 @@ public class DoubleMoneyConverter extends StringConverter<Number> {
 	
 	@Override
 	public Double fromString(String string) {
-		return Double.valueOf(string);
+		return string.equals("") ? 0 : Double.valueOf(string);
 	}
 
 	@Override
