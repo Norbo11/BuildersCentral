@@ -14,6 +14,7 @@ import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.Validation;
+import com.github.norbo11.topbuilders.util.helpers.EmailUtil;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
@@ -62,6 +63,9 @@ public class ModifyEmployeeScene extends AbstractController {
 	        if (isNew) {
 	            String code = HashUtil.generateMD5Hash(username.getText());
 	            activationCode.setText(code);
+	            
+	            //Send email
+	            EmailUtil.sendEmail(email.getText(), "Top Builders account registration", Resources.getResource("employees.activationCodeEmail", code, username.getText()));
 	            
 	            String info = Resources.getResource("employees.activationCodeInfo", code);
 	            SceneUtil.showInfoDialog(Resources.getResource("general.info"), info, () -> SceneUtil.closeScene((Node) event.getSource()));

@@ -95,6 +95,8 @@ public class EmployeesTab extends AbstractController {
         if (!employee.isDummy()) {
             SceneUtil.showConfirmationDialog(Resources.getResource("general.confirm"), Resources.getResource("employees.delete.confirm", employee.getFullName()), () -> employee.delete());
         }
+        
+        updateAll();
     }
     
     @FXML
@@ -107,6 +109,8 @@ public class EmployeesTab extends AbstractController {
         ModifyEmployeeScene controller = (ModifyEmployeeScene) scene.getController();
         controller.setEmployee(new Employee(), true);
         controller.updateAll();
+        
+        updateAll();
     }
     
     @FXML
