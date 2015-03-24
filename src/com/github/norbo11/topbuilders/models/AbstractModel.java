@@ -138,42 +138,56 @@ public abstract class AbstractModel {
     }
     
 	@SuppressWarnings("unchecked")
-	protected static <T extends AbstractModel> ObservableList<T> loadList(ResultSet result, Class<T> clazz) {
-		ObservableList<T> models = FXCollections.observableArrayList();
+    //Returns a list of model instances based on the given result of a query. The class corresponding to the models must be supplied to make use of reflection
+    protected static <T extends AbstractModel> ObservableList<T> loadList(ResultSet result, Class<T> clazz) {
+        //Create a list to store loaded models which we will eventually return
+    	ObservableList<T> models = FXCollections.observableArrayList();
         		
         try {
-			while (result.next()) {
-				T model = clazz.newInstance();
-				ObservableList<T> modelList = null;
-				
-				try {
-					modelList = (ObservableList<T>) clazz.getMethod("getModels").invoke(null); //Invoke the static method getModels
-				} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-					e.printStackTrace();
-				}
-				
-				//Try to find an existing model
-				for (AbstractModel existingModel : modelList) {
-					if (existingModel.getId() == result.getInt("id")) {
-						model = (T) existingModel;
-					}
-				}
-				
-				//If no existing model was found
-				if (model.getId() == 0) {
-					model = clazz.newInstance();
-					model.loadFromResult(result);
-					modelList.add(model);
-				}
-				
-				models.add(model);
-			}
-		} catch (SQLException | InstantiationException | IllegalAccessException e) {
-			Log.error("Error loading list of models " + clazz, e);
-		}
+            //Go through all loaded rows
+    		while (result.next()) {
+    		    //Create a variable to hold the model object which we will eventually return, and initialise it to a new instance of the class
+    			T model = clazz.newInstance();
+    			
+    			//Create a variable to store the currently existing models
+    			ObservableList<T> modelList = null;
+    			
+    			try {
+    			    //Invoke the static method getModels() inside the desired class
+    			    modelList = (ObservableList<T>) clazz.getMethod("getModels").invoke(null); 
+    			} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+    				//Print an error if one occurred
+    			    Log.error("Error loading list of models " + clazz, e);
+    			}
+    			
+    			//Try to find an existing model witin the model list
+    			for (AbstractModel existingModel : modelList) {
+    			    //If a model ID matches the ID of the current row in the result set, then set the model variable which we are returning to the existing model object
+    				if (existingModel.getId() == result.getInt("id")) {
+    					model = (T) existingModel;
+    				}
+    			}
+    			
+    			//If no existing model was found (i.e. if the model variable still has an ID of 0, which would be the case as we created a new instance of the class)
+    			if (model.getId() == 0) {
+    			    //Load the row data into the new model instance
+    				model.loadFromResult(result);
+    				
+    				//Add the model to the list of existing models
+    				modelList.add(model);
+    			}
+    
+    			//Add the model to the list of models which we are returning
+    			models.add(model);
+    		}
+    	} catch (SQLException | InstantiationException | IllegalAccessException e) {
+    	    //Print an error if one occurred
+            Log.error("Error loading list of models " + clazz, e);
+    	}
         
+        //Return the models list consisting of existing instances of the required models or new instances based on the logic above
         return models;
-	}
+    }
 	
 	protected static <T extends AbstractModel> T loadOne(ResultSet result, Class<T> clazz) {
 		ObservableList<T> models = loadList(result, clazz);
