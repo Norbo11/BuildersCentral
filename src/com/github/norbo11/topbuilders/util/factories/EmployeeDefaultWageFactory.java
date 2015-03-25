@@ -1,4 +1,4 @@
-package com.github.norbo11.topbuilders.controllers.tabs;
+package com.github.norbo11.topbuilders.util.factories;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
