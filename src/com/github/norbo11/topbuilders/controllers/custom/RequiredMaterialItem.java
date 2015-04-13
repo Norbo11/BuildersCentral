@@ -79,6 +79,8 @@ public class RequiredMaterialItem extends HBox {
                 	super.updateItem(material, empty);
                     if (material != null) {
                         setText(material + " - " + material.getQuantityString() + " " + Resources.getResource("materials.inStock").toLowerCase());
+                    } else {
+                        setText("");
                     }
                 }
             };

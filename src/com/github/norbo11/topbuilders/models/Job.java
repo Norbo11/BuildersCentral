@@ -204,6 +204,10 @@ public class Job extends AbstractModel {
             requiredMaterial.delete();
         }
         
+        for (Assignment assignment : getAssignments()) {
+            assignment.delete();
+        }
+        
         super.delete();
     }
     

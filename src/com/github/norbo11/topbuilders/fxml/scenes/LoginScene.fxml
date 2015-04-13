@@ -7,6 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import com.github.norbo11.topbuilders.Constants?>
+<?import com.github.norbo11.topbuilders.controllers.custom.LimitedTextField ?>
 
 <VBox fillWidth="true" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.norbo11.topbuilders.controllers.scenes.LoginScene">
   <padding><Insets right="75" left="75" /></padding>
@@ -18,7 +19,7 @@
     </ImageView>
   
     <Label text="User Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <TextField fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <LimitedTextField limit="20" fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     
     <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
     <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />

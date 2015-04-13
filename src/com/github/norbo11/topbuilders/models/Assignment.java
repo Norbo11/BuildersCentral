@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 import com.github.norbo11.topbuilders.models.enums.NotificationType;
 import com.github.norbo11.topbuilders.models.enums.UserType;
 import com.github.norbo11.topbuilders.util.Database;
@@ -198,8 +199,7 @@ public class Assignment extends AbstractModel {
 		Notification existingNotification = Notification.loadAssignmentCloseToEndNotificationForAssignment(this);
 		
 		//If there is no existing notification and the days left to the assignment are less than 7, create a new notification
-		
-		if (getEndDate() != null && calculateDaysLeft() < 7 && existingNotification == null) {
+		if (getEndDate() != null && calculateDaysLeft() < getEmployee().getSettings().getDouble(EmployeeSettingType.ASSIGNMENT_CLOSE_TO_END_DAYS) && existingNotification == null) {
 			Notification notification = new Notification();
             notification.setNewModel(true);
             notification.setEmployeeId(getEmployeeId());

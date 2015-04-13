@@ -73,5 +73,13 @@ public class Settings<T extends AbstractSetting> {
 
     public Locale getLocale(EmployeeSettingType type) {
         return Locale.forLanguageTag(getString(type));
+    }
+
+    public int getInteger(EmployeeSettingType type) {
+        return Integer.valueOf(getString(type));
+    }
+
+    public double getDouble(EmployeeSettingType type) {
+        return Double.valueOf(getString(type));
     } 
 }

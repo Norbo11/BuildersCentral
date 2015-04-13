@@ -167,6 +167,8 @@ public class MaterialsTab extends AbstractController {
 		                else setStyle("-fx-text-fill: red");
 		                
 		                setText(item.doubleValue() + "");
+		            } else {
+		                setText("");
 		            }
 		        }
 		    };

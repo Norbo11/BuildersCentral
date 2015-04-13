@@ -1,7 +1,7 @@
 package com.github.norbo11.topbuilders.models.enums;
 
 public enum EmployeeSettingType implements AbstractSettingType {
-    FULLSCREEN(0, false), LOCALE(1, "en");
+    FULLSCREEN(0, false), LOCALE(1, "en"), ASSIGNMENT_CLOSE_TO_END_DAYS(2, 7);
     
     private int settingTypeId;
     private Object defaultValue;

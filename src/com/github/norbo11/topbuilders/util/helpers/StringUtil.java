@@ -25,12 +25,12 @@ public class StringUtil {
 	}
 
     public static String generateRandomString(int length) {        
-        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Random rnd = new Random();
+        String possibilities = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
         
-        for(int i = 0; i < length; i++) {
-            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        for (int i = 0; i < length; i++) {
+            sb.append(possibilities.charAt(random.nextInt(possibilities.length())));
         }
         
         return sb.toString();

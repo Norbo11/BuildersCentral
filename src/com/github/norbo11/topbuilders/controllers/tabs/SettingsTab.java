@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import com.github.norbo11.topbuilders.Constants;
 import com.github.norbo11.topbuilders.Main;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
+import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
 import com.github.norbo11.topbuilders.controllers.custom.ValidationInfo;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.EmployeeSetting;
@@ -44,6 +45,7 @@ public class SettingsTab extends AbstractController {
     @FXML private ValidationInfo passwordValidation, emailValidation;
     @FXML private PasswordField currentPassword, newPassword1, newPassword2;
     @FXML private TextField newEmail1, newEmail2;
+    @FXML private DoubleTextField assignmentCloseToEndDays;
     @FXML private Label currentEmail;
     
     private Settings<EmployeeSetting> settings;
@@ -84,8 +86,10 @@ public class SettingsTab extends AbstractController {
 		
 		//Adjust components to reflect current user settings
 		settings = Employee.getCurrentEmployee().loadSettings();
+		
         languagesCombo.getSelectionModel().select(settings.getLocale(EmployeeSettingType.LOCALE));
         fullscreenCheckbox.setSelected(settings.getBoolean(EmployeeSettingType.FULLSCREEN));
+        assignmentCloseToEndDays.setDouble(settings.getDouble(EmployeeSettingType.ASSIGNMENT_CLOSE_TO_END_DAYS));
         
         //Set current e-mail
         currentEmail.setText(Employee.getCurrentEmployee().getEmail());
@@ -95,6 +99,7 @@ public class SettingsTab extends AbstractController {
 	public void saveSettings(ActionEvent event) {
 		settings.set(EmployeeSettingType.LOCALE, languagesCombo.getSelectionModel().getSelectedItem().getLanguage());
 		settings.set(EmployeeSettingType.FULLSCREEN, fullscreenCheckbox.isSelected());
+		settings.set(EmployeeSettingType.ASSIGNMENT_CLOSE_TO_END_DAYS, assignmentCloseToEndDays.getDouble());
 		settings.save();
 		
 		TabUtil.closeCurrentTab();

@@ -13,7 +13,7 @@
   <ValidationInfo fx:id="validation" />
   
   <VBox fx:id="activateForm" spacing="20">
-    <Label text="Please enter the 12-character code provided by your employer" />
+    <Label text="Please enter the activation code provided by your employer" />
     <TextField fx:id="code" onAction="#activate" />
     
     <HBox spacing="20" alignment="center">

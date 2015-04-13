@@ -41,10 +41,9 @@
           
           <VBox HBox.hgrow="always">
             <TextField fx:id="employeeAddNameField" />
-            <ListView fx:id="employeeAddSearchList" />
+            <ListView maxHeight="150" fx:id="employeeAddSearchList" />
           </VBox>
         </HBox>
-        
       </VBox>
     </TitledPane>
   </HBox>

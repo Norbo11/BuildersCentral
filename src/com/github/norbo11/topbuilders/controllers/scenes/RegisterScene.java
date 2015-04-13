@@ -35,7 +35,7 @@ public class RegisterScene extends AbstractController {
             }
         }  
         
-        validation.addError("Invalid activation code! Please ensure that you have typed the 12-character code EXACTLY as it was given to you, or contact your manager.");
+        validation.addError("Invalid activation code! Please ensure that you have typed the activation code EXACTLY as it was given to you, or contact your manager.");
         validation.displayErrors(false);
     }
 

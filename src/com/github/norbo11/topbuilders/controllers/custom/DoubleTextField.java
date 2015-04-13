@@ -31,7 +31,7 @@ public class DoubleTextField extends TextField {
 		return Double.valueOf(getText());
 	}
 
-	public void setDouble(double hourlyWage) {
-		setText(hourlyWage + "");
+	public void setDouble(double value) {
+		setText(value + "");
 	}
 }

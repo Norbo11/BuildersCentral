@@ -20,7 +20,7 @@
     </ImageView>
     
     <HBox spacing="10" HBox.hgrow="always">
-        <ImageView fx:id="projectImage" preserveRatio="true" fitHeight="300"/>
+        <ImageView fx:id="projectImage" preserveRatio="true" fitWidth="300"/>
         
         <VBox spacing="10" HBox.hgrow="always">
           <GridPane VBox.vgrow="always"  vgap="5" hgap="5">

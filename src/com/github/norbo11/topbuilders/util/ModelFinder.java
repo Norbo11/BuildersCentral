@@ -1,6 +1,7 @@
 package com.github.norbo11.topbuilders.util;
 
-import javafx.collections.FXCollections;
+import java.util.ArrayList;
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -19,7 +20,7 @@ public class ModelFinder<T> {
         this.comparator = comparator;
                 
         //searchList.setManaged(false);
-        searchList.getItems().addAll(models);
+        //searchList.getItems().addAll(models);
         
         //Ensure height of search list is proportional to number of items in list
         //searchList.prefHeightProperty().bind(Bindings.size(searchList.getItems()).multiply(LIST_CELL_HEIGHT));
@@ -31,24 +32,17 @@ public class ModelFinder<T> {
     }
 
     public void search(String oldVal, String newVal) {          
-        //If the number of characters in the text box is less than last time it must be because the user pressed delete
-        if (newVal.length() < oldVal.length()) {
-            //Restore the lists original set of entries and start from the beginning
-            searchList.getItems().clear();
-            searchList.getItems().addAll(models);
-        }
-         
+        ArrayList<T> entires = new ArrayList<T>();
+                
         //Filter out the entries that don't contain the entered text
-        ObservableList<T> newEntries = FXCollections.observableArrayList();
-        
-        for (T entry : searchList.getItems()) {            
+        for (T entry : models) {            
             //If the entry starts with the entered text then keep it in the search list
-            if (comparator.compare(entry, newVal)) {
-                newEntries.add(entry);
+            if (!newVal.equals("") && comparator.compare(entry, newVal)) {
+                entires.add(entry);
             }
         }
-        
-        searchList.setItems(newEntries);
+
+        searchList.getItems().setAll(entires);
         
         //Hide if the user has deleted the contents of the text field, otherwise show.
         if (newVal.equals("")) {

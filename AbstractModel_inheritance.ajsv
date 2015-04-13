@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2015-Mar-24 20:06" licenseGrade="evaluation" licenseeName="anon" licenseeOrganization="unknown" populationMethod="manual" version="1.8.1.v20150317-1212">
+        <filterScript>
+
+// no filter script yet defined for this class diagram
+// use CTRL+SPACE for completion suggestio
+hide methods named is*
+hide methods named get*
+hide methods named set*
+hide methods named *property
+hide exceptions
+hide fields named DB_TABLE_NAME
+hide dependency lines 
+hide field lines
+hide inheritance lines
+
+</filterScript>
+        <class className="com.github.norbo11.topbuilders.models.AbstractModel" project="TopBuilders" xLocation="1778" yLocation="417"/>
+        <class className="com.github.norbo11.topbuilders.models.AbstractSetting" project="TopBuilders" xLocation="1856" yLocation="-308"/>
+        <class className="com.github.norbo11.topbuilders.models.Assignment" project="TopBuilders" xLocation="648" yLocation="982"/>
+        <class className="com.github.norbo11.topbuilders.models.Employee" project="TopBuilders" xLocation="800" yLocation="53"/>
+        <class className="com.github.norbo11.topbuilders.models.Job" project="TopBuilders" xLocation="2747" yLocation="853"/>
+        <class className="com.github.norbo11.topbuilders.models.JobGroup" project="TopBuilders" xLocation="2678" yLocation="391"/>
+        <class className="com.github.norbo11.topbuilders.models.Message" project="TopBuilders" xLocation="1941" yLocation="1628"/>
+        <class className="com.github.norbo11.topbuilders.models.Notification" project="TopBuilders" xLocation="1089" yLocation="1627"/>
+        <class className="com.github.norbo11.topbuilders.models.Project" project="TopBuilders" xLocation="2572" yLocation="-434"/>
+        <class className="com.github.norbo11.topbuilders.models.RequiredMaterial" project="TopBuilders" xLocation="2639" yLocation="1536"/>
+        <class className="com.github.norbo11.topbuilders.models.StockedMaterial" project="TopBuilders" xLocation="985" yLocation="-352"/>
+    </diagram>
+</ajsv>

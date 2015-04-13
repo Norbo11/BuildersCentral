@@ -82,7 +82,7 @@ public class LoginScene extends AbstractController {
     					+ "<p>You have received this message because you attempted to reset your password for the Top Builders project managment system.</p>"
     					+ "<p>Your new password is: " + newPassword + "</p>"
     					+ "<p>We strongly advise that you change this password into a more desirable one after you log in.</p>"
-    					+ "<p>Regards,<br />Top Builders team."
+    					+ "<p>Regards,<br />Top Builders team.</p>"
 				);	
     			
     			employee.setPassword(HashUtil.generateMD5Hash(newPassword));

@@ -1,4 +1,5 @@
 package com.github.norbo11.topbuilders.controllers.tabs;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -89,16 +90,7 @@ public class QuotesTab extends AbstractController {
             }
         }
     }
-    
-    private class TotalCostTreeCell extends TreeTableCell<Job, Number> {
-        @Override
-        protected void updateItem(Number job, boolean empty) {
-            super.updateItem(job, empty);
 
-            //new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter())
-        }
-    }
-    
     /* Initialization */
     
     @FXML
@@ -107,7 +99,6 @@ public class QuotesTab extends AbstractController {
         StockedMaterial.loadStockedMaterials();
         
     	/* Cell factories */
-        //table.setRowFactory(row -> new JobTableRow());
     	
         deleteJobCol.setCellFactory(param -> new DeleteModelButtonTreeCellFactory());
         titleCol.setCellFactory(param -> new TextFieldTreeCell<Job, String>(new StringStringConverter()));
@@ -115,14 +106,15 @@ public class QuotesTab extends AbstractController {
     	materialsCol.setCellFactory(column -> new MaterialsCell(this));
     	materialsCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
     	labourCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
-    	totalCostCol.setCellFactory(param -> new TotalCostTreeCell());
+    	totalCostCol.setCellFactory(param -> new TextFieldTreeCell<Job, Number>(new DoubleMoneyConverter()));
     	
         /* Cell value factories */
         deleteJobCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	materialsCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<Job>(param.getValue().getValue()));
     	totalCostCol.setCellValueFactory(param -> { 
     		Job job = param.getValue().getValue();
-    		return job.labourPriceProperty().add(job.materialPriceProperty());
+    		DoubleBinding added = job.labourPriceProperty().add(job.materialPriceProperty());
+    		return getSelectedProject().getSettings().getBoolean(QuoteSettingType.SPLIT_PRICE) ? added : job.labourPriceProperty();
     	});
 
         /* Edit handlers */
@@ -130,6 +122,11 @@ public class QuotesTab extends AbstractController {
         descriptionCol.setOnEditCommit(e -> e.getRowValue().getValue().setDescription(e.getNewValue()));
         materialsCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setMaterialPrice(e.getNewValue().doubleValue()));
         labourCostCol.setOnEditCommit(e -> e.getRowValue().getValue().setLabourPrice(e.getNewValue().doubleValue()));
+        totalCostCol.setOnEditCommit(e -> {
+            if (!getSelectedProject().getSettings().getBoolean(QuoteSettingType.SPLIT_PRICE)) {
+                e.getRowValue().getValue().setLabourPrice(e.getNewValue().doubleValue());
+            }
+        });
         
         /* Layout properties */
         titleCol.minWidthProperty().bind(table.widthProperty().multiply(0.15));

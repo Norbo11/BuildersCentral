@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2015-Mar-25 22:12" licenseGrade="evaluation" licenseeName="anon" licenseeOrganization="unknown" populationMethod="manual" version="1.8.1.v20150317-1212">
+        <filterScript>
+
+// no filter script yet defined for this class diagram
+// use CTRL+SPACE for completion suggestio
+hide methods named is*
+hide methods named get*
+hide methods named set*
+hide methods named *property
+hide exceptions
+hide fields named DB_TABLE_NAME
+hide fields named FXML_FILENAME
+hide dependency lines 
+hide field lines
+hide inheritance lines
+hide inner types
+
+</filterScript>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.MyAssignmentsTab" project="TopBuilders" xLocation="689" yLocation="1382"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.ManagerHomeTab" project="TopBuilders" xLocation="1348" yLocation="99"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.MaterialsTab" project="TopBuilders" xLocation="2456" yLocation="100"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.EmployeeHomeTab" project="TopBuilders" xLocation="1280" yLocation="1383"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.QuoteRequestsTab" project="TopBuilders" xLocation="100" yLocation="100"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.QuotesTab" project="TopBuilders" xLocation="688" yLocation="100"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.ManageAssignmentsTab" project="TopBuilders" xLocation="1867" yLocation="100"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.EmployeesTab" project="TopBuilders" xLocation="3045" yLocation="100"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.SettingsTab" project="TopBuilders" xLocation="3634" yLocation="100"/>
+        <class className="com.github.norbo11.topbuilders.controllers.tabs.MessagesTab" project="TopBuilders" xLocation="94" yLocation="1382"/>
+    </diagram>
+</ajsv>

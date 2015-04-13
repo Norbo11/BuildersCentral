@@ -1,7 +1,7 @@
 /* Boilerplate */
 
 .root {    
-    -fx-font: 1.2em "Segoe UI";
+    -fx-font: 1.1em "Segoe UI";
     -fx-background-color: white;
     -fx-focus-color: transparent; 
     -fx-faint-focus-color: transparent;
@@ -50,7 +50,7 @@
 }
 
 .button, .combo-box, .combo-box .list-view {
-    -fx-font: normal bold 1.27em "Segoe UI";
+    -fx-font: normal bold 1.1em "Segoe UI";
     -fx-text-fill: #2D86B3;
      
     -fx-background-color: #C7E7FC;
