@@ -17,11 +17,15 @@ public class Main extends Application {
 	public void start(Stage stage) {
         Database.connect();
         
+        //Set dimensions of main window
         stage.setWidth(Constants.WINDOW_WIDTH);
         stage.setHeight(Constants.WINDOW_HEIGHT);
         
+        //Store an instance of the application and the main stage static variables
         Main.app = this;
         Main.mainStage = stage;
+        
+        //Disconnect from the database when the main window is closed
         stage.setOnCloseRequest(e -> Database.disconnect());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);

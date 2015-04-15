@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
@@ -27,7 +26,7 @@ public class ModifyEmployeeScene extends AbstractController {
     
     @FXML private TextField username, email, firstName, lastName, firstLineAddress, secondLineAddress, city, postcode;
     @FXML private DoubleTextField defaultWage;
-    @FXML private Label activationCode;
+    @FXML private TextField activationCode;
     @FXML private ComboBox<UserType> userType;
     
     public void setEmployee(Employee employee, boolean isNew) {
