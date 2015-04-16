@@ -3,6 +3,7 @@ package com.github.norbo11.topbuilders.controllers.custom;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
+/* Only allows numerical input */
 public class DoubleTextField extends TextField {
 	public DoubleTextField() {
 		this(0);

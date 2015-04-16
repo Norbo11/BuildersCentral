@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.util.LoadedFXML;
 
+/* This class adds extra functionality to the Scene class by keeping track of the scene's controller and stylesheet */
 public class AbstractScene extends Scene {
     
     public AbstractScene(Parent root) {
@@ -16,13 +17,14 @@ public class AbstractScene extends Scene {
     
     public AbstractScene(LoadedFXML fxml) {
     	super(fxml.getRoot());
-    	controller = (AbstractController) fxml.getController();
+    	
+    	this.controller = (AbstractController) fxml.getController();
     	
     	loadStylesheet();
     }
    
-    private String stylesheetPath;
     private AbstractController controller;
+    private String stylesheetPath;
     private boolean neverFullScreen;
 
     public boolean isNeverFullScreen() {
@@ -45,6 +47,7 @@ public class AbstractScene extends Scene {
         this.stylesheetPath = stylesheetPath;
     }
 
+    /* Loads the global stylesheet */
     public void loadStylesheet() {
         getStylesheets().add("/com/github/norbo11/topbuilders/css/global.css");
     }

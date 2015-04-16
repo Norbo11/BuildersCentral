@@ -16,7 +16,7 @@ import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-public class ModifyEmployeeScene extends AbstractController {
+public class ModifyEmployeeScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/ModifyEmployeeScene.fxml";
     
     private Employee employee;
@@ -47,6 +47,7 @@ public class ModifyEmployeeScene extends AbstractController {
     @FXML
     public void saveEmployee(ActionEvent event) {
     	if (validate()) {
+    		/* Set all employee attributes */
 	        employee.setUsername(username.getText());
 	        employee.setEmail(email.getText());
 	        employee.setFirstName(firstName.getText());
@@ -59,16 +60,21 @@ public class ModifyEmployeeScene extends AbstractController {
 	        employee.setUserTypeId(userType.getSelectionModel().getSelectedItem().getRank());
 	        
 	        if (isNew) {
+	        	employee.setNewModel(true);
+	        	
+	        	/* Generate an activation code using an MD5 hash of the username */
 	            String code = HashUtil.generateMD5Hash(username.getText());
 	            activationCode.setText(code);
 	            
+	            /* Show the activation code in an info dialog, closing it when the user clicks the button */
 	            String info = Resources.getResource("employees.activationCodeInfo", code);
-	            SceneUtil.showInfoDialog(Resources.getResource("general.info"), info, () -> SceneUtil.closeScene((Node) event.getSource()));
+	            SceneUtil.showInfoDialog(Resources.getResource("general.info"), info, 
+            		() -> SceneUtil.closeScene((Node) event.getSource())
+        		);
 	        }
-	        employee.setActivationCode(activationCode.getText());
 	        
-	        if (isNew) employee.add();
-	        else employee.save();
+	        employee.setActivationCode(activationCode.getText());
+	        employee.save();
 	        
 	        updateAll();
 	        SceneUtil.closeScene((Node) event.getSource());
@@ -88,7 +94,12 @@ public class ModifyEmployeeScene extends AbstractController {
         userType.getSelectionModel().select(employee.getUserType());
         
         String code = employee.getActivationCode();
-        if (code.equals("") && !isNew) code = Resources.getResource("employees.activationCodeActivated");
+        
+        //If the employee isn't new and hasn't got an activation code, display an activated message
+        if (code.equals("") && !isNew) {
+        	code = Resources.getResource("employees.activationCodeActivated");
+        }
+        
         activationCode.setText(code);
     }    
     
@@ -119,6 +130,6 @@ public class ModifyEmployeeScene extends AbstractController {
     		validation.addErrorFromResource("validation.namesRequired");
     	}
     	
-		return validation.validate();
+		return validation.displayErrors(true);
 	}
 }

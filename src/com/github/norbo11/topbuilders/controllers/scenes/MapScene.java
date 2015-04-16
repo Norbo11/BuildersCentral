@@ -10,7 +10,7 @@ import com.github.norbo11.topbuilders.Constants;
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.util.GoogleMaps;
 
-public class MapScene extends AbstractController {
+public class MapScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/MapScene.fxml";
     private static final int MAP_WIDTH = Constants.WINDOW_WIDTH - 200;
     private static final int MAP_HEIGHT = Constants.WINDOW_HEIGHT - 100;
@@ -24,8 +24,10 @@ public class MapScene extends AbstractController {
     public void initialize() {
         engine = webView.getEngine();
         
+        //Bind the progress of the loading worker to the progress bar
         progress.progressProperty().bind(engine.getLoadWorker().progressProperty());
 
+        //Upon completion, hide the loading bar
         engine.getLoadWorker().stateProperty().addListener((value, oldState, newState) -> {
             if (newState == State.SUCCEEDED) {
                  progress.setVisible(false);
@@ -34,6 +36,7 @@ public class MapScene extends AbstractController {
     }
 
     public void updateAll() {
+    	//HTML document with a single iframe displaying an embedded map view 
         String content = 
         "<html dir=\"ltr\">" +
             "<head></head>" +

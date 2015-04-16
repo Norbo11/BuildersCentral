@@ -12,14 +12,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.stage.Stage;
 
-import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
-import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
 import com.github.norbo11.topbuilders.util.Database;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
-import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
-import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
 public class Message extends AbstractModel {
     public static final String DB_TABLE_NAME = "messages";
@@ -133,17 +128,6 @@ public class Message extends AbstractModel {
 	}
 	
 	/* Static methods */
-
-    public static void displayMessage(Message message) {
-        //Create new window
-        Stage stage = StageUtil.createDialogStage(message.getTitle());
-        AbstractScene scene = SceneUtil.changeScene(stage, DisplayMessageScene.FXML_FILENAME, true);
-        
-        //Display details
-        DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
-        controller.setMessage(message);
-        controller.updateAll();
-    }
     
     public static ObservableList<Message> loadMessagesForEmployee(Employee employee) {
         return loadList(loadAllModelsWhereOrdered(DB_TABLE_NAME, "recipientId", employee.getId(), "timestamp", true),  Message.class);

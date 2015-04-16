@@ -26,7 +26,7 @@ import com.github.norbo11.topbuilders.models.enums.QuantityType;
 import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactory;
 import com.github.norbo11.topbuilders.util.factories.StringStringConverter;
 import com.github.norbo11.topbuilders.util.factories.TextFieldCell;
-public class MaterialsTab extends AbstractController {
+public class MaterialsTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/MaterialsTab.fxml";
     
     @FXML private Button addMaterial;

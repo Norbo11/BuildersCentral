@@ -13,23 +13,16 @@ import com.github.norbo11.topbuilders.util.Settings;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
 
-public class QuoteSettingsScene extends AbstractController {
+public class QuoteSettingsScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/QuoteSettingsScene.fxml";
 
     @FXML private CheckBox groupsEnabled, jobDescriptionsEnabled, materialsEnabled, splitPrice;
     private Settings<QuoteSetting> settings;
     private QuotesTab quotesTab;
-    
-    public void setSettings(Settings<QuoteSetting> settings) {
-        this.settings = settings;
-    }
-    
-    public void setQuotesTab(QuotesTab quotesTab) {
-        this.quotesTab = quotesTab;
-    }
 
     @FXML
     public void save(ActionEvent event) {
+    	/* Save all settings */
         settings.set(QuoteSettingType.GROUPS_ENABLED, groupsEnabled.isSelected());
         settings.set(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED, jobDescriptionsEnabled.isSelected());
         settings.set(QuoteSettingType.MATERIALS_ENABLED, materialsEnabled.isSelected());
@@ -38,7 +31,7 @@ public class QuoteSettingsScene extends AbstractController {
         
         quotesTab.updateColumns();
         
-        //In case the group enabled setting changed
+        //In case the group enabled setting changed,  update related groups and controls
         quotesTab.updateJobGroups(); 
         quotesTab.updateAddGroupControl();
         quotesTab.updateAddJobControl();
@@ -51,7 +44,16 @@ public class QuoteSettingsScene extends AbstractController {
         SceneUtil.closeScene((Node) event.getSource());
     }
 
+    public void setSettings(Settings<QuoteSetting> settings) {
+        this.settings = settings;
+    }
+    
+    public void setQuotesTab(QuotesTab quotesTab) {
+        this.quotesTab = quotesTab;
+    }
+    
     public void updateAll() {
+    	/* Update checkboxes based on settings */
         groupsEnabled.setSelected(settings.getBoolean(QuoteSettingType.GROUPS_ENABLED));
         jobDescriptionsEnabled.setSelected(settings.getBoolean(QuoteSettingType.JOB_DESCRIPTIONS_ENABLED));
         materialsEnabled.setSelected(settings.getBoolean(QuoteSettingType.MATERIALS_ENABLED));

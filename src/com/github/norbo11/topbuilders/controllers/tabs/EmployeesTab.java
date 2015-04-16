@@ -24,7 +24,7 @@ import com.github.norbo11.topbuilders.util.factories.HeadingTreeTableRow;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
-public class EmployeesTab extends AbstractController {
+public class EmployeesTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/EmployeesTab.fxml";
     
     /* Factories */

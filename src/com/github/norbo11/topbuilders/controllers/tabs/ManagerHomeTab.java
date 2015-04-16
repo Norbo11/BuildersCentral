@@ -18,7 +18,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
-public class ManagerHomeTab extends AbstractController {
+public class ManagerHomeTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/ManagerHomeTab.fxml";
     
     @FXML private VBox notificationsList;

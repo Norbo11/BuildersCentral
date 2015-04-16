@@ -27,7 +27,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.helpers.GuiUtil;
 
-public class ManageAssignmentsTab extends AbstractController {
+public class ManageAssignmentsTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/ManageAssignmentsTab.fxml";
     
     @FXML private ListView<Project> projectList;
