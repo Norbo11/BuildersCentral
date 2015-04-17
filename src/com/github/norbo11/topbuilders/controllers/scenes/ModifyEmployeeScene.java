@@ -2,9 +2,15 @@ package com.github.norbo11.topbuilders.controllers.scenes;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.custom.DoubleTextField;
@@ -15,6 +21,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.Validation;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
+import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
 public class ModifyEmployeeScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/ModifyEmployeeScene.fxml";
@@ -67,10 +74,22 @@ public class ModifyEmployeeScene implements AbstractController {
 	            activationCode.setText(code);
 	            
 	            /* Show the activation code in an info dialog, closing it when the user clicks the button */
-	            String info = Resources.getResource("employees.activationCodeInfo", code);
-	            SceneUtil.showInfoDialog(Resources.getResource("general.info"), info, 
-            		() -> SceneUtil.closeScene((Node) event.getSource())
-        		);
+	            VBox root = new VBox(20);
+	            root.setAlignment(Pos.CENTER);
+	            root.setPadding(new Insets(15));
+	            
+	            Label info = new Label(Resources.getResource("employees.activationCodeInfo"));
+	            TextField field = new TextField(code);
+	            field.setMaxWidth(300);
+	            
+	            Button ok = new Button("Ok");
+	            ok.setPrefWidth(200);
+	            ok.setOnAction(e -> SceneUtil.closeScene((Node) e.getSource()));
+	            
+	            root.getChildren().addAll(info, field, ok);
+	            
+	            Stage stage = StageUtil.createDialogStage(Resources.getResource("general.info"));
+	            SceneUtil.changeScene(stage, root);
 	        }
 	        
 	        employee.setActivationCode(activationCode.getText());
