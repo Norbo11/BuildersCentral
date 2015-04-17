@@ -33,45 +33,27 @@ public class RequiredMaterialItem extends HBox {
         this.requiredMaterial = requiredMaterial;
         this.quotesTab = quotesTab;
         
+        //Load this custom component by supplying this class as the root and as the controller
         FXMLUtil.loadFxml(FXML_FILENAME, this, this);
     }
     
-    @FXML
-    public void delete() {
-        requiredMaterial.delete();
-        quotesTab.updateJobGroups();
-    }
-    
-    @FXML
-    public void commit() {
-        requiredMaterial.setQuantityRequired(quantityField.getDouble());
-       
-        StockedMaterial stockedMaterial = StockedMaterial.getStockedMaterialByName(nameField.getText());
-        
-        if (stockedMaterial != null) {
-        	setStockedMaterial(stockedMaterial);
-        } else {
-        	delete();
-            //showNewMaterialDialog();
-        }
-    }
-
-	public void setStockedMaterial(StockedMaterial stockedMaterial) {
-        requiredMaterial.setStockedMaterial(stockedMaterial);
-        updateAll();
-    }
-    
+	/* FXML Methods */
+	
     @FXML
     public void initialize() { 
-        this.finder = new ModelFinder<StockedMaterial>(searchList, nameField, StockedMaterial.getModels(), (entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase()));
+    	//Create a new model finder, supplying the search list and search field, the models, and the comparator
+        this.finder = new ModelFinder<StockedMaterial>(searchList, nameField, StockedMaterial.getModels(), 
+        		(entry, input) -> entry.getName().toUpperCase().startsWith(input.toUpperCase())
+        );
         
-        //Search list
+        //On-click behaviour for search-list (set the correct stocked material)
         searchList.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
-                setStockedMaterial(newValue);
+                updateStockedMaterial(newValue);
             }
         });
         
+        //Modify the search cell appearance by displaying the quantity in stock as well as the material name
         searchList.setCellFactory(param -> {
             return new ListCell<StockedMaterial>() {
                 @Override
@@ -89,22 +71,54 @@ public class RequiredMaterialItem extends HBox {
         searchList.setOnMouseEntered(e -> { mouseOverSearchList = true; });
         searchList.setOnMouseExited(e -> { mouseOverSearchList  = false; });
              
-        //If the name field loses focus, attempt to change the actual required material in commit()
+        //If the name field loses focus, but the search list wasn't clicked (as the mouse wasn't over it)
         nameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
     		if (!newValue && !mouseOverSearchList)
     		{
-    			commit();
+    			//Attempt to set the new material based on what was typed
+    			updateStockedMaterialBasedOnField();
     		}
         });
                 
+        //Update fields and labels
         updateAll();
     }
 
+    @FXML
+    public void delete() {
+        requiredMaterial.delete();
+        quotesTab.updateJobGroups();
+    }
+    
+    @FXML
+    public void updateStockedMaterialBasedOnField() {
+        requiredMaterial.setQuantityRequired(quantityField.getDouble());
+       
+        //Get the material object by name
+        StockedMaterial stockedMaterial = StockedMaterial.getStockedMaterialByName(nameField.getText());
+        
+        //If it exists, update it - otherwise, delete the entire required material entry
+        if (stockedMaterial != null) {
+        	updateStockedMaterial(stockedMaterial);
+        } else {
+        	delete();
+        }
+    }
+    
+    /* Instance methods */
+    
+	public void updateStockedMaterial(StockedMaterial stockedMaterial) {
+		//Set the stocked material for the required material object and update fields/labels
+        requiredMaterial.setStockedMaterial(stockedMaterial);
+        updateAll();
+    }
+    
     public void updateAll() {     
         quantityField.setText(requiredMaterial.getQuantityRequired() + "");
         
         StockedMaterial stockedMaterial = requiredMaterial.getStockedMaterial();
         
+        //If a stocked material is set, update the required labels and fields - otherwise, set them to blank
         if (stockedMaterial != null) {
             nameField.setText(stockedMaterial.getName());
             typeLabel.setText(stockedMaterial.getQuantityType().toString());
@@ -113,66 +127,11 @@ public class RequiredMaterialItem extends HBox {
             typeLabel.setText("");
         }
 
+        //Hide the search results
         finder.hideSearchList();
     }
     
     public TextField getNameField() {
         return nameField;
     }
-    
-    //private Stage stage;
-    
-    /*public void showNewMaterialDialog() {
-    if (stage == null || !stage.isShowing()) {
-        if (!nameField.getText().equals("")) {
-            stage = StageUtil.createDialogStage(Resources.getResource("materials.add"));
-            stage.setOnCloseRequest(e -> {
-                delete();
-            });
-            
-            VBox vbox = new VBox(10);
-            vbox.setPadding(new Insets(10));
-            vbox.setAlignment(Pos.CENTER);
-            SceneUtil.changeScene(stage, vbox);
-            
-            Label infoLabel = new Label(Resources.getResource("quotes.materialCreated", nameField.getText()));
-            vbox.getChildren().add(infoLabel);
-            
-            GridPane grid = new GridPane();
-            grid.setHgap(5);
-            grid.setVgap(5);
-            grid.setAlignment(Pos.CENTER);
-            vbox.getChildren().add(grid);
-            
-            Label quantityLabel = new Label(Resources.getResource("materials.quantityInStock"));
-            DoubleTextField quantity = new DoubleTextField();
-            grid.addRow(0, quantityLabel, quantity);
-            
-            Label quantityTypeLabel = new Label(Resources.getResource("materials.quantityType"));
-            ComboBox<QuantityType> combo = new ComboBox<QuantityType>(FXCollections.observableArrayList(QuantityType.values()));
-            grid.addRow(1, quantityTypeLabel, combo);
-            
-            combo.getSelectionModel().selectFirst();
-            
-            Button add = new Button(Resources.getResource("materials.add"));
-            add.setOnAction(e -> {
-                StockedMaterial newMaterial = new StockedMaterial();
-                newMaterial.setNewModel(true);
-                newMaterial.setName(nameField.getText());
-                newMaterial.setQuantityInStock(quantity.getDouble());
-                newMaterial.setQuantityTypeId(combo.getSelectionModel().getSelectedItem().getId());
-                newMaterial.save();
-
-                requiredMaterial.setStockedMaterial(newMaterial);
-                updateAll();
-                SceneUtil.closeScene(add);
-            });
-
-            vbox.getChildren().add(add);
-            stage.sizeToScene();
-        } else {
-            delete();
-        }
-    }
-}*/
 }

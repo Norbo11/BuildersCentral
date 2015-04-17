@@ -18,7 +18,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
-public class MainScene extends AbstractController {
+public class MainScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/MainScene.fxml";
     
     @FXML private Text welcomeText;
@@ -27,22 +27,26 @@ public class MainScene extends AbstractController {
 
     @FXML
     public void initialize() {
+    	//Set the welcome text to the employee's full name
         welcomeText.setText(Resources.getResource("home.welcome") + ", " + Employee.getCurrentEmployee().getFullName());
         
         Label dateLabel = new Label();
         Label timeLabel = new Label();
         dateBox.getChildren().addAll(dateLabel, timeLabel);
         
+        /* Create a new animation which updates the time every second */
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             LocalDateTime currentDate = LocalDateTime.now();
             timeLabel.setText(DateTimeUtil.formatTime(currentDate));
             dateLabel.setText(DateTimeUtil.formatDate(currentDate));
         }));
+        
+        //Play it forever
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.playFromStart();
         
+        //Show the home tab
         TabUtil.setTabPane(tabPane);
-        
         TabUtil.createHomeTab();
     }
 }

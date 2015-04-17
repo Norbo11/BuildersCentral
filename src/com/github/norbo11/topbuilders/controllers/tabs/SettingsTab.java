@@ -37,7 +37,7 @@ import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
-public class SettingsTab extends AbstractController {
+public class SettingsTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/SettingsTab.fxml";
     
     @FXML private ComboBox<Locale> languagesCombo;
@@ -124,7 +124,7 @@ public class SettingsTab extends AbstractController {
         }
         
         //If no errors occurred
-        if (passwordValidation.validate()) {
+        if (passwordValidation.displayErrors(false)) {
             Employee employee = Employee.getCurrentEmployee();
             employee.setPassword(HashUtil.generateMD5Hash(newPassword1.getText()));
             employee.save();
@@ -151,7 +151,7 @@ public class SettingsTab extends AbstractController {
 		}
 		
 		//If no errors occurred
-		if (emailValidation.validate()) {
+		if (emailValidation.displayErrors(false)) {
 		    //Generate a random verification code
 		    String generatedCode = StringUtil.generateRandomString(10);
 		   

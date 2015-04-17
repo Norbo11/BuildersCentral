@@ -11,7 +11,7 @@ import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.util.helpers.HashUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-public class RegisterScene extends AbstractController {
+public class RegisterScene implements AbstractController {
 	public static final String FXML_FILENAME = "scenes/RegisterScene.fxml";
         
     @FXML TextField code, newPass, confirmPass;
@@ -28,9 +28,12 @@ public class RegisterScene extends AbstractController {
             employee = Employee.checkActivationCode(code);
             
             if (employee != null) {
+            	//Remove the activate controls and show the password controls
                 parent.getChildren().remove(activateForm);
                 passwordForm.setVisible(true);
-                validation.validate();
+                
+                //This hides the validation box as there are no errors added
+                validation.displayErrors(false);
                 return;
             }
         }  
@@ -51,7 +54,7 @@ public class RegisterScene extends AbstractController {
             } else validation.addError("Passwords must match");
         } else validation.addError("You must input a password");
         
-        validation.validate();
+        validation.displayErrors(false);
     }
     
     @FXML
