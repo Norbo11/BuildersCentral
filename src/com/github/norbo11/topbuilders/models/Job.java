@@ -193,14 +193,14 @@ public class Job extends AbstractModel {
     public void save() {
         super.save();
         
-        for (RequiredMaterial requiredMaterial : requiredMaterials) {
+        for (RequiredMaterial requiredMaterial : getRequiredMaterials()) {
             requiredMaterial.save();
         }
     }
     
     @Override
     public void delete() {
-        for (RequiredMaterial requiredMaterial : requiredMaterials) {
+        for (RequiredMaterial requiredMaterial : getRequiredMaterials()) {
             requiredMaterial.delete();
         }
         

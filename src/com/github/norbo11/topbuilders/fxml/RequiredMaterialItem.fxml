@@ -12,11 +12,11 @@
   <Button fx:id="deleteButton" text="X" onAction="#delete" />
   
   <VBox HBox.hgrow="always" fx:id="nameVBox" >        
-    <TextField fx:id="nameField" onAction="#commit" maxWidth="Infinity" />
+    <TextField fx:id="nameField" onAction="#updateStockedMaterialBasedOnField" maxWidth="Infinity" />
     
     <ListView fx:id="searchList" maxHeight="50" maxWidth="Infinity" />
   </VBox>
   
-  <DoubleTextField fx:id="quantityField" minWidth="50" prefWidth="50" onAction="#commit" />
+  <DoubleTextField fx:id="quantityField" minWidth="50" prefWidth="50" onAction="#updateStockedMaterialBasedOnField" />
   <Label fx:id="typeLabel" minWidth="30" prefWidth="30" />
 </fx:root>
