@@ -23,7 +23,7 @@ import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
 
-public class LoginScene extends AbstractController {
+public class LoginScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/LoginScene.fxml";
     
     @FXML private TextField usernameField;
@@ -33,6 +33,7 @@ public class LoginScene extends AbstractController {
 
     @FXML
     public void initialize() {
+    	/* Set enter key behaviour for username and password fields */
         usernameField.setOnAction(e -> submitButton.fire());
         passwordField.setOnAction(e -> submitButton.fire());
     }
@@ -58,6 +59,7 @@ public class LoginScene extends AbstractController {
     
     @FXML
     public void forgotPassword() {
+    	/* Create a forgot password dialog */
     	Stage stage = StageUtil.createDialogStage("Forgotten your password?");
     	
     	VBox vbox = new VBox(10);
@@ -72,10 +74,15 @@ public class LoginScene extends AbstractController {
     	hbox.getChildren().addAll(new Label("Username:"), textField);
     	
     	Button button = new Button("Reset my password");
+    	
+    	/* Set submit button behaviour */
     	button.setOnAction(e -> {
+    		//Get the employee object by the user name entered
     		Employee employee = Employee.loadEmployeeByUsername(textField.getText());
     		
+    		//If an employee was found
     		if (employee != null) {
+    			//Generate a random 7-character password
     			String newPassword = StringUtil.generateRandomString(7);
     			
     			EmailUtil.sendEmail(employee.getEmail(), "Top Builders password reset", ""
@@ -95,6 +102,7 @@ public class LoginScene extends AbstractController {
     		}
     	});
     	
+    	/* Add all components and change the scene */
     	vbox.getChildren().addAll(label, hbox, button);    	
     	SceneUtil.changeScene(stage, vbox);
     }

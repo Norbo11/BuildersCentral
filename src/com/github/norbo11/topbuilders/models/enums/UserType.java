@@ -25,12 +25,15 @@ public enum UserType implements Comparable<UserType> {
         return rank <= type.getRank();
     }
 
-    //Adds valid UserType choices to the ComboBox in the arugment, ensuring that only superusers can add managers. Nobody can add superusers (except directly through DB)
+    //Adds valid UserType choices to the ComboBox in the argument, ensuring that only superusers can add managers. Nobody can add superusers (except directly through DB)
     public static void populateCombo(ComboBox<UserType> combo) {
         UserType loggedInUserType = Employee.getCurrentEmployee().getUserType();
         
-        if (loggedInUserType.isAtLeast(UserType.SUPERUSER)) combo.getItems().add(UserType.MANAGER);
+        if (loggedInUserType.isAtLeast(UserType.SUPERUSER)) {
+        	combo.getItems().add(UserType.MANAGER);
+        }
+        
         combo.getItems().add(UserType.EMPLOYEE);
-        combo.getSelectionModel().select(0);
+        combo.getSelectionModel().selectFirst();
     }
 }

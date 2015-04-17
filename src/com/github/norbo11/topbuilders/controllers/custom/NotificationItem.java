@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 
 import com.github.norbo11.topbuilders.controllers.AbstractTab;
 import com.github.norbo11.topbuilders.controllers.tabs.ManageAssignmentsTab;
+import com.github.norbo11.topbuilders.controllers.tabs.MessagesTab;
 import com.github.norbo11.topbuilders.controllers.tabs.MyAssignmentsTab;
 import com.github.norbo11.topbuilders.controllers.tabs.QuoteRequestsTab;
 import com.github.norbo11.topbuilders.models.AbstractModel;
@@ -38,13 +39,15 @@ public class NotificationItem extends TitledPane {
         this.notification = notification;
         this.associatedModel = notification.getAssociatedModel();
 
+        //Load this custom component by supplying this class as the root and as the controller
         FXMLUtil.loadFxml(FXML_FILENAME, this, this);
     }
     
     @FXML
     public void initialize() {  
-        
     	if (associatedModel != null) {
+    		
+    		/* Go through all possible assignment types and change the contents of the notification accordingly */
 	        switch (notification.getType()) {
 	            case ASSIGNMENT_CLOSE_TO_END:
 	            	Assignment assignment1 = (Assignment) associatedModel;
@@ -99,7 +102,7 @@ public class NotificationItem extends TitledPane {
 	                break;
 	        }
 	        
-	        /* Set image */
+	        /* Set appropriate image */
 	        switch (notification.getType()) {
 	            case ASSIGNMENT_CLOSE_TO_END: case NEW_ASSIGNMENT: case EMPLOYEE_ASSIGNMENT_COMPLETE:
 	                image.setImage(new Image("img/page.png"));
@@ -130,6 +133,7 @@ public class NotificationItem extends TitledPane {
 	        	else getStyleClass().remove("seen");
 	        });
 	        
+	        //Set the time by formatting the timestamp
 	        timestamp.setText(DateTimeUtil.formatDate(notification.getDate()) + "\n" + DateTimeUtil.formatTime(notification.getDate()));
     	}
     }
@@ -137,6 +141,8 @@ public class NotificationItem extends TitledPane {
     @FXML
     public void view(MouseEvent event) {
     	if (associatedModel != null) {
+    		
+    		/* Carry out an action based on notification type when the notification is clicked */
 	        switch (notification.getType()) {
 	            case ASSIGNMENT_CLOSE_TO_END: case NEW_ASSIGNMENT:
 	            	//Simply open the My Assignments tab
@@ -145,7 +151,7 @@ public class NotificationItem extends TitledPane {
 	                
 	            case NEW_MESSAGE:
 	            	//Display the message in a new window
-	                Message.displayMessage((Message) associatedModel);
+	                MessagesTab.displayMessage((Message) associatedModel, null);
 	                break;
 	                
 	            /* Manager specific */

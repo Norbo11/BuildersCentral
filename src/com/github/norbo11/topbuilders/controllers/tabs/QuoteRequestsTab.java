@@ -19,7 +19,7 @@ import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 import com.github.norbo11.topbuilders.util.helpers.TabUtil;
 
-public class QuoteRequestsTab extends AbstractController {
+public class QuoteRequestsTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/QuoteRequestsTab.fxml";
     
     @FXML private Label clientName, email, contactNumber, firstLineAddress, secondLineAddress, city, postcode, projectDescription;

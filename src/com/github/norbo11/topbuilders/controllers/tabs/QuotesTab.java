@@ -38,7 +38,7 @@ import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
-public class QuotesTab extends AbstractController {
+public class QuotesTab implements AbstractController {
 
     public final static String FXML_FILENAME = "tabs/QuotesTab.fxml";
     
@@ -374,7 +374,7 @@ public class QuotesTab extends AbstractController {
         	validation.addErrorFromResource("validation.invalidEmail");
         }
 
-        return validation.validate();
+        return validation.displayErrors(false);
     }
 
     public ComboBox<Project> getProjectPicker() {

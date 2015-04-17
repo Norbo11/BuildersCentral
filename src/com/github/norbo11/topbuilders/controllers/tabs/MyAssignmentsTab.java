@@ -16,7 +16,7 @@ import com.github.norbo11.topbuilders.models.Project;
 import com.github.norbo11.topbuilders.util.Resources;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-public class MyAssignmentsTab extends AbstractController {
+public class MyAssignmentsTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/MyAssignmentsTab.fxml";
     
     @FXML private TreeTableView<Assignment> table;

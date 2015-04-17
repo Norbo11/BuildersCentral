@@ -4,11 +4,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/* Only allows a limited number of characters */
 public class LimitedTextField extends TextField {
     private int limit = 0;
-
+    
 	public LimitedTextField() {
-        addEventFilter(KeyEvent.KEY_TYPED, e -> {                  
+		//When a user starts typing
+        addEventFilter(KeyEvent.KEY_TYPED, e -> {            
+        	
             //If the user isn't trying to delete characters and he has reached the limit, cancel the event
             if (!e.getCharacter().equals(KeyCode.BACK_SPACE) && getText().length() == limit) {
                 e.consume();

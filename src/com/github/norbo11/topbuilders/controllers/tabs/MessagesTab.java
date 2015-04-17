@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
 import com.github.norbo11.topbuilders.controllers.scenes.AbstractScene;
+import com.github.norbo11.topbuilders.controllers.scenes.DisplayMessageScene;
 import com.github.norbo11.topbuilders.controllers.scenes.NewMessageScene;
 import com.github.norbo11.topbuilders.models.Employee;
 import com.github.norbo11.topbuilders.models.Message;
@@ -22,7 +23,7 @@ import com.github.norbo11.topbuilders.util.factories.DeleteModelButtonCellFactor
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 
-public class MessagesTab extends AbstractController {
+public class MessagesTab implements AbstractController {
     public final static String FXML_FILENAME = "tabs/MessagesTab.fxml";    
     
     @FXML public TableView<Message> table;
@@ -73,19 +74,40 @@ public class MessagesTab extends AbstractController {
 
     @FXML
 	public void newMessage(ActionEvent event) {
-	    Stage stage = StageUtil.createDialogStage(Resources.getResource("messages.new"));
-	    AbstractScene scene = SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
-	    NewMessageScene controller = (NewMessageScene) scene.getController();
-	    controller.setParent(this);
+	    newMessage();
 	}
     
     @FXML
     public void readMessage(ActionEvent event) {
-        Message.displayMessage(table.getSelectionModel().getSelectedItem());
+        displayMessage(table.getSelectionModel().getSelectedItem(), this);
     }
     
     public void updateAll() {
     	table.getItems().clear();
     	table.getItems().addAll(Employee.getCurrentEmployee().loadMessages());
+    }
+    
+    /* Static methods */
+    
+    public static void displayMessage(Message message, MessagesTab tab) {
+        //Create new window
+        Stage stage = StageUtil.createDialogStage(message.getTitle());
+        AbstractScene scene = SceneUtil.changeScene(stage, DisplayMessageScene.FXML_FILENAME, true);
+        
+        //Display details
+        DisplayMessageScene controller = (DisplayMessageScene) scene.getController();
+        controller.setMessage(message);
+        controller.setMessagesTab(tab);
+        controller.updateAll();
+    }
+    
+    public static NewMessageScene newMessage() {
+    	/* Create the new message dialog */
+    	Stage stage = StageUtil.createDialogStage(Resources.getResource("messages.new"));
+	    AbstractScene scene = SceneUtil.changeScene(stage, NewMessageScene.FXML_FILENAME);
+	    
+	    /* Return the new message scene controller */
+	    NewMessageScene controller = (NewMessageScene) scene.getController();
+	    return controller;
     }
 }

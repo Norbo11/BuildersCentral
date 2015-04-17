@@ -37,6 +37,9 @@
     <Label text="%employees.defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="0" />
     <DoubleTextField fx:id="defaultWage" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.margin="$rightMargin" prefWidth="$prefWidth"/>
     
+    <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+    <TextField fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" editable="false" GridPane.margin="$rightMargin" prefWidth="$prefWidth" /> 
+    
     <Label text="%general.address.firstLine" GridPane.rowIndex="0" GridPane.columnIndex="2" />
     <TextField fx:id="firstLineAddress" GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
     
@@ -51,9 +54,6 @@
     
     <Label text="%employees.userType" GridPane.rowIndex="4" GridPane.columnIndex="2" />
     <ComboBox fx:id="userType" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="$prefWidth"/>
-    
-    <Label text="%employees.activationCode" GridPane.rowIndex="5" GridPane.columnIndex="0" />
-    <Label fx:id="activationCode" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="$prefWidth"/> 
     
     <ValidationInfo fx:id="validation" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="4" />
   </GridPane>
