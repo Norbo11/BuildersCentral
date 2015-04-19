@@ -104,6 +104,7 @@ public class SettingsTab implements AbstractController {
 		
 		TabUtil.closeCurrentTab();
 		Main.getMainStage().setFullScreen(fullscreenCheckbox.isSelected());
+		Resources.setCurrentBundle(Employee.getCurrentEmployee());
 	}
 	
 	@FXML
