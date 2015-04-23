@@ -11,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import com.github.norbo11.topbuilders.controllers.AbstractController;
@@ -42,10 +41,9 @@ public class QuotesTab implements AbstractController {
 
     public final static String FXML_FILENAME = "tabs/QuotesTab.fxml";
     
-    @FXML private GridPane jobsGrid;
     @FXML private ComboBox<Project> projectPicker;
     @FXML private ComboBox<JobGroup> jobGroupCombo;
-    @FXML private Button deleteProjectButton, newGroupButton, settingsButton, jobGroupButton, exportProjectButton;
+    @FXML private Button deleteProjectButton, newGroupButton, settingsButton, addJobButton, exportProjectButton;
     @FXML private TextField newGroupField;
     
     @FXML private TextArea projectDescription, projectNote;
@@ -275,10 +273,10 @@ public class QuotesTab implements AbstractController {
                 if (jobGroupCombo.getItems().contains(previousSelection)) selectionModel.select(previousSelection);
                 
                 jobGroupCombo.setDisable(false);
-                jobGroupButton.setDisable(false);
+                addJobButton.setDisable(false);
             } else {
                 jobGroupCombo.setDisable(true);
-                jobGroupButton.setDisable(true);
+                addJobButton.setDisable(true);
             }
         }
     }

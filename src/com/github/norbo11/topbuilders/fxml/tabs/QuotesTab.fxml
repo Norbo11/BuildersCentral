@@ -57,7 +57,7 @@
   <VBox spacing="20">
     <HBox spacing="40">
       <ComboBox fx:id="jobGroupCombo" prefWidth="230" />
-      <Button fx:id="jobGroupButton" text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJob" />
+      <Button fx:id="addJobButton" text="%quotes.addJob" prefWidth="190" prefHeight="40" onAction="#addJob" />
     </HBox>
     
     <HBox spacing="40">
