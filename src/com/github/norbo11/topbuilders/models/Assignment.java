@@ -170,7 +170,7 @@ public class Assignment extends AbstractModel {
 	    return isDummy() ? "" : getJob().getDescription();
 	}
 	
-	public void updateNewAssignmentNotification() {
+	public void updateAssignmentCompletedNotification() {
 		if (isCompleted()) {
 			
 			//Create an Assignment Completed notification for all managers

@@ -46,7 +46,7 @@ public class MyAssignmentsTab implements AbstractController {
                             @Override
                             public void run() {
                                 item.setCompleted(checkBox.isSelected());
-                                item.updateNewAssignmentNotification();
+                                item.updateAssignmentCompletedNotification();
                                 item.save();
                             }
                         };
