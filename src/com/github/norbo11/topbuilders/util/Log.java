@@ -2,7 +2,6 @@ package com.github.norbo11.topbuilders.util;
 
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-
 public class Log {
 
     public static void error(String string) {

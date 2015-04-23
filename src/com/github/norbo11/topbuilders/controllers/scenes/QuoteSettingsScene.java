@@ -12,7 +12,6 @@ import com.github.norbo11.topbuilders.models.enums.QuoteSettingType;
 import com.github.norbo11.topbuilders.util.Settings;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-
 public class QuoteSettingsScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/QuoteSettingsScene.fxml";
 

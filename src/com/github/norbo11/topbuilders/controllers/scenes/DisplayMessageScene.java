@@ -13,7 +13,6 @@ import com.github.norbo11.topbuilders.models.Message;
 import com.github.norbo11.topbuilders.util.helpers.DateTimeUtil;
 import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 
-
 public class DisplayMessageScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/DisplayMessageScene.fxml";
     

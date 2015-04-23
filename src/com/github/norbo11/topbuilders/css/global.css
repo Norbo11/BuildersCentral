@@ -45,8 +45,8 @@
 }   
 
 .button {
-	-fx-border-color: #97CBE6;
-	-fx-border-size: 2px;
+    -fx-border-color: #97CBE6;
+    -fx-border-size: 2px;
 }
 
 .button, .combo-box, .combo-box .list-view {
@@ -85,7 +85,7 @@
 }
 
 .tree-table-row-cell.heading, .notification-item .title {
-	-fx-background-color: #C7E7FC;
+    -fx-background-color: #C7E7FC;
 }
 
 .list-cell {
@@ -114,7 +114,7 @@
 }
 
 .notification-item.seen .title {
-	-fx-background-color: #D5E8F4;
+    -fx-background-color: #D5E8F4;
 }
 
 /* Tabs */
@@ -128,7 +128,7 @@
 }
 
 .tab-header-area {
-	-fx-border-color: transparent transparent black transparent;
+    -fx-border-color: transparent transparent black transparent;
 }
 
 .tab-pane {

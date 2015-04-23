@@ -19,12 +19,6 @@ public class ModelFinder<T> {
         this.models = models;
         this.comparator = comparator;
                 
-        //searchList.setManaged(false);
-        //searchList.getItems().addAll(models);
-        
-        //Ensure height of search list is proportional to number of items in list
-        //searchList.prefHeightProperty().bind(Bindings.size(searchList.getItems()).multiply(LIST_CELL_HEIGHT));
-        
         //Search upon typing in the text field
         textField.textProperty().addListener((obs, oldVal, newVal) -> search(oldVal, newVal));
         

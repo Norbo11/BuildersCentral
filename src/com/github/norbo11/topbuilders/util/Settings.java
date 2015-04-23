@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import com.github.norbo11.topbuilders.models.AbstractModel;
 import com.github.norbo11.topbuilders.models.AbstractSetting;
 import com.github.norbo11.topbuilders.models.enums.AbstractSettingType;
-import com.github.norbo11.topbuilders.models.enums.EmployeeSettingType;
 
 public class Settings<T extends AbstractSetting> {
     private ObservableList<T> settings;

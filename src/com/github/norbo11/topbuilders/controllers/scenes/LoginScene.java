@@ -22,7 +22,6 @@ import com.github.norbo11.topbuilders.util.helpers.SceneUtil;
 import com.github.norbo11.topbuilders.util.helpers.StageUtil;
 import com.github.norbo11.topbuilders.util.helpers.StringUtil;
 
-
 public class LoginScene implements AbstractController {
     public static final String FXML_FILENAME = "scenes/LoginScene.fxml";
     
