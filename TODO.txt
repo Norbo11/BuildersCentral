@@ -1,8 +1,17 @@
 TODO:
 
--Message replying, forwarding, and sent messages (need to stop deleting message rows and just mark them as deleted)
--CSS
--Keep/discard changes popup on closing some tabs
--Add notifications read functionality
--Add quit button somewhere (fullscreen usage) - possibly on the lower right corner where the date bar is
--fix fullscreen not being set properly on initial log in
+-contents page
+-develop specific objectives a bit more - put as much detail as you can
+-put numbers in the instructions for the user guide
+-add page numbers for the user guide
+
+-add a troubleshooting section at the end of the user guide
+--cant be installed, check java version, database connection not working, 
+system is unresponsive (system requirements and task manager), add in error messages too
+--backup and recovery (or managment of the database in phpmyadmin)
+
+-develop two more points for the extentions heading
+-perhaps expand the user feedback a little
+-comapare project performance against objectives (waffle)
+-proofread the whole project
+-check against the AQA project log
