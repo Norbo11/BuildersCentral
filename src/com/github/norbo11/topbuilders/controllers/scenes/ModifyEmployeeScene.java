@@ -141,7 +141,7 @@ public class ModifyEmployeeScene implements AbstractController {
     			if (emailChanged && Employee.checkEmailExists(email.getText())) {
     				validation.addErrorFromResource("validation.emailExists");
             	}
-        	} else validation.addErrorFromResource("validation.invalidEmail");
+        	} else validation.addErrorFromResource("validation.invalidEmailFormat");
     	} else validation.addErrorFromResource("validation.emailRequired");
     	
     	/* Name */
